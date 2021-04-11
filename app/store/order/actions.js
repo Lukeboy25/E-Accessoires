@@ -10,7 +10,7 @@ export function setOpenOrders(openOrders) {
 
 export const getOrders = () => async (dispatch) => {
   const openOrders = await HttpService.get('orders');
-  // if (openOrders && openOrders.length > 0) {
-  //   await dispatch(setOpenOrders(openOrders));
-  // }
+  if (openOrders && openOrders.length > 0) {
+    await dispatch(setOpenOrders(openOrders));
+  }
 };
