@@ -5,7 +5,6 @@ import { APP_URL } from 'react-native-dotenv';
 
 class HttpService {
   constructor() {
-    console.log(APP_URL);
     this.instance = Axios.create({
       baseURL: APP_URL,
       headers: {
