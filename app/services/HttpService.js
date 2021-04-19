@@ -1,19 +1,20 @@
 import Axios from 'axios';
-import Constants from 'expo-constants/src/Constants';
 import { store } from '../../App';
-import { logOut, refresh } from '../store/user/actions';
+import { logOut, refresh } from '../store/token/actions';
+import { APP_URL } from 'react-native-dotenv';
 
 class HttpService {
   constructor() {
+    console.log(APP_URL);
     this.instance = Axios.create({
-      baseURL: Constants.manifest.extra.apiUrl,
+      baseURL: APP_URL,
       headers: {
-        'Content-Type': 'application/json',
+        Accept: 'application/vnd.retailer.v3+json',
       },
     });
     this.instance.interceptors.request.use(
       (request) => {
-        const token = store.getState().user.token;
+        const token = store.getState().token.token;
         request.headers = request.headers || {};
         request.headers.Authorization = `Bearer ${token}`;
         return request;
