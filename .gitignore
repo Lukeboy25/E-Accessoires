@@ -14,3 +14,4 @@ web-build/
 
 .env
 google-services.json
+yarn-error.log
