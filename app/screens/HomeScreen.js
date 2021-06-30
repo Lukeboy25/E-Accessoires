@@ -1,60 +1,60 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, View, StatusBar, Text, Button } from 'react-native';
+import { StyleSheet, View, StatusBar, Text, Button, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestToken } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
-import NotificationSender from './NotifcationSender';
-import AsyncStorage from '@react-native-community/async-storage';
+import BackgroundFetchScreen from './BackgroundFetchScreen';
+
+import { GoogleAuthentication, NotificationSender } from '.';
 
 class HomeScreen extends Component {
-  state = { willTriggerNotification: null };
+  state = { orders: [], name: '', photoUrl: '' };
 
-  async componentDidMount() {
+  componentDidMount = async () => {
+    await this.getGoogleData();
     await this.props.requestToken();
     await this.props.getOrders();
-    const willTriggerNotification = await this.checkForNewNotification();
+  };
 
-    this.setState({ willTriggerNotification });
-  }
-
-  async checkForNewNotification() {
-    const currentOpenOrders = await AsyncStorage.getItem('currentOpenOrders');
-
-    if (!this.props.openOrders || this.props.openOrders.length === 0) {
-      return false;
+  getGoogleData = async () => {
+    try {
+      const googleName = await AsyncStorage.getItem('googleName');
+      const googlePhotoUrl = await AsyncStorage.getItem('googlePhotoUrl');
+      this.setState({ name: googleName, photoUrl: googlePhotoUrl });
+    } catch (e) {
+      console.error(e);
     }
-
-    if (this.props.openOrders.length === parseInt(currentOpenOrders)) {
-      return false;
-    }
-
-    AsyncStorage.setItem('currentOpenOrders', this.props.openOrders.length.toString());
-    this.setState({
-      willTriggerNotification: false,
-    });
-
-    return true;
-  }
+  };
 
   render(props) {
     if (!this.props.token) {
       this.props.requestToken();
     }
 
-    return (
+    return this.state.name === '' || this.state.name === null ? (
+      <GoogleAuthentication />
+    ) : (
       <View style={styles.background}>
         <StatusBar barStyle={'light-content'} />
-        <View>
-          <Text>Welcome to E-accessoires</Text>
+        <View style={styles.googleHeader}>
+          <Text style={styles.headerText}>Welcome: {this.state.name}</Text>
+          <Image style={styles.headerImage} source={{ uri: this.state.photoUrl }} />
         </View>
-        <Text>Openstaande bestellingen: {this.props.openOrders.length}</Text>
-        <Text style={styles.orders}>Bestelnummers:</Text>
-        {this.props.openOrders.map((order, index) => (
-          <View index={index} key={order.orderId}>
-            <Text>{order.orderId}</Text>
-          </View>
-        ))}
+        <View style={styles.container}>
+          <Text>Welcome to E-accessoires</Text>
+          <Text>Openstaande bestellingen: {this.props.openOrders.length}</Text>
+          <Text style={styles.orders}>Bestelnummers:</Text>
+          {this.props.openOrders.map((order, index) => (
+            <View index={index} key={order.orderId}>
+              <Text>{order.orderId}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* <BackgroundFetchScreen openOrders={this.props.openOrders.length} /> */}
+
         {this.state.willTriggerNotification && <NotificationSender />}
       </View>
     );
@@ -62,14 +62,31 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
+  googleHeader: {
+    height: 100,
+    backgroundColor: '#fff',
+  },
+  headerText: {},
+  headerImage: {
+    justifyContent: 'flex-end',
+    margin: 15,
+    width: 50,
+    height: 50,
+    borderColor: 'rgba(0,0,0,0.2)',
+    borderWidth: 2,
+    borderRadius: 25,
+  },
+
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   orders: {
     paddingTop: 20,
     fontWeight: 'bold',
-  },
-  background: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 
   button: {
