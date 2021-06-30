@@ -15,11 +15,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "infoPlist": {
+        "UIBackgroundModes": ["location", "fetch"]
+      },
       "supportsTablet": true
     },
     "android": {
       "package": "eaccessoires.app",
-      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
