@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -38,48 +38,8 @@ function NotificationSender() {
     };
   }, []);
 
-  return (
-    <View
-      style={{
-        paddingTop: 40,
-        alignItems: 'center',
-      }}
-    >
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>{expoPushToken}</Text>
-        <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-      </View>
-      <Button
-        title='Press to Send Notification'
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
-    </View>
-  );
+  return <View></View>;
 }
-
-// Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/notifications
-// async function sendPushNotification(expoPushToken) {
-//   const message = {
-//     to: expoPushToken,
-//     sound: 'default',
-//     title: 'Original Title',
-//     body: 'And here is the body!',
-//     data: { someData: 'goes here' },
-//   };
-
-//   await fetch('https://exp.host/--/api/v2/push/send', {
-//     method: 'POST',
-//     headers: {
-//       'Accept': 'application/json',
-//       'Accept-encoding': 'gzip, deflate',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(message),
-//   });
-// }
 
 async function schedulePushNotification() {
   await Notifications.scheduleNotificationAsync({
