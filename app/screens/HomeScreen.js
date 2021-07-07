@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, View, StatusBar, Text, Button, Image } from 'react-native';
+import { StyleSheet, View, StatusBar, Text, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestToken } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
+
 import BackgroundFetchScreen from './BackgroundFetchScreen';
 
-import { GoogleAuthentication, NotificationSender } from '.';
+import { GoogleAuthentication, NotificationSender, OpenOrders } from '.';
 
 class HomeScreen extends Component {
-  state = { orders: [], name: '', photoUrl: '' };
+  state = { name: '', photoUrl: '' };
 
   componentDidMount = async () => {
     await this.getGoogleData();
@@ -36,27 +37,21 @@ class HomeScreen extends Component {
     return this.state.name === '' || this.state.name === null ? (
       <GoogleAuthentication />
     ) : (
-      <View style={styles.background}>
+      <ScrollView style={styles.background}>
         <StatusBar barStyle={'light-content'} />
-        <View style={styles.googleHeader}>
-          <Text style={styles.headerText}>Welcome: {this.state.name}</Text>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>
+            <Text>Welcome: </Text>
+            <Text style={{ fontWeight: 'bold' }}>{this.state.name}</Text>
+          </Text>
           <Image style={styles.headerImage} source={{ uri: this.state.photoUrl }} />
         </View>
-        <View style={styles.container}>
-          <Text>Welcome to E-accessoires</Text>
-          <Text>Openstaande bestellingen: {this.props.openOrders.length}</Text>
-          <Text style={styles.orders}>Bestelnummers:</Text>
-          {this.props.openOrders.map((order, index) => (
-            <View index={index} key={order.orderId}>
-              <Text>{order.orderId}</Text>
-            </View>
-          ))}
-        </View>
+        {this.props.detailedOpenOrders && <OpenOrders detailedOpenOrders={this.props.detailedOpenOrders} />}
 
         {/* <BackgroundFetchScreen openOrders={this.props.openOrders.length} /> */}
 
         {this.state.willTriggerNotification && <NotificationSender />}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -65,33 +60,22 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  googleHeader: {
-    height: 100,
+
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 80,
     backgroundColor: '#fff',
   },
-  headerText: {},
+  headerText: {
+    margin: 15,
+  },
   headerImage: {
-    justifyContent: 'flex-end',
     margin: 15,
     width: 50,
     height: 50,
-    borderColor: 'rgba(0,0,0,0.2)',
-    borderWidth: 2,
     borderRadius: 25,
-  },
-
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  orders: {
-    paddingTop: 20,
-    fontWeight: 'bold',
-  },
-
-  button: {
-    width: 250,
-    margin: 8,
   },
 });
 
@@ -100,7 +84,7 @@ const mapStateToProps = (state) => {
 
   return {
     token: state.token.token,
-    openOrders: order.openOrders,
+    detailedOpenOrders: order.detailedOpenOrders,
   };
 };
 
