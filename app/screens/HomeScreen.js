@@ -62,7 +62,7 @@ class HomeScreen extends Component {
         {this.props.openOrders && <OpenOrders openOrders={this.props.openOrders} />}
 
         <BackgroundFetchScreen openOrders={this.props.openOrders.length} />
-        {this.state.willTriggerNotification && <NotificationSender />}
+        {/* {this.state.willTriggerNotification && <NotificationSender />} */}
         <Button
           style={styles.logOutButton}
           onPress={() => this.logOut()}

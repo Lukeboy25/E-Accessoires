@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import React from 'react';
+import Moment from 'react-moment';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import HttpService from '../services/HttpService';
 import NotificationSender from './NotificationSender';
@@ -48,8 +49,6 @@ export default function BackgroundFetchScreen(props) {
     AsyncStorage.setItem(CURRENT_ORDER_ITEMS, props.openOrders.toString());
     setCurrentOrderItems(props.openOrders);
 
-    // console.log(currentOpenOrders);
-
     if (!props.openOrders || props.openOrders === 0) {
       return false;
     }
@@ -88,34 +87,41 @@ export default function BackgroundFetchScreen(props) {
     setIsRegistered(!isRegistered);
   };
 
-  const renderText = () => {
+  const renderFetchTime = () => {
     if (!fetchDate) {
       return <Text>There was no BackgroundFetch call yet.</Text>;
     }
     return (
-      <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-        <Text>Last background fetch was invoked at:</Text>
-        <Text style={styles.boldText}>{fetchDate.toString()}</Text>
+      <View style={styles.statusContainer}>
         <Text>
-          Orders: {currentOrderItems} {willTriggerNotification && <NotificationSender />}
+          Laatste meldingen check:{' '}
+          <Moment style={styles.boldText} format='DD-MM-yyyy HH:mm:ss' element={Text}>
+            {fetchDate}
+          </Moment>
         </Text>
       </View>
     );
   };
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.textContainer}>
+    <View style={styles.background}>
+      <Text style={styles.backgroundTitle}>Meldingen</Text>
+      <View style={styles.statusContainer}>
         <Text>
-          Background fetch status: <Text style={styles.boldText}>{status ? BackgroundFetch.Status[status] : null}</Text>
+          Status: <Text style={styles.boldText}>{status ? BackgroundFetch.Status[status] : null}</Text>
         </Text>
       </View>
-      <View style={styles.textContainer}>{renderText()}</View>
-      <Button
-        buttonStyle={styles.button}
-        title={isRegistered ? 'Unregister BackgroundFetch task' : 'Register BackgroundFetch task'}
-        onPress={toggle}
-      />
+      {renderFetchTime()}
+      <Text>
+        Orders: {currentOrderItems} {willTriggerNotification && <NotificationSender />}
+      </Text>
+      <View style={styles.buttonContainer}>
+        <Button
+          buttonStyle={styles.button}
+          title={isRegistered ? 'Zet meldingen uit' : 'Zet meldingen aan'}
+          onPress={toggle}
+        />
+      </View>
     </View>
   );
 }
@@ -140,19 +146,25 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 });
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    padding: 10,
-    marginVertical: 5,
-  },
-  textContainer: {
-    margin: 10,
+  background: {
+    margin: 25,
   },
   boldText: {
     fontWeight: 'bold',
+  },
+  statusContainer: {
+    alignItems: 'stretch',
+  },
+
+  backgroundTitle: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    alignSelf: 'stretch',
+    textAlign: 'center',
+  },
+
+  buttonContainer: {
+    alignSelf: 'stretch',
+    marginTop: 10,
   },
 });
