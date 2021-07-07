@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, View, StatusBar, Text, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, StatusBar, Text, Image, ScrollView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestToken } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
+import { LogoIcon } from '../components/icons/index';
 
 import BackgroundFetchScreen from './BackgroundFetchScreen';
 
@@ -19,6 +20,12 @@ class HomeScreen extends Component {
     await this.props.getOrders();
   };
 
+  componentDidUpdate = async (state) => {
+    if (state.name !== this.state.name) {
+      await this.getGoogleData();
+    }
+  };
+
   getGoogleData = async () => {
     try {
       const googleName = await AsyncStorage.getItem('googleName');
@@ -27,6 +34,12 @@ class HomeScreen extends Component {
     } catch (e) {
       console.error(e);
     }
+  };
+
+  logOut = async () => {
+    await AsyncStorage.setItem('googleName', '');
+    await AsyncStorage.setItem('googlePhotoUrl', '');
+    this.setState({ name: '', photoUrl: '' });
   };
 
   render(props) {
@@ -40,10 +53,10 @@ class HomeScreen extends Component {
       <ScrollView style={styles.background}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.header}>
-          <Text style={styles.headerText}>
-            <Text>Welcome: </Text>
-            <Text style={{ fontWeight: 'bold' }}>{this.state.name}</Text>
-          </Text>
+          <View style={styles.headerLeftSection}>
+            <LogoIcon />
+            <Text style={styles.headerUserName}>{this.state.name}</Text>
+          </View>
           <Image style={styles.headerImage} source={{ uri: this.state.photoUrl }} />
         </View>
         {this.props.detailedOpenOrders && <OpenOrders detailedOpenOrders={this.props.detailedOpenOrders} />}
@@ -51,6 +64,12 @@ class HomeScreen extends Component {
         {/* <BackgroundFetchScreen openOrders={this.props.openOrders.length} /> */}
 
         {this.state.willTriggerNotification && <NotificationSender />}
+        <Button
+          style={styles.logOutButton}
+          onPress={() => this.logOut()}
+          title='Log out'
+          accessibilityLabel='Log out'
+        />
       </ScrollView>
     );
   }
@@ -67,9 +86,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
     backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#D0D0D0',
   },
-  headerText: {
+  headerLeftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
     margin: 15,
+  },
+  headerUserName: {
+    marginLeft: 10,
+    fontWeight: 'bold',
+    width: 200,
   },
   headerImage: {
     margin: 15,
@@ -77,6 +105,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
   },
+
+  logOutButton: {},
 });
 
 const mapStateToProps = (state) => {

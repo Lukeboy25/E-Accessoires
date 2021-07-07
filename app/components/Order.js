@@ -1,27 +1,46 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
+import Moment from 'react-moment';
 
 const Order = ({ order, index }) => {
   return (
     <TouchableOpacity index={index} key={order.orderId}>
       <View style={styles.orderCard}>
         <View style={styles.orderCardHeader}>
-          <Text style={styles.orderId}>{order.orderId}</Text>
+          <Text style={styles.orderTitle}>
+            {order.orderId} - {order.customerDetails.shipmentDetails.firstName}{' '}
+            {order.customerDetails.shipmentDetails.surName}
+          </Text>
           <View style={styles.orderCardLanguage}>
             {order.customerDetails.shipmentDetails.countryCode === 'NL' && (
-              <Image style={styles.languageLogo} source={require('../components/icons/netherlands.png')} />
+              <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
             )}
             {order.customerDetails.shipmentDetails.countryCode === 'BE' && (
-              <Image style={styles.languageLogo} source={require('../components/icons/belgium.png')} />
+              <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
             )}
             <Text> {order.customerDetails.shipmentDetails.countryCode}</Text>
           </View>
         </View>
         {order.orderItems.map((orderItem) => (
           <View>
-            <Text>{orderItem.title}</Text>
-            <Text>{orderItem.quantity}</Text>
+            <Text>
+              {orderItem.title} - &euro;{orderItem.offerPrice}
+            </Text>
+            <Text>
+              Aantal besteld: <Text style={styles.boldText}>{orderItem.quantity}</Text>
+            </Text>
+            <Text>
+              Besteld op:{' '}
+              <Moment style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
+                {order.dateTimeOrderPlaced}
+              </Moment>
+            </Text>
+            <Text>
+              Uiterste leverdatum:{' '}
+              <Moment style={styles.boldText} format='DD-MM-yyyy' element={Text}>
+                {orderItem.latestDeliveryDate}
+              </Moment>
+            </Text>
           </View>
         ))}
       </View>
@@ -40,8 +59,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  orderId: {
+  orderTitle: {
     fontWeight: 'bold',
+    alignSelf: 'stretch',
+    width: '90%',
   },
   orderCardLanguage: {
     flexDirection: 'row',
@@ -50,6 +71,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+
+  boldText: {
+    fontWeight: 'bold',
+  },
 });
 
-export default connect(null, null)(Order);
+export default Order;

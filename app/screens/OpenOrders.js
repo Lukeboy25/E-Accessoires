@@ -12,7 +12,14 @@ const OpenOrders = ({ detailedOpenOrders, getOrders }) => {
 
   return (
     <View style={styles.container}>
-      <Button onPress={() => loadOrders()} title='Refresh' accessibilityLabel='Request latest orders' />
+      <View>
+        <Button
+          style={styles.refreshButton}
+          onPress={() => loadOrders()}
+          title='Ververs'
+          accessibilityLabel='Request latest orders'
+        />
+      </View>
       <Text style={styles.title}>E-accessoires</Text>
       <Text style={styles.orders}>
         {detailedOpenOrders.length == 1
@@ -32,11 +39,13 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 5,
   },
   title: {
     fontWeight: 'bold',
     fontSize: 22,
+    alignSelf: 'stretch',
+    textAlign: 'center',
   },
   orders: {
     paddingTop: 10,
