@@ -1,17 +1,10 @@
 import HttpService from '../../services/HttpService';
-import { OPEN_ORDERS, ORDER } from './types';
+import { OPEN_ORDERS } from './types';
 
 export function setOpenOrders(openOrders) {
   return {
     type: OPEN_ORDERS,
     openOrders: openOrders,
-  };
-}
-
-export function setSingleOrder(order) {
-  return {
-    type: ORDER,
-    order: order,
   };
 }
 
@@ -22,16 +15,11 @@ export const getOrders = () => async (dispatch) => {
     return [];
   }
 
-  const detailedOrders = [];
-
-  orders.map(async (order) => {
-    const singleOrder = await HttpService.get('orders/' + order.orderId);
-    detailedOrders.push(singleOrder);
-
-    if (singleOrder) {
-      await dispatch(setSingleOrder(singleOrder));
-    }
+  const promiseArray = orders.map(async (order) => {
+    return HttpService.get('orders/' + order.orderId);
   });
 
-  await dispatch(setOpenOrders(detailedOrders));
+  Promise.all(promiseArray).then((openOrdersArray) => {
+    return dispatch(setOpenOrders(openOrdersArray));
+  });
 };

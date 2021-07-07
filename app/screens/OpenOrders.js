@@ -5,7 +5,7 @@ import { Order } from '../components/index';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { getOrders } from '../store/order/actions';
 
-const OpenOrders = ({ detailedOpenOrders, getOrders }) => {
+const OpenOrders = ({ openOrders, getOrders }) => {
   const loadOrders = async () => {
     getOrders();
   };
@@ -22,12 +22,12 @@ const OpenOrders = ({ detailedOpenOrders, getOrders }) => {
       </View>
       <Text style={styles.title}>E-accessoires</Text>
       <Text style={styles.orders}>
-        {detailedOpenOrders.length == 1
-          ? `${detailedOpenOrders.length} openstaande bestelling:`
-          : `${detailedOpenOrders.length} openstaande bestellingen:`}
+        {openOrders.length == 1
+          ? `${openOrders.length} openstaande bestelling:`
+          : `${openOrders.length} openstaande bestellingen:`}
       </Text>
       <View>
-        {detailedOpenOrders?.map((order, index) => (
+        {openOrders?.map((order, index) => (
           <Order order={order} index={index} />
         ))}
       </View>
@@ -57,7 +57,7 @@ const mapStateToProps = (state) => {
   const order = state.order;
 
   return {
-    detailedOpenOrders: order.detailedOpenOrders,
+    openOrders: order.openOrders,
   };
 };
 

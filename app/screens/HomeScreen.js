@@ -59,10 +59,9 @@ class HomeScreen extends Component {
           </View>
           <Image style={styles.headerImage} source={{ uri: this.state.photoUrl }} />
         </View>
-        {this.props.detailedOpenOrders && <OpenOrders detailedOpenOrders={this.props.detailedOpenOrders} />}
+        {this.props.openOrders && <OpenOrders openOrders={this.props.openOrders} />}
 
-        {/* <BackgroundFetchScreen openOrders={this.props.openOrders.length} /> */}
-
+        <BackgroundFetchScreen openOrders={this.props.openOrders.length} />
         {this.state.willTriggerNotification && <NotificationSender />}
         <Button
           style={styles.logOutButton}
@@ -114,7 +113,7 @@ const mapStateToProps = (state) => {
 
   return {
     token: state.token.token,
-    detailedOpenOrders: order.detailedOpenOrders,
+    openOrders: order.openOrders,
   };
 };
 

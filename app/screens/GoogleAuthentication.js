@@ -17,7 +17,8 @@ const GoogleAuthentication = (props) => {
   const signIn = async () => {
     try {
       const result = await Google.logInAsync({
-        androidClientId: ANDROID_CLIENT_ID,
+        // androidClientId: ANDROID_CLIENT_ID,
+        androidStandaloneAppClientId: ANDROID_CLIENT_ID,
         // iosClientId: YOUR_CLIENT_ID_HERE,
         scopes: ['profile', 'email'],
       });
