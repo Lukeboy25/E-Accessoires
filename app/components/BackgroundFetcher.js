@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-// import format from 'date-format';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import React from 'react';
@@ -14,7 +13,7 @@ const LAST_FETCH_DATE_KEY = 'background-fetch-date';
 const ORDER_ITEMS = 'order-items';
 const CURRENT_ORDER_ITEMS = 'current-order-items';
 
-export default function BackgroundFetchScreen(props) {
+export default function BackgroundFetcher(props) {
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [fetchDate, setFetchDate] = React.useState(Date || null);
   const [currentOrderItems, setCurrentOrderItems] = React.useState(Number || null);
@@ -26,8 +25,11 @@ export default function BackgroundFetchScreen(props) {
   }, [fetchDate]);
 
   React.useEffect(() => {
+    if (props.openOrders !== currentOrderItems) {
+      setCurrentOrderItems(props.openOrders);
+    }
     checkForNewNotification();
-  }, [CURRENT_ORDER_ITEMS]);
+  }, [currentOrderItems]);
 
   const onFocus = React.useCallback(() => {
     refreshLastFetchDateAsync();
@@ -126,7 +128,7 @@ export default function BackgroundFetchScreen(props) {
   );
 }
 
-BackgroundFetchScreen.navigationOptions = {
+BackgroundFetcher.navigationOptions = {
   title: 'Background Fetch',
 };
 

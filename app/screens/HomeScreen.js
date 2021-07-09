@@ -6,13 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestToken } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
 import { LogoIcon } from '../components/icons/index';
-
-import BackgroundFetchScreen from './BackgroundFetchScreen';
-
-import { GoogleAuthentication, NotificationSender, OpenOrders } from '.';
+import { GoogleAuthentication, BackgroundFetcher, NotificationSender, OpenOrders } from '../components';
 
 class HomeScreen extends Component {
-  state = { name: '', photoUrl: '' };
+  state = { name: '', photoUrl: '', openOrders: 0 };
 
   componentDidMount = async () => {
     await this.getGoogleData();
@@ -21,8 +18,13 @@ class HomeScreen extends Component {
   };
 
   componentDidUpdate = async (state) => {
-    if (state.name !== this.state.name) {
+    if (this.state.name) {
       await this.getGoogleData();
+    }
+
+    if (state.openOrders.length !== this.state.openOrders) {
+      await this.props.getOrders();
+      this.setState({ openOrders: state.openOrders.length });
     }
   };
 
@@ -61,7 +63,7 @@ class HomeScreen extends Component {
         </View>
         {this.props.openOrders && <OpenOrders openOrders={this.props.openOrders} />}
 
-        <BackgroundFetchScreen openOrders={this.props.openOrders.length} />
+        <BackgroundFetcher openOrders={this.state.openOrders} />
         {/* {this.state.willTriggerNotification && <NotificationSender />} */}
         <Button
           style={styles.logOutButton}

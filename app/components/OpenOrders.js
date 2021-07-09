@@ -1,13 +1,13 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Order } from '../components/index';
+import { Order } from '.';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { getOrders } from '../store/order/actions';
 
 const OpenOrders = ({ openOrders, getOrders }) => {
   const loadOrders = async () => {
-    getOrders();
+    await getOrders();
   };
 
   return (
@@ -28,7 +28,7 @@ const OpenOrders = ({ openOrders, getOrders }) => {
       </Text>
       <View>
         {openOrders?.map((order, index) => (
-          <Order order={order} index={index} />
+          <Order key={index} order={order} />
         ))}
       </View>
     </View>

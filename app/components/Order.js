@@ -22,7 +22,7 @@ const Order = ({ order, index }) => {
           </View>
         </View>
         {order.orderItems.map((orderItem) => (
-          <View>
+          <View key={orderItem.orderId}>
             <Text>
               {orderItem.title} - &euro;{orderItem.offerPrice}
             </Text>
