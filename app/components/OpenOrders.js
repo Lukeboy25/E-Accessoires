@@ -1,35 +1,11 @@
-import React, { useState } from 'react';
-import { bindActionCreators } from 'redux';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Order } from '.';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import { getOrders } from '../store/order/actions';
-import { LoadingScreen } from '../screens';
+import { View, Text, StyleSheet } from 'react-native';
 
-const OpenOrders = ({ openOrders, getOrders }) => {
-  const [loading, setLoading] = useState(false);
-
-  const requestOrders = async () => {
-    setLoading(true);
-    try {
-      await getOrders();
-    } catch (e) {
-      console.error(e);
-    }
-    setLoading(false);
-  };
-
+const OpenOrders = ({ openOrders }) => {
   return (
     <View style={styles.container}>
-      <LoadingScreen show={loading} loadingMessage={'Fetching orders'} />
-      <View>
-        <Button
-          style={styles.refreshButton}
-          onPress={() => requestOrders()}
-          title='Ververs'
-          accessibilityLabel='Request latest orders'
-        />
-      </View>
       <Text style={styles.title}>E-accessoires</Text>
       <Text style={styles.orders}>
         {openOrders.length == 1
@@ -52,6 +28,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   title: {
+    marginTop: 10,
     fontWeight: 'bold',
     fontSize: 22,
     alignSelf: 'stretch',
@@ -71,12 +48,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      getOrders,
-    },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(OpenOrders);
+export default connect(mapStateToProps, null)(OpenOrders);

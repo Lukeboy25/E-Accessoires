@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, View, StatusBar, Text, Image, ScrollView, Button } from 'react-native';
+import { StyleSheet, View, StatusBar, Text, Image, ScrollView, Button, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestToken } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
@@ -29,6 +29,10 @@ class HomeScreen extends Component {
     }
   };
 
+  setLoading(loading) {
+    this.setState((state) => ({ ...state, loading }));
+  }
+
   getGoogleData = async () => {
     try {
       const googleName = await AsyncStorage.getItem('googleName');
@@ -49,17 +53,13 @@ class HomeScreen extends Component {
     this.setLoading(false);
   };
 
-  setLoading(loading) {
-    this.setState((state) => ({ ...state, loading }));
-  }
-
   logOut = async () => {
     await AsyncStorage.setItem('googleName', '');
     await AsyncStorage.setItem('googlePhotoUrl', '');
     this.setState({ name: '', photoUrl: '' });
   };
 
-  render(props) {
+  render() {
     if (!this.props.token) {
       this.props.requestToken();
     }
@@ -67,7 +67,10 @@ class HomeScreen extends Component {
     return this.state.name === '' || this.state.name === null ? (
       <GoogleAuthentication />
     ) : (
-      <ScrollView style={styles.background}>
+      <ScrollView
+        style={styles.background}
+        refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
+      >
         <StatusBar barStyle={'light-content'} />
         <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
         <View style={styles.header}>
