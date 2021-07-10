@@ -1,41 +1,32 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { ActivityIndicator, Modal, View, Text } from 'react-native';
 
-const LoadingScreen = () => {
+const LoadingScreen = (props) => {
+  const { show = false, color = '#ffffff', backgroundColor = 'transparent', dimLights = 0.6, loadingMessage } = props;
   return (
-    <KeyboardAvoidingView
-      style={styles.profileOverview}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      enabled={true}
-    >
-      <TouchableWithoutFeedback>
-        <SafeAreaView style={styles.profileHeader}>
-          <ActivityIndicator animating={true} color={'#000000'} size='large' />
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    <Modal transparent={true} animationType='none' visible={show}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingBottom: 25,
+          backgroundColor: `rgba(0,0,0,${dimLights})`,
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: `${backgroundColor}`,
+            borderRadius: 13,
+          }}
+        >
+          <ActivityIndicator animating={show} color={color} size='large' />
+          {loadingMessage && <Text style={{ color: `${color}` }}>{loadingMessage}</Text>}
+        </View>
+      </View>
+    </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  profileOverview: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  profileHeader: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderColor: '#000000',
-  },
-});
 
 export default LoadingScreen;

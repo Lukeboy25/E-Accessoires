@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-google-app-auth';
-import { ANDROID_CLIENT_ID } from 'react-native-dotenv';
+import { ANDROID_CLIENT_ID, ANDROID_DEMO_CLIENT_ID } from 'react-native-dotenv';
 
 const GoogleAuthentication = (props) => {
   const storeGoogleData = async (googleData) => {
@@ -17,7 +17,7 @@ const GoogleAuthentication = (props) => {
   const signIn = async () => {
     try {
       const result = await Google.logInAsync({
-        // androidClientId: ANDROID_CLIENT_ID,
+        androidClientId: ANDROID_DEMO_CLIENT_ID,
         androidStandaloneAppClientId: ANDROID_CLIENT_ID,
         // iosClientId: YOUR_CLIENT_ID_HERE,
         scopes: ['profile', 'email'],

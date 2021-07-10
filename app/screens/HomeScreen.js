@@ -6,25 +6,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestToken } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
 import { LogoIcon } from '../components/icons/index';
-import { GoogleAuthentication, BackgroundFetcher, NotificationSender, OpenOrders } from '../components';
+import { GoogleAuthentication, BackgroundFetcher, OpenOrders } from '../components';
+import { LoadingScreen } from '.';
 
 class HomeScreen extends Component {
-  state = { name: '', photoUrl: '', openOrders: 0 };
+  state = { name: '', photoUrl: '', openOrders: 0, loading: false };
 
   componentDidMount = async () => {
     await this.getGoogleData();
     await this.props.requestToken();
-    await this.props.getOrders();
+    await this.requestOrders();
   };
 
   componentDidUpdate = async (state) => {
-    if (this.state.name) {
+    if (!this.state.name || this.state.name === null) {
       await this.getGoogleData();
     }
 
-    if (state.openOrders.length !== this.state.openOrders) {
-      await this.props.getOrders();
-      this.setState({ openOrders: state.openOrders.length });
+    if (state.openOrders.length != this.state.openOrders) {
+      await this.setState({ openOrders: state.openOrders.length });
+      await this.requestOrders();
     }
   };
 
@@ -37,6 +38,20 @@ class HomeScreen extends Component {
       console.error(e);
     }
   };
+
+  requestOrders = async () => {
+    this.setLoading(true);
+    try {
+      await this.props.getOrders();
+    } catch (e) {
+      console.error(e);
+    }
+    this.setLoading(false);
+  };
+
+  setLoading(loading) {
+    this.setState((state) => ({ ...state, loading }));
+  }
 
   logOut = async () => {
     await AsyncStorage.setItem('googleName', '');
@@ -54,6 +69,7 @@ class HomeScreen extends Component {
     ) : (
       <ScrollView style={styles.background}>
         <StatusBar barStyle={'light-content'} />
+        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
         <View style={styles.header}>
           <View style={styles.headerLeftSection}>
             <LogoIcon />

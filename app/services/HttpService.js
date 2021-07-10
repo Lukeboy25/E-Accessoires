@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { store } from '../../App';
-import { logOut, refresh } from '../store/token/actions';
+import { logOut, requestToken } from '../store/token/actions';
 import { APP_URL } from 'react-native-dotenv';
 
 class HttpService {
@@ -33,7 +33,7 @@ class HttpService {
         if (error?.response?.status === 401) {
           if (!/refresh/.test(error.config.url)) {
             console.error('Unauthorized:', error);
-            const token = await store.dispatch(refresh());
+            const token = await store.dispatch(requestToken());
             if (token) {
               return (await this.instance.request(error.config)).data;
             }

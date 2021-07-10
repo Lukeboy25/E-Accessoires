@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Order } from '.';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { getOrders } from '../store/order/actions';
+import { LoadingScreen } from '../screens';
 
 const OpenOrders = ({ openOrders, getOrders }) => {
-  const loadOrders = async () => {
-    await getOrders();
+  const [loading, setLoading] = useState(false);
+
+  const requestOrders = async () => {
+    setLoading(true);
+    try {
+      await getOrders();
+    } catch (e) {
+      console.error(e);
+    }
+    setLoading(false);
   };
 
   return (
     <View style={styles.container}>
+      <LoadingScreen show={loading} loadingMessage={'Fetching orders'} />
       <View>
         <Button
           style={styles.refreshButton}
-          onPress={() => loadOrders()}
+          onPress={() => requestOrders()}
           title='Ververs'
           accessibilityLabel='Request latest orders'
         />
