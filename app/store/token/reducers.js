@@ -1,7 +1,8 @@
-import { TOKEN, REFRESH_TOKEN } from './types';
+import { TOKEN, REFRESH_TOKEN, TOKEN_BE } from './types';
 
 const initialState = {
   token: null,
+  tokenBE: null,
   refreshToken: null,
 };
 
@@ -11,6 +12,11 @@ export function tokenReducer(state = initialState, action) {
       return {
         ...state,
         token: action.token,
+      };
+    case TOKEN_BE:
+      return {
+        ...state,
+        tokenBE: action.tokenBE,
       };
     case REFRESH_TOKEN:
       return {

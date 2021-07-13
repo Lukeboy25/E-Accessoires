@@ -1,10 +1,11 @@
 import Axios from 'axios';
 import { store } from '../../App';
-import { logOut, requestToken } from '../store/token/actions';
-import { APP_URL } from 'react-native-dotenv';
+import { logOut, requestTokenNL, requestTokenBE } from '../store/token/actions';
+import { APP_URL, DEMO_URL } from 'react-native-dotenv';
 
 class HttpService {
-  constructor() {
+  constructor(language) {
+    this.language = language;
     this.instance = Axios.create({
       baseURL: APP_URL,
       headers: {
@@ -13,7 +14,7 @@ class HttpService {
     });
     this.instance.interceptors.request.use(
       (request) => {
-        const token = store.getState().token.token;
+        const token = language === 'NL' ? store.getState().token.token : store.getState().token.tokenBE;
         request.headers = request.headers || {};
         request.headers.Authorization = `Bearer ${token}`;
         return request;
@@ -33,7 +34,8 @@ class HttpService {
         if (error?.response?.status === 401) {
           if (!/refresh/.test(error.config.url)) {
             console.error('Unauthorized:', error);
-            const token = await store.dispatch(requestToken());
+            const token =
+              language === 'NL' ? await store.dispatch(requestTokenNL()) : await store.dispatch(requestTokenBE());
             if (token) {
               return (await this.instance.request(error.config)).data;
             }
@@ -73,4 +75,4 @@ class HttpService {
   }
 }
 
-export default new HttpService();
+export default HttpService;

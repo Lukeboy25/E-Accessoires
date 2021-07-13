@@ -133,7 +133,8 @@ BackgroundFetcher.navigationOptions = {
 };
 
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  const { orders } = await HttpService.get('orders');
+  const httpService = new HttpService('NL');
+  const { orders } = await httpService.get('orders');
 
   const now = Date.now();
   console.log(`Got background fetch call at date: ${new Date(now).toString()}`);

@@ -1,30 +1,34 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, View, StatusBar, Text, Image, ScrollView, Button, RefreshControl } from 'react-native';
+import { StyleSheet, StatusBar, ScrollView, Button, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { requestToken } from '../store/token/actions';
+import { requestTokenNL, requestTokenBE } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
-import { LogoIcon } from '../components/icons/index';
-import { GoogleAuthentication, BackgroundFetcher, OpenOrders } from '../components';
+import { GoogleAuthentication, BackgroundFetcher, OpenOrders, Header } from '../components';
 import { LoadingScreen } from './index';
 
 class HomeScreen extends Component {
-  state = { name: '', photoUrl: '', openOrders: 0, loading: false };
+  state = { name: '', photoUrl: '', openOrders: 0, loading: false, languageState: 'NL' };
 
   componentDidMount = async () => {
     await this.getGoogleData();
-    await this.props.requestToken();
+    await this.props.requestTokenNL();
+    await this.props.requestTokenBE();
     await this.requestOrders();
   };
 
-  componentDidUpdate = async (state) => {
+  componentDidUpdate = async (prevProps, prevState) => {
     if (!this.state.name || this.state.name === null) {
       await this.getGoogleData();
     }
 
-    if (state.openOrders.length != this.state.openOrders) {
-      await this.setState({ openOrders: state.openOrders.length });
+    if (prevProps.openOrders.length != this.state.openOrders) {
+      await this.setState({ openOrders: prevProps.openOrders.length });
+      await this.requestOrders();
+    }
+
+    if (prevState.languageState !== this.state.languageState) {
       await this.requestOrders();
     }
   };
@@ -46,11 +50,19 @@ class HomeScreen extends Component {
   requestOrders = async () => {
     this.setLoading(true);
     try {
-      await this.props.getOrders();
+      await this.props.getOrders(this.state.languageState);
     } catch (e) {
       console.error(e);
     }
     this.setLoading(false);
+  };
+
+  switchLanguage = async () => {
+    if (this.state.languageState === 'NL') {
+      this.setState({ languageState: 'BE' });
+    } else {
+      this.setState({ languageState: 'NL' });
+    }
   };
 
   logOut = async () => {
@@ -61,7 +73,11 @@ class HomeScreen extends Component {
 
   render() {
     if (!this.props.token) {
-      this.props.requestToken();
+      this.props.requestTokenNL();
+    }
+
+    if (!this.props.tokenBE) {
+      this.props.requestTokenBE();
     }
 
     return this.state.name === '' || this.state.name === null ? (
@@ -73,14 +89,14 @@ class HomeScreen extends Component {
       >
         <StatusBar barStyle={'light-content'} />
         <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
-        <View style={styles.header}>
-          <View style={styles.headerLeftSection}>
-            <LogoIcon />
-            <Text style={styles.headerUserName}>{this.state.name}</Text>
-          </View>
-          <Image style={styles.headerImage} source={{ uri: this.state.photoUrl }} />
-        </View>
-        {this.props.openOrders && <OpenOrders openOrders={this.props.openOrders} />}
+        <Header name={this.state.name} photoUrl={this.state.photoUrl} />
+        {this.props.openOrders && (
+          <OpenOrders
+            languageState={this.state.languageState}
+            switchLanguage={this.switchLanguage}
+            openOrders={this.props.openOrders}
+          />
+        )}
 
         {this.props.openOrders.length > 0 && <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />}
         {/* {this.state.willTriggerNotification && <NotificationSender />} */}
@@ -99,33 +115,6 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 80,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#D0D0D0',
-  },
-  headerLeftSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 15,
-  },
-  headerUserName: {
-    marginLeft: 10,
-    fontWeight: 'bold',
-    width: 200,
-  },
-  headerImage: {
-    margin: 15,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-
   logOutButton: {},
 });
 
@@ -134,6 +123,7 @@ const mapStateToProps = (state) => {
 
   return {
     token: state.token.token,
+    tokenBE: state.token.tokenBE,
     openOrders: order.openOrders,
   };
 };
@@ -141,7 +131,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      requestToken,
+      requestTokenNL,
+      requestTokenBE,
       getOrders,
     },
     dispatch

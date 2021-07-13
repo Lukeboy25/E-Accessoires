@@ -8,15 +8,16 @@ export function setOpenOrders(openOrders) {
   };
 }
 
-export const getOrders = () => async (dispatch) => {
-  const { orders } = await HttpService.get('orders');
+export const getOrders = (country) => async (dispatch) => {
+  const httpService = new HttpService(country);
+  const { orders } = await httpService.get('orders');
 
-  if (!orders || orders.length == 0) {
-    return [];
+  if (!orders || orders === undefined) {
+    return setOpenOrders([]);
   }
 
   const promiseArray = orders.map(async (order) => {
-    return HttpService.get('orders/' + order.orderId);
+    return httpService.get('orders/' + order.orderId);
   });
 
   Promise.all(promiseArray).then((openOrdersArray) => {

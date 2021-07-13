@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Order } from './index';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-const OpenOrders = ({ openOrders }) => {
+const OpenOrders = ({ languageState, switchLanguage, openOrders }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>E-accessoires</Text>
@@ -12,6 +12,13 @@ const OpenOrders = ({ openOrders }) => {
           ? `${openOrders.length} openstaande bestelling:`
           : `${openOrders.length} openstaande bestellingen:`}
       </Text>
+      <TouchableOpacity onPress={switchLanguage} style={styles.languageContainer}>
+        {languageState === 'NL' ? (
+          <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
+        ) : (
+          <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
+        )}
+      </TouchableOpacity>
       <View>
         {openOrders?.map((order, index) => (
           <Order key={index} order={order} />
@@ -37,6 +44,17 @@ const styles = StyleSheet.create({
   orders: {
     paddingTop: 10,
     fontSize: 16,
+  },
+  languageContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    alignSelf: 'flex-end',
+    margin: 15,
+  },
+  languageLogo: {
+    width: 50,
+    height: 50,
   },
 });
 
