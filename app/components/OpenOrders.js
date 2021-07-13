@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Order } from '.';
+import { Order } from './index';
 import { View, Text, StyleSheet } from 'react-native';
 
 const OpenOrders = ({ openOrders }) => {

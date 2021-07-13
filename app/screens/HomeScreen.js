@@ -7,7 +7,7 @@ import { requestToken } from '../store/token/actions';
 import { getOrders } from '../store/order/actions';
 import { LogoIcon } from '../components/icons/index';
 import { GoogleAuthentication, BackgroundFetcher, OpenOrders } from '../components';
-import { LoadingScreen } from '.';
+import { LoadingScreen } from './index';
 
 class HomeScreen extends Component {
   state = { name: '', photoUrl: '', openOrders: 0, loading: false };
@@ -82,7 +82,7 @@ class HomeScreen extends Component {
         </View>
         {this.props.openOrders && <OpenOrders openOrders={this.props.openOrders} />}
 
-        <BackgroundFetcher openOrders={this.state.openOrders} />
+        {this.props.openOrders.length > 0 && <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />}
         {/* {this.state.willTriggerNotification && <NotificationSender />} */}
         <Button
           style={styles.logOutButton}

@@ -25,8 +25,8 @@ export default function BackgroundFetcher(props) {
   }, [fetchDate]);
 
   React.useEffect(() => {
-    if (props.openOrders !== currentOrderItems) {
-      setCurrentOrderItems(props.openOrders);
+    if (props.openOrdersAmount !== currentOrderItems) {
+      setCurrentOrderItems(props.openOrdersAmount);
     }
     checkForNewNotification();
   }, [currentOrderItems]);
@@ -48,14 +48,14 @@ export default function BackgroundFetcher(props) {
   const checkForNewNotification = async () => {
     const currentOpenOrders = await AsyncStorage.getItem(CURRENT_ORDER_ITEMS);
 
-    AsyncStorage.setItem(CURRENT_ORDER_ITEMS, props.openOrders.toString());
-    setCurrentOrderItems(props.openOrders);
+    AsyncStorage.setItem(CURRENT_ORDER_ITEMS, props.openOrdersAmount.toString());
+    setCurrentOrderItems(props.openOrdersAmount);
 
-    if (!props.openOrders || props.openOrders === 0) {
+    if (!props.openOrdersAmount || props.openOrdersAmount === 0) {
       return false;
     }
 
-    if (props.openOrders === parseInt(currentOpenOrders)) {
+    if (props.openOrdersAmount === parseInt(currentOpenOrders)) {
       return false;
     }
 
