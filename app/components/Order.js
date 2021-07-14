@@ -1,8 +1,27 @@
 import React from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
 import Moment from 'react-moment';
+import moment from 'moment';
 
 const Order = ({ order, index }) => {
+  const currentDate = moment(new Date());
+
+  const getCorrectColorForDeliveryDate = (date) => {
+    if (date <= currentDate.format('yyyy-MM-DD')) {
+      return styles.errorText;
+    }
+
+    if (date === currentDate.add(1, 'days').format('yyyy-MM-DD')) {
+      return styles.dangerText;
+    }
+
+    if (date >= currentDate.format('yyyy-MM-DD')) {
+      return styles.safeText;
+    }
+
+    return styles.errorText;
+  };
+
   return (
     <TouchableOpacity index={index} key={order.orderId}>
       <View style={styles.orderCard}>
@@ -37,7 +56,11 @@ const Order = ({ order, index }) => {
             </Text>
             <Text>
               Uiterste leverdatum:{' '}
-              <Moment style={styles.boldText} format='DD-MM-yyyy' element={Text}>
+              <Moment
+                style={[styles.boldText, getCorrectColorForDeliveryDate(orderItem.latestDeliveryDate)]}
+                format='DD-MM-yyyy'
+                element={Text}
+              >
                 {orderItem.latestDeliveryDate}
               </Moment>
             </Text>
@@ -74,6 +97,16 @@ const styles = StyleSheet.create({
 
   boldText: {
     fontWeight: 'bold',
+  },
+
+  safeText: {
+    color: '#2ECC71',
+  },
+  dangerText: {
+    color: '#F39C12',
+  },
+  errorText: {
+    color: '#E74C3C',
   },
 });
 
