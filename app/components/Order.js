@@ -27,23 +27,22 @@ const Order = ({ order, index }) => {
       <View style={styles.orderCard}>
         <View style={styles.orderCardHeader}>
           <Text style={styles.orderTitle}>
-            {order.orderId} - {order.customerDetails.shipmentDetails.firstName}{' '}
-            {order.customerDetails.shipmentDetails.surName}
+            {order.orderId} - {order.shipmentDetails.firstName} {order.shipmentDetails.surname}
           </Text>
           <View style={styles.orderCardLanguage}>
-            {order.customerDetails.shipmentDetails.countryCode === 'NL' && (
+            {order.shipmentDetails.countryCode === 'NL' && (
               <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
             )}
-            {order.customerDetails.shipmentDetails.countryCode === 'BE' && (
+            {order.shipmentDetails.countryCode === 'BE' && (
               <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
             )}
-            <Text> {order.customerDetails.shipmentDetails.countryCode}</Text>
+            <Text> {order.shipmentDetails.countryCode}</Text>
           </View>
         </View>
         {order.orderItems.map((orderItem) => (
           <View key={orderItem.orderId}>
             <Text>
-              {orderItem.title} - &euro;{orderItem.offerPrice}
+              {orderItem.product.title} - &euro;{orderItem.unitPrice}
             </Text>
             <Text>
               Aantal besteld: <Text style={styles.boldText}>{orderItem.quantity}</Text>
@@ -51,17 +50,17 @@ const Order = ({ order, index }) => {
             <Text>
               Besteld op:{' '}
               <Moment style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
-                {order.dateTimeOrderPlaced}
+                {order.orderPlacedDateTime}
               </Moment>
             </Text>
             <Text>
               Uiterste leverdatum:{' '}
               <Moment
-                style={[styles.boldText, getCorrectColorForDeliveryDate(orderItem.latestDeliveryDate)]}
+                style={[styles.boldText, getCorrectColorForDeliveryDate(orderItem.fulfilment.latestDeliveryDate)]}
                 format='DD-MM-yyyy'
                 element={Text}
               >
-                {orderItem.latestDeliveryDate}
+                {orderItem.fulfilment.latestDeliveryDate}
               </Moment>
             </Text>
           </View>
