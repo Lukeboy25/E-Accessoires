@@ -13,7 +13,7 @@ export const getOrders = (country) => async (dispatch) => {
   const { orders } = await httpService.get('orders');
 
   if (!orders || orders === undefined) {
-    return setOpenOrders([]);
+    return dispatch(setOpenOrders([]));
   }
 
   const promiseArray = orders.map(async (order) => {
