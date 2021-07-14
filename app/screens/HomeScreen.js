@@ -103,8 +103,8 @@ class HomeScreen extends Component {
         <Button
           style={styles.logOutButton}
           onPress={() => this.logOut()}
-          title='Log out'
-          accessibilityLabel='Log out'
+          title='Uitloggen'
+          accessibilityLabel='Uitloggen'
         />
       </ScrollView>
     );
