@@ -54,7 +54,10 @@ class HomeScreen extends Component {
     } catch (e) {
       console.error(e);
     }
-    this.setLoading(false);
+
+    setTimeout(() => {
+      this.setLoading(false);
+    }, 400);
   };
 
   switchLanguage = async () => {

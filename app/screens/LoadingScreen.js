@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityIndicator, Modal, View, Text } from 'react-native';
 
 const LoadingScreen = (props) => {
-  const { show = false, color = '#ffffff', backgroundColor = 'transparent', dimLights = 0.6, loadingMessage } = props;
+  const { show = false, color = '#ffffff', backgroundColor = 'transparent', dimLights = 0.3, loadingMessage } = props;
   return (
     <Modal transparent={true} animationType='none' visible={show}>
       <View
