@@ -22,8 +22,8 @@ const OpenOrders = ({ languageState, shipOrderItems, switchLanguage, openOrders 
         )}
       </TouchableOpacity>
       <View>
-        {openOrders?.map((order, index) => (
-          <Order key={index} shipOrderItems={shipOrderItems} order={order} />
+        {openOrders?.map((order) => (
+          <Order key={order.orderId} order={order} shipOrderItems={shipOrderItems} />
         ))}
       </View>
     </View>

@@ -1,19 +1,12 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { StyleSheet, View, Text, Button } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginWithGoogle } from '../store/login/actions';
 import * as Google from 'expo-google-app-auth';
 import { ANDROID_CLIENT_ID, ANDROID_DEMO_CLIENT_ID } from 'react-native-dotenv';
 
-const GoogleAuthentication = (props) => {
-  const storeGoogleData = async (googleData) => {
-    try {
-      await AsyncStorage.setItem('googleName', googleData.name);
-      await AsyncStorage.setItem('googlePhotoUrl', googleData.photoUrl);
-    } catch (e) {
-      console.log(error);
-    }
-  };
-
+const GoogleAuthentication = ({ loginWithGoogle }) => {
   const signIn = async () => {
     try {
       const result = await Google.logInAsync({
@@ -24,7 +17,7 @@ const GoogleAuthentication = (props) => {
       });
 
       if (result.type === 'success') {
-        storeGoogleData(result.user);
+        await loginWithGoogle(result.user);
       } else {
         console.log('cancelled');
       }
@@ -61,4 +54,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GoogleAuthentication;
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      loginWithGoogle,
+    },
+    dispatch
+  );
+
+export default connect(null, mapDispatchToProps)(GoogleAuthentication);

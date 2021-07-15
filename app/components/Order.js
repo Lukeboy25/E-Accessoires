@@ -4,7 +4,7 @@ import Moment from 'react-moment';
 import moment from 'moment';
 import { LoadingScreen } from '../screens/index';
 
-const Order = ({ order, index, shipOrderItems }) => {
+const Order = ({ order, shipOrderItems }) => {
   const [loading, setLoading] = useState(false);
   const currentDate = moment(new Date());
 
@@ -35,7 +35,7 @@ const Order = ({ order, index, shipOrderItems }) => {
   };
 
   return (
-    <View style={styles.orderCard} index={index} key={order.orderId}>
+    <View style={styles.orderCard} key={order.orderId}>
       <LoadingScreen show={loading} loadingMessage={'Sending order'} />
       <View style={styles.orderCardHeader}>
         <Text style={styles.orderTitle}>

@@ -1,28 +1,22 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, StatusBar, ScrollView, Button, RefreshControl } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native';
 import { requestTokenNL, requestTokenBE } from '../store/token/actions';
+import { checkForGoogleUser } from '../store/login/actions';
 import { getOrders } from '../store/order/actions';
-import { GoogleAuthentication, BackgroundFetcher, OpenOrders, Header } from '../components';
+import { GoogleAuthentication, OpenOrders, Header } from '../components';
 import { LoadingScreen } from './index';
 
 class HomeScreen extends Component {
-  state = { name: '', photoUrl: '', openOrders: 0, loading: false, languageState: 'NL' };
+  state = { openOrders: 0, loading: false, languageState: 'NL' };
 
   componentDidMount = async () => {
-    await this.getGoogleData();
-    await this.props.requestTokenNL();
-    await this.props.requestTokenBE();
+    await this.props.checkForGoogleUser();
     await this.requestOrders();
   };
 
   componentDidUpdate = async (prevProps, prevState) => {
-    if (!this.state.name || this.state.name === null) {
-      await this.getGoogleData();
-    }
-
     if (prevProps.openOrders.length != this.state.openOrders) {
       await this.setState({ openOrders: prevProps.openOrders.length });
       await this.requestOrders();
@@ -37,16 +31,6 @@ class HomeScreen extends Component {
     this.setState((state) => ({ ...state, loading }));
   }
 
-  getGoogleData = async () => {
-    try {
-      const googleName = await AsyncStorage.getItem('googleName');
-      const googlePhotoUrl = await AsyncStorage.getItem('googlePhotoUrl');
-      this.setState({ name: googleName, photoUrl: googlePhotoUrl });
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   requestOrders = async () => {
     this.setLoading(true);
     try {
@@ -57,7 +41,7 @@ class HomeScreen extends Component {
 
     setTimeout(() => {
       this.setLoading(false);
-    }, 400);
+    }, 350);
   };
 
   switchLanguage = async () => {
@@ -66,12 +50,6 @@ class HomeScreen extends Component {
     } else {
       this.setState({ languageState: 'NL' });
     }
-  };
-
-  logOut = async () => {
-    await AsyncStorage.setItem('googleName', '');
-    await AsyncStorage.setItem('googlePhotoUrl', '');
-    this.setState({ name: '', photoUrl: '' });
   };
 
   render() {
@@ -83,7 +61,7 @@ class HomeScreen extends Component {
       this.props.requestTokenBE();
     }
 
-    return this.state.name === '' || this.state.name === null ? (
+    return !this.props.user ? (
       <GoogleAuthentication />
     ) : (
       <ScrollView
@@ -92,7 +70,7 @@ class HomeScreen extends Component {
       >
         <StatusBar barStyle={'light-content'} />
         <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
-        <Header name={this.state.name} photoUrl={this.state.photoUrl} />
+        <Header name={this.props.user.name} photoUrl={this.props.user.photoUrl} />
         {this.props.openOrders && (
           <OpenOrders
             languageState={this.state.languageState}
@@ -100,15 +78,6 @@ class HomeScreen extends Component {
             openOrders={this.props.openOrders}
           />
         )}
-
-        {this.props.openOrders.length > 0 && <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />}
-        {/* {this.state.willTriggerNotification && <NotificationSender />} */}
-        <Button
-          style={styles.logOutButton}
-          onPress={() => this.logOut()}
-          title='Uitloggen'
-          accessibilityLabel='Uitloggen'
-        />
       </ScrollView>
     );
   }
@@ -118,16 +87,14 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  logOutButton: {},
 });
 
 const mapStateToProps = (state) => {
-  const order = state.order;
-
   return {
     token: state.token.token,
     tokenBE: state.token.tokenBE,
-    openOrders: order.openOrders,
+    openOrders: state.order.openOrders,
+    user: state.login.user,
   };
 };
 
@@ -137,6 +104,7 @@ const mapDispatchToProps = (dispatch) =>
       requestTokenNL,
       requestTokenBE,
       getOrders,
+      checkForGoogleUser,
     },
     dispatch
   );
