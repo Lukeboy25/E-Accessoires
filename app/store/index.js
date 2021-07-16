@@ -6,11 +6,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { tokenReducer } from './token/reducers';
 import { orderReducer } from './order/reducers';
 import { loginReducer } from './login/reducers';
+import { offerReducer } from './offer/reducers';
 
 const rootReducer = combineReducers({
   order: orderReducer,
   token: tokenReducer,
   login: loginReducer,
+  offer: offerReducer,
 });
 
 // Middleware: Redux Persist Config

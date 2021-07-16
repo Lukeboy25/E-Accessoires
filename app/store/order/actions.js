@@ -1,4 +1,5 @@
 import HttpService from '../../services/HttpService';
+import { checkStockForOffer } from '../offer/actions';
 import { OPEN_ORDERS } from './types';
 
 export function setOpenOrders(openOrders) {
@@ -23,18 +24,23 @@ export const getOrders = (country) => async (dispatch) => {
   });
 
   Promise.all(promiseArray).then((openOrdersArray) => {
-    return dispatch(setOpenOrders(openOrdersArray));
+    const notCancelledOrders = openOrdersArray.filter((order) => {
+      return !order.orderItems[0].cancellationRequest;
+    });
+
+    return dispatch(setOpenOrders(notCancelledOrders));
   });
 };
 
 export const MINIMUM_PRICE = 6;
 
 export const shipOrderItems = (orderItems, language) => async (dispatch) => {
+  const httpService = new HttpService(language);
+
   const orderItemIds = orderItems.map((order) => {
     return { orderItemId: order.orderItemId };
   });
 
-  const httpService = new HttpService(language);
   if (orderItems[0].unitPrice < MINIMUM_PRICE) {
     const shipmentResponse = await httpService
       .put('orders/shipment', {
@@ -49,10 +55,18 @@ export const shipOrderItems = (orderItems, language) => async (dispatch) => {
 
     await dispatch(getOrders());
 
+    orderItems.map(async (offer) => {
+      const stockWarning = await dispatch(checkStockForOffer(offer.offerId, language));
+
+      if (stockWarning) {
+        return `Let op! Voorraad van ${offer.store.productTitle} is opgeraakt!`;
+      }
+    });
+
     if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
       return 'Order succesvol verzonden';
     }
-
-    return 'Er is iets fout gegaan!';
   }
+
+  return 'Er is iets fout gegaan!';
 };
