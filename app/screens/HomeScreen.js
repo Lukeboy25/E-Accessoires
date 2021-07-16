@@ -13,6 +13,8 @@ class HomeScreen extends Component {
 
   componentDidMount = async () => {
     await this.props.checkForGoogleUser();
+    await this.props.requestTokenNL();
+    await this.props.requestTokenBE();
     await this.requestOrders();
   };
 

@@ -68,11 +68,16 @@ const Order = ({ order, shipOrderItems }) => {
           <Text>
             Uiterste leverdatum:{' '}
             <Moment
-              style={[styles.boldText, getColorForDeliveryDate(orderItem.fulfilment.latestDeliveryDate)]}
+              style={[
+                styles.boldText,
+                getColorForDeliveryDate(
+                  orderItem.fulfilment.latestDeliveryDate || orderItem.fulfilment.exactDeliveryDate
+                ),
+              ]}
               format='DD-MM-yyyy'
               element={Text}
             >
-              {orderItem.fulfilment.latestDeliveryDate}
+              {orderItem.fulfilment.latestDeliveryDate || orderItem.fulfilment.exactDeliveryDate}
             </Moment>
           </Text>
         </View>
