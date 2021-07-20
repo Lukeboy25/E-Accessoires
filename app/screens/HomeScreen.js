@@ -7,6 +7,7 @@ import { checkForGoogleUser } from '../store/login/actions';
 import { getOrders } from '../store/order/actions';
 import { GoogleAuthentication, OpenOrders, Header } from '../components';
 import { LoadingScreen } from './index';
+import Toast from 'react-native-easy-toast';
 
 class HomeScreen extends Component {
   state = { openOrders: 0, loading: false, languageState: 'NL' };
@@ -63,24 +64,36 @@ class HomeScreen extends Component {
       this.props.requestTokenBE();
     }
 
-    return !this.props.user ? (
+    return !this.props.user.name ? (
       <GoogleAuthentication />
     ) : (
-      <ScrollView
-        style={styles.background}
-        refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
-      >
-        <StatusBar barStyle={'light-content'} />
-        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
-        <Header name={this.props.user.name} photoUrl={this.props.user.photoUrl} />
-        {this.props.openOrders && (
-          <OpenOrders
-            languageState={this.state.languageState}
-            switchLanguage={this.switchLanguage}
-            openOrders={this.props.openOrders}
-          />
-        )}
-      </ScrollView>
+      <>
+        <ScrollView
+          style={styles.background}
+          refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
+        >
+          <StatusBar barStyle={'light-content'} />
+          <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
+          <Header name={this.props.user.name} photoUrl={this.props.user.photoUrl} />
+          {this.props.openOrders && (
+            <OpenOrders
+              languageState={this.state.languageState}
+              switchLanguage={this.switchLanguage}
+              openOrders={this.props.openOrders}
+              toast={this.toast}
+            />
+          )}
+        </ScrollView>
+        <Toast
+          ref={(toast) => (this.toast = toast)}
+          style={styles.defaultToast}
+          position='top'
+          positionValue={0}
+          fadeInDuration={800}
+          fadeOutDuration={1400}
+          textStyle={{ color: 'white' }}
+        />
+      </>
     );
   }
 }
@@ -88,6 +101,11 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+  },
+  defaultToast: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    margin: 8,
+    alignSelf: 'flex-end',
   },
 });
 

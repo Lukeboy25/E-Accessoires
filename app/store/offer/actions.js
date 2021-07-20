@@ -18,8 +18,6 @@ export const checkStockForOffer = (offerUuid, language) => async (dispatch) => {
   const offer = await dispatch(getOfferByUuid(offerUuid, language));
 
   if (offer.stock.correctedStock === 0) {
-    return true;
+    return `Let op! De voorraad van ${offer.store.productTitle} is opgeraakt!`;
   }
-
-  return false;
 };

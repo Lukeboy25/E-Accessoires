@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import Moment from 'react-moment';
 import moment from 'moment';
 import { LoadingScreen } from '../screens/index';
+import { shipOrderItem } from '../store/order/actions';
 
-const Order = ({ order, shipOrderItems }) => {
+const Order = ({ order, shipOrderItem, toast }) => {
   const [loading, setLoading] = useState(false);
   const currentDate = moment(new Date());
 
@@ -24,10 +27,14 @@ const Order = ({ order, shipOrderItems }) => {
     return styles.errorText;
   };
 
-  const sendShipOrderItems = async (orderItems, language) => {
+  const sendShipOrderItem = async (orderItem, language) => {
     setLoading(true);
 
-    await shipOrderItems(orderItems, language);
+    const toastResponse = await shipOrderItem(orderItem, language);
+    toast.show(
+      <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
+      2500
+    );
 
     setTimeout(() => {
       setLoading(false);
@@ -80,15 +87,15 @@ const Order = ({ order, shipOrderItems }) => {
               {orderItem.fulfilment.latestDeliveryDate || orderItem.fulfilment.exactDeliveryDate}
             </Moment>
           </Text>
+          <View key={orderItem.orderId} style={styles.shipmentButtonContainer}>
+            <Button
+              onPress={() => sendShipOrderItem(orderItem, order.shipmentDetails.countryCode)}
+              title='Verzend'
+              disabled={loading}
+            />
+          </View>
         </View>
       ))}
-      <View style={styles.shipmentButtonContainer}>
-        <Button
-          onPress={() => sendShipOrderItems(order.orderItems, order.shipmentDetails.countryCode)}
-          title='Verzend'
-          disabled={loading}
-        ></Button>
-      </View>
     </View>
   );
 };
@@ -131,9 +138,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     bottom: 0,
-    margin: 10,
     alignSelf: 'stretch',
     width: 100,
+  },
+  toastStyle: {
+    borderRadius: 5,
+    padding: 10,
+    color: 'white',
   },
 
   boldText: {
@@ -141,4 +152,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Order;
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      shipOrderItem,
+    },
+    dispatch
+  );
+
+export default connect(null, mapDispatchToProps)(Order);

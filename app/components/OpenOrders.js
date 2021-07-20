@@ -1,11 +1,9 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Order } from './index';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { shipOrderItems } from '../store/order/actions';
 
-const OpenOrders = ({ languageState, shipOrderItems, switchLanguage, openOrders }) => {
+const OpenOrders = ({ languageState, switchLanguage, openOrders, toast }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>E-accessoires</Text>
@@ -23,7 +21,7 @@ const OpenOrders = ({ languageState, shipOrderItems, switchLanguage, openOrders 
       </TouchableOpacity>
       <View>
         {openOrders?.map((order) => (
-          <Order key={order.orderId} order={order} shipOrderItems={shipOrderItems} />
+          <Order key={order.orderId} order={order} toast={toast} />
         ))}
       </View>
     </View>
@@ -67,12 +65,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      shipOrderItems,
-    },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(OpenOrders);
+export default connect(mapStateToProps, null)(OpenOrders);

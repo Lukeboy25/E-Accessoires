@@ -26,5 +26,5 @@ export const logOutGoogle = () => async (dispatch) => {
   await AsyncStorage.removeItem('googleName');
   await AsyncStorage.removeItem('googlePhotoUrl');
 
-  return dispatch(setGoogleLogin({}));
+  return await dispatch(setGoogleLogin({}));
 };

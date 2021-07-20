@@ -32,19 +32,17 @@ export const getOrders = (country) => async (dispatch) => {
   });
 };
 
-export const MINIMUM_PRICE = 6;
+const toasterMessageWithColor = (color, text) => {
+  return { color: color, text: text };
+};
 
-export const shipOrderItems = (orderItems, language) => async (dispatch) => {
+export const shipOrderItem = (orderItem, language) => async (dispatch) => {
   const httpService = new HttpService(language);
 
-  const orderItemIds = orderItems.map((order) => {
-    return { orderItemId: order.orderItemId };
-  });
-
-  if (orderItems[0].unitPrice < MINIMUM_PRICE) {
+  if (orderItem.fulfilment.method === 'FBR') {
     const shipmentResponse = await httpService
       .put('orders/shipment', {
-        orderItems: orderItemIds,
+        orderItems: { orderItemId: orderItem.orderItemId },
         transport: {
           transporterCode: 'OTHER',
         },
@@ -55,18 +53,15 @@ export const shipOrderItems = (orderItems, language) => async (dispatch) => {
 
     await dispatch(getOrders());
 
-    orderItems.map(async (offer) => {
-      const stockWarning = await dispatch(checkStockForOffer(offer.offerId, language));
-
-      if (stockWarning) {
-        return `Let op! Voorraad van ${offer.store.productTitle} is opgeraakt!`;
-      }
-    });
+    const outOfStockMessage = await dispatch(checkStockForOffer(orderItem.offer.offerId, language));
+    if (outOfStockMessage) {
+      return toasterMessageWithColor('#F39C12', outOfStockMessage);
+    }
 
     if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
-      return 'Order succesvol verzonden';
+      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
     }
   }
 
-  return 'Er is iets fout gegaan!';
+  return toasterMessageWithColor('#E74C3C', 'Er is iets fout gegaan!');
 };
