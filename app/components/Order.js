@@ -91,7 +91,7 @@ const Order = ({ order, shipOrderItem, toast }) => {
             <Button
               onPress={() => sendShipOrderItem(orderItem, order.shipmentDetails.countryCode)}
               title='Verzend'
-              disabled={loading}
+              disabled={loading || orderItem.quantity === orderItem.quantityShipped}
             />
           </View>
         </View>
