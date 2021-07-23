@@ -40,18 +40,19 @@ export const shipOrderItem = (orderItem, language) => async (dispatch) => {
   const httpService = new HttpService(language);
 
   if (orderItem.fulfilment.method === 'FBR') {
+    // VVB = Verzenden via bol.com, TNT = PostNL
+    const transporterCode = orderItem.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
+
     const shipmentResponse = await httpService
       .put('orders/shipment', {
         orderItems: { orderItemId: orderItem.orderItemId },
         transport: {
-          transporterCode: 'OTHER',
+          transporterCode: transporterCode,
         },
       })
       .catch((e) => {
         console.error(e);
       });
-
-    await dispatch(getOrders());
 
     const outOfStockMessage = await dispatch(checkStockForOffer(orderItem.offer.offerId, language));
     if (outOfStockMessage) {

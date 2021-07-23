@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { REFRESH_TOKEN, TOKEN, TOKEN_BE } from './types';
+import { TOKEN, TOKEN_BE } from './types';
 import { CLIENT_ID, CLIENT_SECRET, CLIENT_ID_BE, CLIENT_SECRET_BE } from 'react-native-dotenv';
 
 export function setTokenNL(token) {
@@ -16,32 +16,9 @@ export function setTokenBE(tokenBE) {
   };
 }
 
-export function setRefreshToken(token) {
-  return {
-    type: REFRESH_TOKEN,
-    refreshToken: token,
-  };
-}
-
 export const logOut = () => async (dispatch) => {
   dispatch(setTokenNL(null));
   dispatch(setTokenBE(null));
-  dispatch(setRefreshToken(null));
-};
-
-export const refresh = () => async (dispatch, getState) => {
-  const state = getState();
-  let refreshToken = state.token.refreshToken;
-  if (!refreshToken) return;
-  const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-  const { access_token } = await (await Axios.post('https://login.bol.com/token', refreshToken, { headers })).data;
-  if (!access_token) return;
-  dispatch(setTokenNL(access_token));
-  // if (refresh_token) {
-  //   dispatch(setRefreshToken(refresh_token));
-  // }
-  return token;
 };
 
 export const requestTokenNL = () => async (dispatch) => {
@@ -49,7 +26,6 @@ export const requestTokenNL = () => async (dispatch) => {
 
   if (!access_token) return;
   dispatch(setTokenNL(access_token));
-  dispatch(setRefreshToken(access_token));
 
   return access_token;
 };

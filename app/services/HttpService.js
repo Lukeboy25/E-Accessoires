@@ -33,20 +33,16 @@ class HttpService {
       },
       async (error) => {
         if (error?.response?.status === 401) {
-          if (!/refresh/.test(error.config.url)) {
-            console.error('Unauthorized:', error);
-            const token =
-              language === 'NL' ? await store.dispatch(requestTokenNL()) : await store.dispatch(requestTokenBE());
-            if (token) {
-              return (await this.instance.request(error.config)).data;
-            }
-            return;
-          } else {
-            store.dispatch(logOut());
-            return;
+          const token =
+            language === 'NL' ? await store.dispatch(requestTokenNL()) : await store.dispatch(requestTokenBE());
+          if (token) {
+            return await this.instance.request(error.config);
           }
+          return;
+        } else {
+          store.dispatch(logOut());
+          return;
         }
-        throw error;
       }
     );
   }

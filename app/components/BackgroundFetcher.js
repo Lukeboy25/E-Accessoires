@@ -81,7 +81,7 @@ export default function BackgroundFetcher(props) {
       await BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
     } else {
       await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-        minimumInterval: 5, // 1 minute
+        minimumInterval: 60, // 1 minute
         stopOnTerminate: false,
         startOnBoot: true,
       });
