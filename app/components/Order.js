@@ -5,22 +5,21 @@ import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import Moment from 'react-moment';
 import moment from 'moment';
 import { LoadingScreen } from '../screens/index';
-import { shipOrderItem } from '../store/order/actions';
+import { shipOrderItem, getOrders } from '../store/order/actions';
 
-const Order = ({ order, shipOrderItem, toast }) => {
+const Order = ({ order, shipOrderItem, getOrders, toast }) => {
   const [loading, setLoading] = useState(false);
-  const currentDate = moment(new Date());
 
   const getColorForDeliveryDate = (date) => {
-    if (date <= currentDate.format('yyyy-MM-DD')) {
+    if (date <= moment(new Date()).format('yyyy-MM-DD')) {
       return styles.errorText;
     }
 
-    if (date === currentDate.add(1, 'days').format('yyyy-MM-DD')) {
+    if (date === moment(new Date()).add(1, 'days').format('yyyy-MM-DD')) {
       return styles.dangerText;
     }
 
-    if (date >= currentDate.format('yyyy-MM-DD')) {
+    if (date >= moment(new Date()).format('yyyy-MM-DD')) {
       return styles.safeText;
     }
 
@@ -31,10 +30,14 @@ const Order = ({ order, shipOrderItem, toast }) => {
     setLoading(true);
 
     const toastResponse = await shipOrderItem(orderItem, language);
-    toast.show(
-      <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
-      2500
-    );
+
+    toast &&
+      toast.show(
+        <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
+        2500
+      );
+
+    await getOrders();
 
     setTimeout(() => {
       setLoading(false);
@@ -60,21 +63,22 @@ const Order = ({ order, shipOrderItem, toast }) => {
       </View>
       {order.orderItems.map((orderItem) => (
         <View key={orderItem.orderId}>
-          <Text>
+          <Text key={orderItem.orderId}>
             {orderItem.product.title} - &euro;{orderItem.unitPrice}
           </Text>
-          <Text>
+          <Text key={orderItem.orderId}>
             Aantal besteld: <Text style={styles.boldText}>{orderItem.quantity}</Text>
           </Text>
-          <Text>
+          <Text key={orderItem.orderId}>
             Besteld op:{' '}
-            <Moment style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
+            <Moment key={orderItem.orderId} style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
-          <Text>
+          <Text key={orderItem.orderId}>
             Uiterste leverdatum:{' '}
             <Moment
+              key={orderItem.orderId}
               style={[
                 styles.boldText,
                 getColorForDeliveryDate(
@@ -89,6 +93,7 @@ const Order = ({ order, shipOrderItem, toast }) => {
           </Text>
           <View key={orderItem.orderId} style={styles.shipmentButtonContainer}>
             <Button
+              key={orderItem.orderId}
               onPress={() => sendShipOrderItem(orderItem, order.shipmentDetails.countryCode)}
               title='Verzend'
               disabled={loading || orderItem.quantity === orderItem.quantityShipped}
@@ -156,6 +161,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       shipOrderItem,
+      getOrders,
     },
     dispatch
   );
