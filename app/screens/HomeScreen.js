@@ -5,7 +5,7 @@ import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native'
 import { requestTokenNL, requestTokenBE } from '../store/token/actions';
 import { checkForGoogleUser } from '../store/login/actions';
 import { getOrders } from '../store/order/actions';
-import { GoogleAuthentication, OpenOrders, Header } from '../components';
+import { GoogleAuthentication, OpenOrders, Header, BackgroundFetcher } from '../components';
 import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
 
@@ -14,8 +14,6 @@ class HomeScreen extends Component {
 
   componentDidMount = async () => {
     await this.props.checkForGoogleUser();
-    await this.props.requestTokenNL();
-    await this.props.requestTokenBE();
     await this.requestOrders();
   };
 
@@ -56,14 +54,6 @@ class HomeScreen extends Component {
   };
 
   render() {
-    if (!this.props.token) {
-      this.props.requestTokenNL();
-    }
-
-    if (!this.props.tokenBE) {
-      this.props.requestTokenBE();
-    }
-
     return !this.props.user.name ? (
       <GoogleAuthentication />
     ) : (
@@ -83,6 +73,7 @@ class HomeScreen extends Component {
               toast={this.toast}
             />
           )}
+          <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />
         </ScrollView>
         <Toast
           ref={(toast) => (this.toast = toast)}
@@ -121,8 +112,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      requestTokenNL,
-      requestTokenBE,
+      // requestTokenNL,
+      // requestTokenBE,
       getOrders,
       checkForGoogleUser,
     },

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { StyleSheet, StatusBar, ScrollView, Button, RefreshControl } from 'react-native';
 import { logOutGoogle } from '../store/login/actions';
-import { Header, BackgroundFetcher } from '../components';
+import { Header } from '../components';
 import { LoadingScreen } from './index';
 
 class SettingsScreen extends Component {
@@ -28,7 +28,6 @@ class SettingsScreen extends Component {
         <StatusBar barStyle={'light-content'} />
         <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
         <Header name={this.props.user.name} photoUrl={this.props.user.photoUrl} />
-        <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />
         {this.props.user.name !== undefined && (
           <Button
             style={styles.logOutButton}
