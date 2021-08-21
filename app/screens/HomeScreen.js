@@ -13,6 +13,8 @@ class HomeScreen extends Component {
   state = { openOrders: 0, loading: false, languageState: 'NL' };
 
   componentDidMount = async () => {
+    await this.props.requestTokenNL();
+    await this.props.requestTokenBE();
     await this.props.checkForGoogleUser();
     await this.requestOrders();
   };
@@ -112,8 +114,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      // requestTokenNL,
-      // requestTokenBE,
+      requestTokenNL,
+      requestTokenBE,
       getOrders,
       checkForGoogleUser,
     },
