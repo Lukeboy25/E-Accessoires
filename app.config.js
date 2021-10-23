@@ -14,25 +14,23 @@ export default {
       fallbackToCacheTimeout: 0,
     },
     assetBundlePatterns: ['**/*'],
-    sdkVersion: '40.0.0',
-    platforms: [
-      {
-        ios: {
-          infoPlist: {
-            UIBackgroundModes: ['location', 'fetch'],
-          },
-          supportsTablet: true,
-        },
-        android: {
-          package: 'eaccessoires.app',
-          googleServicesFile: './google-services.json',
-          adaptiveIcon: {
-            foregroundImage: './app/assets/logo-small-space-around.png',
-            backgroundColor: '#FFFFFF',
-          },
-        },
+    sdkVersion: '42.0.0',
+    platforms: ['ios', 'android'],
+    ios: {
+      infoPlist: {
+        UIBackgroundModes: ['location', 'fetch'],
       },
-    ],
+      supportsTablet: true,
+    },
+    android: {
+      package: 'eaccessoires.app',
+      googleServicesFile: './google-services.json',
+      adaptiveIcon: {
+        foregroundImage: './app/assets/logo-small-space-around.png',
+        backgroundColor: '#FFFFFF',
+      },
+      permissions: [],
+    },
   },
   extra: {},
 };
