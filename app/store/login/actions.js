@@ -17,13 +17,15 @@ export const checkForGoogleUser = () => async (dispatch) => {
 
 export const loginWithGoogle = (googleUser) => async (dispatch) => {
   await AsyncStorage.setItem('googleName', googleUser.name);
+  await AsyncStorage.setItem('googleEmail', googleUser.email);
   await AsyncStorage.setItem('googlePhotoUrl', googleUser.photoUrl);
 
-  return dispatch(setGoogleLogin({ name: googleUser.name, photoUrl: googleUser.photoUrl }));
+  return dispatch(setGoogleLogin({ name: googleUser.name, email: googleUser.email, photoUrl: googleUser.photoUrl }));
 };
 
 export const logOutGoogle = () => async (dispatch) => {
   await AsyncStorage.removeItem('googleName');
+  await AsyncStorage.removeItem('googleEmail');
   await AsyncStorage.removeItem('googlePhotoUrl');
 
   return await dispatch(setGoogleLogin({}));

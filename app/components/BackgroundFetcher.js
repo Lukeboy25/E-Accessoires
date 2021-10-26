@@ -29,7 +29,7 @@ export default function BackgroundFetcher(props) {
       setCurrentOrderItems(props.openOrdersAmount);
     }
     checkForNewNotification();
-  }, [currentOrderItems]);
+  }, [props.openOrdersAmount]);
 
   const onFocus = React.useCallback(() => {
     refreshLastFetchDateAsync();

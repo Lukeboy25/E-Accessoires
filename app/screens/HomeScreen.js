@@ -10,21 +10,16 @@ import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
 
 class HomeScreen extends Component {
-  state = { openOrders: 0, loading: false, languageState: 'NL' };
+  state = { loading: false, languageState: 'NL' };
 
   componentDidMount = async () => {
-    await this.props.requestTokenNL();
-    await this.props.requestTokenBE();
-    await this.props.checkForGoogleUser();
+    this.setLoading(true);
+  
+    this.props.checkForGoogleUser();
     await this.requestOrders();
   };
 
   componentDidUpdate = async (prevProps, prevState) => {
-    if (prevProps.openOrders.length != this.state.openOrders) {
-      await this.setState({ openOrders: prevProps.openOrders.length });
-      await this.requestOrders();
-    }
-
     if (prevState.languageState !== this.state.languageState) {
       await this.requestOrders();
     }
@@ -37,6 +32,12 @@ class HomeScreen extends Component {
   requestOrders = async () => {
     this.setLoading(true);
     try {
+      if (this.state.languageState == 'NL') {
+        await this.props.requestTokenNL();
+      } else {
+        await this.props.requestTokenBE();
+      }
+
       await this.props.getOrders(this.state.languageState);
     } catch (e) {
       console.error(e);
@@ -56,38 +57,39 @@ class HomeScreen extends Component {
   };
 
   render() {
-    return !this.props.user.name ? (
-      <GoogleAuthentication />
-    ) : (
-      <>
-        <ScrollView
-          style={styles.background}
-          refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
-        >
-          <StatusBar barStyle={'light-content'} />
-          <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
-          <Header name={this.props.user.name} photoUrl={this.props.user.photoUrl} />
-          {this.props.openOrders && (
-            <OpenOrders
-              languageState={this.state.languageState}
-              switchLanguage={this.switchLanguage}
-              openOrders={this.props.openOrders}
-              toast={this.toast}
-            />
-          )}
-          <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />
-        </ScrollView>
-        <Toast
-          ref={(toast) => (this.toast = toast)}
-          style={styles.defaultToast}
-          position='top'
-          positionValue={0}
-          fadeInDuration={800}
-          fadeOutDuration={1400}
-          textStyle={{ color: 'white' }}
-        />
-      </>
-    );
+    if (!this.props.user.name) {
+      return <GoogleAuthentication />;
+    }
+
+    return (
+    <>
+      <ScrollView
+        style={styles.background}
+        refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
+      >
+        <StatusBar barStyle={'light-content'} />
+        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
+        <Header />
+        {this.props.openOrders && (
+          <OpenOrders
+            languageState={this.state.languageState}
+            switchLanguage={this.switchLanguage}
+            openOrders={this.props.openOrders}
+            toast={this.toast}
+          />
+        )}
+        <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />
+      </ScrollView>
+      <Toast
+        ref={(toast) => (this.toast = toast)}
+        style={styles.defaultToast}
+        position='top'
+        positionValue={0}
+        fadeInDuration={800}
+        fadeOutDuration={1400}
+        textStyle={{ color: 'white' }}
+      />
+    </>);
   }
 }
 

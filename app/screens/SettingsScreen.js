@@ -27,7 +27,7 @@ class SettingsScreen extends Component {
       >
         <StatusBar barStyle={'light-content'} />
         <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
-        <Header name={this.props.user.name} photoUrl={this.props.user.photoUrl} />
+        <Header />
         {this.props.user.name !== undefined && (
           <Button
             style={styles.logOutButton}

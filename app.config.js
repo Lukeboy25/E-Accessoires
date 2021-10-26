@@ -2,11 +2,11 @@ export default {
   expo: {
     name: 'E-accessoires',
     slug: 'e-accessoires-app',
-    version: '2.0.12',
+    version: '2.0.13',
     orientation: 'portrait',
-    icon: './app/assets/logo-small.png',
+    icon: './app/assets/logo-new-middle.png',
     splash: {
-      image: './app/assets/logo-splash.png',
+      image: './app/assets/logo-new-space-around.png',
       resizeMode: 'contain',
       backgroundColor: '#ffffff',
     },
@@ -27,7 +27,7 @@ export default {
           package: 'eaccessoires.app',
           googleServicesFile: './google-services.json',
           adaptiveIcon: {
-            foregroundImage: './app/assets/logo-small-space-around.png',
+            foregroundImage: './app/assets/logo-new-space-around.png',
             backgroundColor: '#FFFFFF',
           },
         },

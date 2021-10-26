@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { LogoIcon } from '../components/icons/index';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Header = ({ name, photoUrl }) => {
+const Header = () => {
+  const [name, setName] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('');
+
+  AsyncStorage.getItem('googleName').then((value) => {
+    setName(value);
+  });
+
+  AsyncStorage.getItem('googlePhotoUrl').then((url) => {
+    setPhotoUrl(url);
+  })
+
   return (
     <View style={styles.header}>
       <View style={styles.headerLeftSection}>
