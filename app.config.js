@@ -26,7 +26,7 @@ export default {
       package: 'eaccessoires.app',
       googleServicesFile: './google-services.json',
       adaptiveIcon: {
-        foregroundImage: './app/assets/logo-small-space-around.png',
+        foregroundImage: './app/assets/logo-new-space-around.png',
         backgroundColor: '#FFFFFF',
       },
       permissions: [],
