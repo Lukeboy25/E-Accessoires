@@ -23,9 +23,7 @@ export default {
       supportsTablet: true,
     },
     android: {
-      defaultConfig:{
-        versionCode: 2
-      },
+      versionCode: 2,
       package: 'eaccessoires.app',
       googleServicesFile: './google-services.json',
       adaptiveIcon: {
