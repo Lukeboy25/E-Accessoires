@@ -61,6 +61,10 @@ class HomeScreen extends Component {
       return <GoogleAuthentication />;
     }
 
+    if (this.props.user.email !== "luke25spaans@gmail.com" || this.props.user.email !== "31nmolenaar@gmail.com") {
+      return <GoogleAuthentication />;
+    }
+
     return (
     <>
       <ScrollView

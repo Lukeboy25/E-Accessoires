@@ -10,9 +10,10 @@ export function setGoogleLogin(user) {
 
 export const checkForGoogleUser = () => async (dispatch) => {
   const name = await AsyncStorage.getItem('googleName');
+  const email = await AsyncStorage.getItem('googleEmail');
   const photoUrl = await AsyncStorage.getItem('googlePhotoUrl');
 
-  return dispatch(setGoogleLogin({ name, photoUrl }));
+  return dispatch(setGoogleLogin({ name, email, photoUrl }));
 };
 
 export const loginWithGoogle = (googleUser) => async (dispatch) => {
