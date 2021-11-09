@@ -61,7 +61,7 @@ class HomeScreen extends Component {
       return <GoogleAuthentication />;
     }
 
-    if (this.props.user.email !== "luke25spaans@gmail.com" || this.props.user.email !== "31nmolenaar@gmail.com") {
+    if (this.props.user.email !== "luke25spaans@gmail.com" && this.props.user.email !== "31nmolenaar@gmail.com") {
       return <GoogleAuthentication />;
     }
 
@@ -82,7 +82,7 @@ class HomeScreen extends Component {
             toast={this.toast}
           />
         )}
-        <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} />
+        {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
       </ScrollView>
       <Toast
         ref={(toast) => (this.toast = toast)}

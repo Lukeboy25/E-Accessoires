@@ -115,7 +115,8 @@ export default function BackgroundFetcher(props) {
       </View>
       {renderFetchTime()}
       <Text>
-        Orders: {currentOrderItems} {willTriggerNotification && <NotificationSender />}
+        Orders: {currentOrderItems} 
+        {willTriggerNotification && <NotificationSender />}
       </Text>
       <View style={styles.buttonContainer}>
         <Button
