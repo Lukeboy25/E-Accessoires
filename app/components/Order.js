@@ -3,28 +3,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import Moment from 'react-moment';
-import moment from 'moment';
 import { LoadingScreen } from '../screens/index';
 import { shipOrderItem, getOrders } from '../store/order/actions';
+import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 
 const Order = ({ order, shipOrderItem, getOrders, toast }) => {
   const [loading, setLoading] = useState(false);
-
-  const getColorForDeliveryDate = (date) => {
-    if (date <= moment(new Date()).format('yyyy-MM-DD')) {
-      return styles.errorText;
-    }
-
-    if (date === moment(new Date()).add(1, 'days').format('yyyy-MM-DD')) {
-      return styles.dangerText;
-    }
-
-    if (date >= moment(new Date()).format('yyyy-MM-DD')) {
-      return styles.safeText;
-    }
-
-    return styles.errorText;
-  };
 
   const sendShipOrderItem = async (orderItem, language) => {
     setLoading(true);
@@ -127,16 +111,6 @@ const styles = StyleSheet.create({
   languageLogo: {
     width: 20,
     height: 20,
-  },
-
-  safeText: {
-    color: '#2ECC71',
-  },
-  dangerText: {
-    color: '#F39C12',
-  },
-  errorText: {
-    color: '#E74C3C',
   },
 
   shipmentButtonContainer: {

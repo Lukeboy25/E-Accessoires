@@ -2,7 +2,7 @@ export default {
   expo: {
     name: 'E-accessoires',
     slug: 'e-accessoires-app',
-    version: '2.0.13',
+    version: '2.0.14',
     orientation: 'portrait',
     icon: './app/assets/logo-new-middle.png',
     splash: {
