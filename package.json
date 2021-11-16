@@ -5,7 +5,25 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest --verbose --coverage",
+    "test:update": "jest --verbose --coverage --updateSnapshot",
+    "test:watch": "jest --verbose --watch"
+  },
+  "jest": {
+    "preset": "react-native",
+    "cacheDirectory": "./cache",
+    "coveragePathIgnorePatterns": [
+      "./app/utils/vendor"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 75
+      }
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!react-native|react-clone-referenced-element|react-navigation)"
+    ]
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
@@ -22,6 +40,7 @@
     "expo-notifications": "~0.12.3",
     "expo-status-bar": "~1.0.4",
     "expo-task-manager": "~9.2.2",
+    "jest": "^27.3.1",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",

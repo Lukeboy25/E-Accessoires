@@ -66,7 +66,7 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
               style={[
                 styles.boldText,
                 getColorForDeliveryDate(
-                  orderItem.fulfilment.latestDeliveryDate || orderItem.fulfilment.exactDeliveryDate
+                  orderItem.fulfilment.latestDeliveryDate || orderItem.fulfilment.exactDeliveryDate, new Date()
                 ),
               ]}
               format='DD-MM-yyyy'
