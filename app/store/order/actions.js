@@ -36,35 +36,33 @@ const toasterMessageWithColor = (color, text) => {
   return { color: color, text: text };
 };
 
-export const shipOrderItem = (orderItem, language) => async (dispatch) => {
+export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
   const httpService = new HttpService(language);
 
-  if (orderItem.fulfilment.method === 'FBR') {
+  if (orderdetail.fulfilment.method === 'FBR') {
     // VVB = Verzenden via bol.com, TNT = PostNL
-    const transporterCode = orderItem.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
+    const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
 
-    // const shipmentResponse = await httpService
-    //   .put('orders/shipment', {
-    //     orderItems: { orderItemId: orderItem.orderItemId },
-    //     transport: {
-    //       transporterCode: transporterCode,
-    //     },
-    //   })
-    //   .catch((e) => {
-    //     console.error(e);
-    //   });
+    const shipmentResponse = await httpService
+      .put('orders/shipment', {
+        orderItems: { orderItemId: orderdetail.orderItemId },
+        transport: {
+          transporterCode: transporterCode,
+        },
+      })
+      .catch((e) => {
+        console.error(e);
+      });
 
-    const outOfStockMessage = await dispatch(checkStockForOffer(orderItem.offer.offerId, language));
-
-    console.log(orderItem);
+    const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
 
     if (outOfStockMessage) {
       return toasterMessageWithColor('#F39C12', outOfStockMessage);
     }
 
-    // if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
-    //   return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-    // }
+    if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
+      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    }
   }
 
   return toasterMessageWithColor('#E74C3C', 'Er is iets fout gegaan!');

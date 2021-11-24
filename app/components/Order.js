@@ -6,14 +6,17 @@ import Moment from 'react-moment';
 import { LoadingScreen } from '../screens/index';
 import { shipOrderItem, getOrders } from '../store/order/actions';
 import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
+import { printShipmentLabel } from '../helpers/printShipmentLabel';
 
 const Order = ({ order, shipOrderItem, getOrders, toast }) => {
   const [loading, setLoading] = useState(false);
 
-  const sendShipOrderItem = async (orderItem, language) => {
+  const sendShipOrderItem = async (order, orderDetail, language) => {
     setLoading(true);
 
-    const toastResponse = await shipOrderItem(orderItem, language);
+    const toastResponse = await shipOrderItem(orderDetail, language);
+
+    await printShipmentLabel(order);
 
     toast &&
       toast.show(
@@ -45,42 +48,42 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
           <Text> {order.shipmentDetails.countryCode}</Text>
         </View>
       </View>
-      {order.orderItems.map((orderItem) => (
-        <View key={orderItem.orderId}>
-          <Text key={orderItem.orderId}>
-            {orderItem.product.title} - &euro;{orderItem.unitPrice}
+      {order.orderItems.map((orderDetail) => (
+        <View key={orderDetail.orderId}>
+          <Text key={orderDetail.orderId}>
+            {orderDetail.product.title} - &euro;{orderDetail.unitPrice}
           </Text>
-          <Text key={orderItem.orderId}>
-            Aantal besteld: <Text style={styles.boldText}>{orderItem.quantity}</Text>
+          <Text key={orderDetail.orderId}>
+            Aantal besteld: <Text style={styles.boldText}>{orderDetail.quantity}</Text>
           </Text>
-          <Text key={orderItem.orderId}>
+          <Text key={orderDetail.orderId}>
             Besteld op:{' '}
-            <Moment key={orderItem.orderId} style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
+            <Moment key={orderDetail.orderId} style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
-          <Text key={orderItem.orderId}>
+          <Text key={orderDetail.orderId}>
             Uiterste leverdatum:{' '}
             <Moment
-              key={orderItem.orderId}
+              key={orderDetail.orderId}
               style={[
                 styles.boldText,
                 getColorForDeliveryDate(
-                  orderItem.fulfilment.latestDeliveryDate || orderItem.fulfilment.exactDeliveryDate, new Date()
+                  orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()
                 ),
               ]}
               format='DD-MM-yyyy'
               element={Text}
             >
-              {orderItem.fulfilment.latestDeliveryDate || orderItem.fulfilment.exactDeliveryDate}
+              {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
             </Moment>
           </Text>
-          <View key={orderItem.orderId} style={styles.shipmentButtonContainer}>
+          <View key={orderDetail.orderId} style={styles.shipmentButtonContainer}>
             <Button
-              key={orderItem.orderId}
-              onPress={() => sendShipOrderItem(orderItem, order.shipmentDetails.countryCode)}
+              key={orderDetail.orderId}
+              onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
               title='Verzend'
-              disabled={loading || orderItem.quantity === orderItem.quantityShipped}
+              disabled={loading || orderDetail.quantity === orderDetail.quantityShipped}
             />
           </View>
         </View>
