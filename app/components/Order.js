@@ -8,6 +8,8 @@ import { shipOrderItem, getOrders } from '../store/order/actions';
 import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../helpers/printShipmentLabel';
 
+export const orderClosed = (orderDetail) => orderDetail.quantity === orderDetail.quantityShipped;
+
 const Order = ({ order, shipOrderItem, getOrders, toast }) => {
   const [loading, setLoading] = useState(false);
 
@@ -62,29 +64,41 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
-          <Text key={orderDetail.orderId}>
-            Uiterste leverdatum:{' '}
-            <Moment
-              key={orderDetail.orderId}
-              style={[
-                styles.boldText,
-                getColorForDeliveryDate(
-                  orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()
-                ),
-              ]}
-              format='DD-MM-yyyy'
-              element={Text}
-            >
-              {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
-            </Moment>
-          </Text>
+          {!orderClosed(orderDetail) && 
+            <Text key={orderDetail.orderId}>
+              Uiterste leverdatum:{' '}
+              <Moment
+                key={orderDetail.orderId}
+                style={[
+                  styles.boldText,
+                  getColorForDeliveryDate(
+                    orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()
+                  ),
+                ]}
+                format='DD-MM-yyyy'
+                element={Text}
+              >
+                {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
+              </Moment>
+            </Text>
+          }
           <View key={orderDetail.orderId} style={styles.shipmentButtonContainer}>
-            <Button
-              key={orderDetail.orderId}
-              onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
-              title='Verzend'
-              disabled={loading || orderDetail.quantity === orderDetail.quantityShipped}
-            />
+            {!orderClosed(orderDetail) && 
+              <Button
+                key={orderDetail.orderId}
+                onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
+                title='Verzend'
+                disabled={loading}
+              />
+            }
+            {orderClosed(orderDetail) && 
+              <Button
+                key={orderDetail.orderId}
+                onPress={() => printShipmentLabel(order)}
+                title='Label'
+                disabled={loading}
+              />
+            }
           </View>
         </View>
       ))}
