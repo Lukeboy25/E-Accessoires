@@ -21,7 +21,7 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
         2500
       );
 
-    await getOrders();
+    await getOrders(language);
 
     setTimeout(() => {
       setLoading(false);
