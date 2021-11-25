@@ -39,7 +39,6 @@ export const getOrders = (language) => async (dispatch) => {
   });
 };
 
-
 export const getClosedOrders = (language) => async (dispatch) => {
   const params = {'status': 'ALL'};
 
@@ -52,18 +51,23 @@ export const getClosedOrders = (language) => async (dispatch) => {
     return dispatch(setClosedOrders([]));
   }
 
-  const promiseArray = orders.map(async (order) => {
+  const slicedArray = orders.slice(0, 30);
+  const promiseArray = slicedArray.map(async (order) => {
     return await httpService.get('orders/' + order.orderId);
   });
 
   Promise.all(promiseArray).then((closedOrdersArray) => {
-    const onlyClosedOrders = closedOrdersArray.filter((order) => {
-      return order.orderItems[0] && order.orderItems[0].quantityShipped;
+    const onlyClosedOrders =  closedOrdersArray.filter((order) => {
+      if (!order || !order.orderItems[0]) {
+        return;
+      }
+
+      return order.orderItems[0].quantityShipped;
     });
 
-    console.log(onlyClosedOrders.length);
-
     return dispatch(setClosedOrders(onlyClosedOrders));
+  }).catch((error) => { 
+    console.log(error.message);
   });
 };
 
@@ -78,16 +82,16 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
     // VVB = Verzenden via bol.com, TNT = PostNL
     const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
 
-    // const shipmentResponse = await httpService
-    //   .put('orders/shipment', {
-    //     orderItems: { orderItemId: orderdetail.orderItemId },
-    //     transport: {
-    //       transporterCode: transporterCode,
-    //     },
-    //   })
-    //   .catch((e) => {
-    //     console.error(e);
-    //   });
+    const shipmentResponse = await httpService
+      .put('orders/shipment', {
+        orderItems: { orderItemId: orderdetail.orderItemId },
+        transport: {
+          transporterCode: transporterCode,
+        },
+      })
+      .catch((e) => {
+        console.error(e);
+      });
 
     const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
 
@@ -95,9 +99,9 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
       return toasterMessageWithColor('#F39C12', outOfStockMessage);
     }
 
-    // if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
-    //   return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-    // }
+    if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
+      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    }
   }
 
   return toasterMessageWithColor('#E74C3C', 'Er is iets fout gegaan!');

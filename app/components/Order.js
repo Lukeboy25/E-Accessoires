@@ -7,10 +7,9 @@ import { LoadingScreen } from '../screens/index';
 import { shipOrderItem, getOrders } from '../store/order/actions';
 import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../helpers/printShipmentLabel';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-export const orderClosed = (orderDetail) => orderDetail.quantity === orderDetail.quantityShipped;
-
-const Order = ({ order, shipOrderItem, getOrders, toast }) => {
+const Order = ({ order, shipOrderItem, getOrders, toast, isClosedOrder }) => {
   const [loading, setLoading] = useState(false);
 
   const sendShipOrderItem = async (order, orderDetail, language) => {
@@ -34,7 +33,7 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
   };
 
   return (
-    <View style={styles.orderCard} key={order.orderId}>
+    <View style={[styles.orderCard, isClosedOrder ? styles.orderCardDark : styles.orderCard ]} key={order.orderId}>
       <LoadingScreen show={loading} loadingMessage={'Sending order'} />
       <View style={styles.orderCardHeader}>
         <Text style={styles.orderTitle}>
@@ -64,7 +63,7 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
-          {!orderClosed(orderDetail) && 
+          {!isClosedOrder && 
             <Text key={orderDetail.orderId}>
               Uiterste leverdatum:{' '}
               <Moment
@@ -83,7 +82,7 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
             </Text>
           }
           <View key={orderDetail.orderId} style={styles.shipmentButtonContainer}>
-            {!orderClosed(orderDetail) && 
+            {!isClosedOrder && 
               <Button
                 key={orderDetail.orderId}
                 onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
@@ -91,13 +90,16 @@ const Order = ({ order, shipOrderItem, getOrders, toast }) => {
                 disabled={loading}
               />
             }
-            {orderClosed(orderDetail) && 
-              <Button
+            {isClosedOrder && 
+               <MaterialIcons 
                 key={orderDetail.orderId}
-                onPress={() => printShipmentLabel(order)}
-                title='Label'
-                disabled={loading}
-              />
+                style={styles.printIcon}
+                disabled={loading} 
+                onPress={() => printShipmentLabel(order)} 
+                name='print' 
+                color={'grey'} 
+                size={30} 
+               />
             }
           </View>
         </View>
@@ -112,6 +114,10 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#fff',
     borderRadius: 10,
+  },
+  orderCardDark: {
+    backgroundColor: '#d6d6d6',
+    color: 'white',
   },
   orderCardHeader: {
     flexDirection: 'row',
@@ -136,6 +142,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignSelf: 'stretch',
     width: 100,
+  },
+  printIcon: {
+    alignSelf: 'flex-end',
   },
   toastStyle: {
     borderRadius: 5,

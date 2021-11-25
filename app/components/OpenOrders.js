@@ -9,8 +9,8 @@ const OpenOrders = ({ languageState, switchLanguage, openOrders, toast }) => {
       <Text style={styles.title}>E-accessoires</Text>
       <Text style={styles.orders}>
         {openOrders.length == 1
-          ? `${openOrders.length} openstaande bestelling:`
-          : `${openOrders.length} openstaande bestellingen:`}
+          ? `${openOrders.length} openstaande bestelling`
+          : `${openOrders.length} openstaande bestellingen`}
       </Text>
       <TouchableOpacity onPress={switchLanguage} style={styles.languageContainer}>
         {languageState === 'NL' ? (

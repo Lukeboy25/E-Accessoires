@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import { Order } from './index';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
+export const IS_CLOSED_ORDER = true;
+
 const ClosedOrders = ({ languageState, switchLanguage, closedOrders, toast }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>E-accessoires</Text>
       <Text style={styles.orders}>
-        {closedOrders.length} verzonden bestellingen:
+        Afgeronde bestellingen
       </Text>
       <TouchableOpacity onPress={switchLanguage} style={styles.languageContainer}>
         {languageState === 'NL' ? (
@@ -19,7 +21,7 @@ const ClosedOrders = ({ languageState, switchLanguage, closedOrders, toast }) =>
       </TouchableOpacity>
       <View>
         {closedOrders?.map((order) => (
-          <Order key={order.orderId} order={order} toast={toast} />
+          <Order key={order.orderId} order={order} toast={toast} isClosedOrder={IS_CLOSED_ORDER} />
         ))}
       </View>
     </View>
