@@ -19,13 +19,13 @@ const Order = ({ order, shipOrderItem, getOrders, toast, isClosedOrder }) => {
 
     await printShipmentLabel(order);
 
+    await getOrders(language);
+
     toast &&
       toast.show(
         <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
         2500
       );
-
-    await getOrders(language);
 
     setTimeout(() => {
       setLoading(false);

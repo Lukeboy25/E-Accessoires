@@ -1,9 +1,10 @@
 import * as Print from 'expo-print';
+import { capitalize, capitalizeLastName } from './capitalize';
 
 export const printShipmentLabel = async (order) => {
     const shipment = order.shipmentDetails;
 
-    const name = `${shipment.firstName} ${shipment.surname}`;
+    const name = `${capitalize(shipment.firstName)} ${capitalizeLastName(shipment.surname)}`;
     const address = `${shipment.streetName} ${shipment.houseNumber}`
     const city = `${shipment.zipCode} ${shipment.city}`;
     const country = shipment.countryCode === 'NL' ? 'Nederland' : 'België';
@@ -14,9 +15,14 @@ export const printShipmentLabel = async (order) => {
         <html>
           <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+            <style> 
+              @page { 
+                margin: 5px;
+              } 
+            </style>
           </head>
-          <body style="text-align: left;">
-            <p style="font-size: 20px; font-family: Helvetica Neue; font-weight: normal;">
+          <body style="text-align: left; width: 100vw; width: 100vw;">
+            <p style="font-size: 7vw; font-family: Helvetica Neue; font-weight: normal;">
               ${name} <br />
               ${address} <br />
               ${city} <br />
@@ -26,5 +32,6 @@ export const printShipmentLabel = async (order) => {
           </body>
         </html>
       `,
-    });
+      orientation: Print.Orientation.landscape
+    },);
   }
