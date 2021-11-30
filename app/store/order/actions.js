@@ -16,10 +16,10 @@ export function setClosedOrders(closedOrders) {
   };
 }
 
-export const getOrders = (language) => async (dispatch) => {
+export const getOrders = (language, pageNumber) => async (dispatch) => {
   const httpService = new HttpService(language);
-  const { orders } = await httpService.get('orders').catch((e) => {
-    console.error(e);
+  const { orders } = await httpService.get(`orders?page=${pageNumber}`).catch((e) => {
+    console.error('error fetching orders:', e);
   });
 
   if (!orders || orders === undefined) {
@@ -27,7 +27,7 @@ export const getOrders = (language) => async (dispatch) => {
   }
 
   const promiseArray = orders.map(async (order) => {
-    return httpService.get('orders/' + order.orderId);
+    return await httpService.get('orders/' + order.orderId);
   });
 
   Promise.all(promiseArray).then((openOrdersArray) => {
@@ -44,30 +44,28 @@ export const getClosedOrders = (language) => async (dispatch) => {
 
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders', { params }).catch((e) => {
-    console.error(e);
+    console.error('error while fetching orders:', e);
   });
 
   if (!orders || orders === undefined) {
     return dispatch(setClosedOrders([]));
   }
 
-  const slicedArray = orders.slice(0, 30);
+  const slicedArray = orders.slice(0, 20);
   const promiseArray = slicedArray.map(async (order) => {
     return await httpService.get('orders/' + order.orderId);
   });
 
   Promise.all(promiseArray).then((closedOrdersArray) => {
-    const onlyClosedOrders =  closedOrdersArray.filter((order) => {
-      if (!order || !order.orderItems[0]) {
-        return;
+    const onlyClosedOrders = closedOrdersArray.filter((order) => {
+      if (order && order.orderItems[0]) {
+        return order.orderItems[0].quantityShipped;
       }
-
-      return order.orderItems[0].quantityShipped;
     });
 
     return dispatch(setClosedOrders(onlyClosedOrders));
   }).catch((error) => { 
-    console.log(error.message);
+    console.error('error filtering:', error);
   });
 };
 

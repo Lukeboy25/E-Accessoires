@@ -5,7 +5,7 @@ import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native'
 import { requestTokenNL, requestTokenBE } from '../store/token/actions';
 import { checkForGoogleUser } from '../store/login/actions';
 import { getOrders } from '../store/order/actions';
-import { GoogleAuthentication, OpenOrders, Header, BackgroundFetcher } from '../components';
+import { GoogleAuthentication, OpenOrders, Header, Pagination } from '../components';
 import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
 
@@ -38,7 +38,7 @@ class HomeScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getOrders(this.state.languageState);
+      await this.props.getOrders(this.state.languageState, 1);
     } catch (e) {
       console.error(e);
     }
@@ -83,6 +83,10 @@ class HomeScreen extends Component {
           />
         )}
         {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
+        <Pagination 
+          onPreviousPage={() => this.requestOrders}
+          onNextPage={() => this.requestOrders}
+        />
       </ScrollView>
       <Toast
         ref={(toast) => (this.toast = toast)}
