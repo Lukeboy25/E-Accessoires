@@ -5,6 +5,7 @@ import NotificationSender from './NotificationSender';
 import OpenOrders from './OpenOrders';
 import ClosedOrders from './ClosedOrders';
 import Header from './Header';
+import Pagination from './Pagination';
 
 export { 
     Order, 
@@ -13,5 +14,6 @@ export {
     NotificationSender,
     OpenOrders,
     ClosedOrders,
-    Header
+    Header,
+    Pagination,
 };

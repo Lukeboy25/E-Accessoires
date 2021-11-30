@@ -9,7 +9,13 @@ import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../helpers/printShipmentLabel';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const Order = ({ order, shipOrderItem, getOrders, toast, isClosedOrder }) => {
+const Order = ({ 
+  order, 
+  shipOrderItem, 
+  getOrders, 
+  toast, 
+  isClosedOrder,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const sendShipOrderItem = async (order, orderDetail, language) => {
@@ -19,7 +25,7 @@ const Order = ({ order, shipOrderItem, getOrders, toast, isClosedOrder }) => {
 
     await printShipmentLabel(order);
 
-    await getOrders(language);
+    await getOrders(language, 1);
 
     toast &&
       toast.show(
@@ -50,24 +56,23 @@ const Order = ({ order, shipOrderItem, getOrders, toast, isClosedOrder }) => {
         </View>
       </View>
       {order.orderItems.map((orderDetail) => (
-        <View key={orderDetail.orderId}>
-          <Text key={orderDetail.orderId}>
+        <View key={orderDetail.orderItemId}>
+          <Text>
             {orderDetail.product.title} - &euro;{orderDetail.unitPrice}
           </Text>
-          <Text key={orderDetail.orderId}>
+          <Text>
             Aantal besteld: <Text style={styles.boldText}>{orderDetail.quantity}</Text>
           </Text>
-          <Text key={orderDetail.orderId}>
+          <Text>
             Besteld op:{' '}
-            <Moment key={orderDetail.orderId} style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
+            <Moment style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
           {!isClosedOrder && 
-            <Text key={orderDetail.orderId}>
+            <Text>
               Uiterste leverdatum:{' '}
               <Moment
-                key={orderDetail.orderId}
                 style={[
                   styles.boldText,
                   getColorForDeliveryDate(
@@ -81,10 +86,11 @@ const Order = ({ order, shipOrderItem, getOrders, toast, isClosedOrder }) => {
               </Moment>
             </Text>
           }
-          <View key={orderDetail.orderId} style={styles.shipmentButtonContainer}>
+          <View style={styles.shipmentButtonContainer}>
             {!isClosedOrder && 
               <Button
-                key={orderDetail.orderId}
+                key={orderDetail.orderItemId}
+                disabled={loading || orderDetail.quantity === orderDetail.quantityShipped}
                 onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
                 title='Verzend'
                 disabled={loading}
