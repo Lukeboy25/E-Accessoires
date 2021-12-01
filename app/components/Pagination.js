@@ -1,61 +1,62 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';;
+import React, {
+    useEffect,
+    useState,
+} from 'react';
+import { View, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Pagination = ({
-    page,
-    onPreviousPage,
-    onNextPage,
+    onPageChange,
+    defaultPage = 1,
+    totalPages = 1,
 }) => {
-    console.log(page);
-    const [pageNumber, setPageNumber] = useState(page);
-    
-    const onPreviousClick = () => {
-        setPageNumber(pageNumber - 1);
-        onPreviousPage();
-    }
+    const [page, setPage] = useState(defaultPage);
 
-    const onNextClick = () => {
-        setPageNumber(pageNumber + 1);
-        onNextPage();
-    }
+    useEffect(() => {
+        onPageChange(page);
+    }, [page]);
 
-  return (
-    <View style={styles.pagination}>
-        { page > 1 && 
-            <MaterialIcons
-            style={styles.previousIcon} 
-            onPress={() => onPreviousClick()} 
-            name='keyboard-arrow-left' 
-            color={'black'} 
-            size={30} 
-            />
-        }
-        <MaterialIcons
-          style={styles.nextIcon} 
-          onPress={() => onNextClick()} 
-          name='keyboard-arrow-right' 
-          color={'black'} 
-          size={30} 
-      />
-    </View>
-  );
+    const onNextClick = () => setPage(page + 1);
+    const onPrevClick = () => setPage(page - 1);
+
+    return (
+        <View style={styles.pagination}>
+            {page > 1 &&
+                <MaterialIcons
+                    style={styles.previousIcon}
+                    onPress={onPrevClick}
+                    name='keyboard-arrow-left'
+                    color={'black'}
+                    size={30}
+                />
+            }
+            {totalPages > page && 
+                <MaterialIcons
+                    style={styles.nextIcon}
+                    onPress={onNextClick}
+                    name='keyboard-arrow-right'
+                    color={'black'}
+                    size={30}
+                />
+            }
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-  pagination: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  previousIcon: {
-  },
-  nextIcon: {
-    marginLeft: 'auto',
-    alignSelf: 'flex-end',
-  }
+    pagination: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: '#fff',
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+    },
+    previousIcon: {
+    },
+    nextIcon: {
+        marginLeft: 'auto',
+        alignSelf: 'flex-end',
+    }
 });
 
 export default Pagination;

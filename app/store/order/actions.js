@@ -1,6 +1,6 @@
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/actions';
-import { OPEN_ORDERS, CLOSED_ORDERS } from './types';
+import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES } from './types';
 
 export function setOpenOrders(openOrders) {
   return {
@@ -16,11 +16,26 @@ export function setClosedOrders(closedOrders) {
   };
 }
 
+export function setOrderPages(orderPages) {
+  return {
+    type: ORDER_PAGES,
+    orderPages: orderPages,
+  };
+}
+
+export const calculateOrderPages = (orderAmount) => async (dispatch)  => {
+  const orderPages = parseInt(orderAmount / 50) + 1;
+  
+  dispatch(setOrderPages(orderPages));
+}
+
 export const getOrders = (language, pageNumber) => async (dispatch) => {
   const httpService = new HttpService(language);
   const { orders } = await httpService.get(`orders?page=${pageNumber}`).catch((e) => {
     console.error('error fetching orders:', e);
   });
+
+  dispatch(calculateOrderPages(orders.length - 1));
 
   if (!orders || orders === undefined) {
     return dispatch(setOpenOrders([]));
@@ -80,26 +95,26 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
     // VVB = Verzenden via bol.com, TNT = PostNL
     const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
 
-    const shipmentResponse = await httpService
-      .put('orders/shipment', {
-        orderItems: { orderItemId: orderdetail.orderItemId },
-        transport: {
-          transporterCode: transporterCode,
-        },
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    // const shipmentResponse = await httpService
+    //   .put('orders/shipment', {
+    //     orderItems: { orderItemId: orderdetail.orderItemId },
+    //     transport: {
+    //       transporterCode: transporterCode,
+    //     },
+    //   })
+    //   .catch((e) => {
+    //     console.error(e);
+    //   });
 
-    const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
+    // const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
 
-    if (outOfStockMessage) {
-      return toasterMessageWithColor('#F39C12', outOfStockMessage);
-    }
+    // if (outOfStockMessage) {
+    //   return toasterMessageWithColor('#F39C12', outOfStockMessage);
+    // }
 
-    if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
-      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-    }
+    // if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
+    //   return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    // }
   }
 
   return toasterMessageWithColor('#E74C3C', 'Er is iets fout gegaan!');

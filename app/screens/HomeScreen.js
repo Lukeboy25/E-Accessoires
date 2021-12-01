@@ -10,7 +10,7 @@ import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
 
 class HomeScreen extends Component {
-  state = { loading: false, languageState: 'NL' };
+  state = { loading: false, languageState: 'NL', page: 1 };
 
   componentDidMount = async () => {
     this.setLoading(true);
@@ -38,7 +38,7 @@ class HomeScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getOrders(this.state.languageState, 1);
+      await this.props.getOrders(this.state.languageState, this.state.page);
     } catch (e) {
       console.error(e);
     }
@@ -55,6 +55,11 @@ class HomeScreen extends Component {
       this.setState({ languageState: 'NL' });
     }
   };
+
+  setPage = (page) => {
+    this.setState(() => ({ page: page }));
+    this.requestOrders();
+  }
 
   render() {
     if (!this.props.user.name) {
@@ -84,8 +89,9 @@ class HomeScreen extends Component {
         )}
         {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
         <Pagination 
-          onPreviousPage={() => this.requestOrders}
-          onNextPage={() => this.requestOrders}
+          onPageChange={(page) => this.setPage(page)}        
+          defaultPage={this.state.page}
+          totalPages={this.props.orderPages}
         />
       </ScrollView>
       <Toast
@@ -117,6 +123,7 @@ const mapStateToProps = (state) => {
     token: state.token.token,
     tokenBE: state.token.tokenBE,
     openOrders: state.order.openOrders,
+    orderPages: state.order.orderPages,
     user: state.login.user,
   };
 };
