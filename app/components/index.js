@@ -6,6 +6,7 @@ import OpenOrders from './OpenOrders';
 import ClosedOrders from './ClosedOrders';
 import Header from './Header';
 import Pagination from './Pagination';
+import OrderTitle from './OrderTitle';
 
 export { 
     Order, 
@@ -16,4 +17,5 @@ export {
     ClosedOrders,
     Header,
     Pagination,
+    OrderTitle,
 };
