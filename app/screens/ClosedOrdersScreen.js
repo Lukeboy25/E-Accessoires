@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native';
 import { requestTokenNL, requestTokenBE } from '../store/token/actions';
 import { checkForGoogleUser } from '../store/login/actions';
-import { getOrders } from '../store/order/actions';
-import { GoogleAuthentication, OpenOrders, Header, Pagination } from '../components';
+import { getClosedOrders } from '../store/order/actions';
+import { GoogleAuthentication, Header, ClosedOrders } from '../components';
 import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
 
-class HomeScreen extends Component {
-  state = { loading: false, languageState: 'NL', page: 1 };
+class ClosedOrdersScreen extends Component {
+  state = { loading: false, languageState: 'NL' };
 
   componentDidMount = async () => {
     this.setLoading(true);
@@ -38,7 +38,7 @@ class HomeScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getOrders(this.state.languageState, this.state.page);
+      await this.props.getClosedOrders(this.state.languageState);
     } catch (e) {
       console.error(e);
     }
@@ -56,11 +56,6 @@ class HomeScreen extends Component {
     }
   };
 
-  setPage = (page) => {
-    this.setState(() => ({ page: page }));
-    this.requestOrders();
-  }
-
   render() {
     if (!this.props.user.name) {
       return <GoogleAuthentication />;
@@ -77,22 +72,16 @@ class HomeScreen extends Component {
         refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
       >
         <StatusBar barStyle={'light-content'} />
-        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
+        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching closed orders'} />
         <Header />
-        {this.props.openOrders && (
-          <OpenOrders
+        {this.props.closedOrders && (
+          <ClosedOrders
             languageState={this.state.languageState}
             switchLanguage={this.switchLanguage}
-            openOrders={this.props.openOrders}
+            closedOrders={this.props.closedOrders}
             toast={this.toast}
           />
         )}
-        {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
-        <Pagination 
-          onPageChange={(page) => this.setPage(page)}        
-          defaultPage={this.state.page}
-          totalPages={this.props.orderPages}
-        />
       </ScrollView>
       <Toast
         ref={(toast) => (this.toast = toast)}
@@ -122,8 +111,7 @@ const mapStateToProps = (state) => {
   return {
     token: state.token.token,
     tokenBE: state.token.tokenBE,
-    openOrders: state.order.openOrders,
-    orderPages: state.order.orderPages,
+    closedOrders: state.order.closedOrders,
     user: state.login.user,
   };
 };
@@ -133,10 +121,10 @@ const mapDispatchToProps = (dispatch) =>
     {
       requestTokenNL,
       requestTokenBE,
-      getOrders,
+      getClosedOrders,
       checkForGoogleUser,
     },
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ClosedOrdersScreen);

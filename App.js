@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect, Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './app/store';
-import { LoadingScreen, HomeScreen, SettingsScreen } from './app/screens';
+import { LoadingScreen, HomeScreen, ClosedOrdersScreen, SettingsScreen } from './app/screens';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -35,6 +35,14 @@ const BottomTabNavigation = () => {
         options={{
           tabBarLabel: 'Bestellingen',
           tabBarIcon: ({ color }) => <MaterialIcons name='shopping-bag' color={color} size={26} />,
+        }}
+      />
+      <Tab.Screen
+        name='ClosedOrders'
+        component={ClosedOrdersScreen}
+        options={{
+          tabBarLabel: 'Afgerond',
+          tabBarIcon: ({ color }) => <MaterialIcons name='done' color={color} size={26} />,
         }}
       />
       <Tab.Screen

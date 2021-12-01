@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { Order } from './index';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-const OpenOrders = ({ languageState, switchLanguage, openOrders, toast }) => {
+export const IS_CLOSED_ORDER = true;
+
+const ClosedOrders = ({ languageState, switchLanguage, closedOrders, toast }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>E-accessoires</Text>
       <Text style={styles.orders}>
-        {openOrders.length == 1
-          ? `${openOrders.length} openstaande bestelling`
-          : `${openOrders.length} openstaande bestellingen`}
+        Afgeronde bestellingen
       </Text>
       <TouchableOpacity onPress={switchLanguage} style={styles.languageContainer}>
         {languageState === 'NL' ? (
@@ -20,8 +20,8 @@ const OpenOrders = ({ languageState, switchLanguage, openOrders, toast }) => {
         )}
       </TouchableOpacity>
       <View>
-        {openOrders?.map((order) => (
-          <Order key={order.orderId} order={order} toast={toast} />
+        {closedOrders?.map((order) => (
+          <Order key={order.orderId} order={order} toast={toast} isClosedOrder={IS_CLOSED_ORDER} />
         ))}
       </View>
     </View>
@@ -61,8 +61,8 @@ const mapStateToProps = (state) => {
   const order = state.order;
 
   return {
-    openOrders: order.openOrders,
+    closedOrders: order.closedOrders,
   };
 };
 
-export default connect(mapStateToProps, null)(OpenOrders);
+export default connect(mapStateToProps, null)(ClosedOrders);

@@ -1,6 +1,6 @@
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/actions';
-import { OPEN_ORDERS } from './types';
+import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES } from './types';
 
 export function setOpenOrders(openOrders) {
   return {
@@ -9,18 +9,40 @@ export function setOpenOrders(openOrders) {
   };
 }
 
-export const getOrders = (country) => async (dispatch) => {
-  const httpService = new HttpService(country);
-  const { orders } = await httpService.get('orders').catch((e) => {
-    console.error(e);
+export function setClosedOrders(closedOrders) {
+  return {
+    type: CLOSED_ORDERS,
+    closedOrders: closedOrders,
+  };
+}
+
+export function setOrderPages(orderPages) {
+  return {
+    type: ORDER_PAGES,
+    orderPages: orderPages,
+  };
+}
+
+export const calculateOrderPages = (orderAmount) => async (dispatch)  => {
+  const orderPages = parseInt(orderAmount / 50) + 1;
+  
+  dispatch(setOrderPages(orderPages));
+}
+
+export const getOrders = (language, pageNumber) => async (dispatch) => {
+  const httpService = new HttpService(language);
+  const { orders } = await httpService.get(`orders?page=${pageNumber}`).catch((e) => {
+    console.error('error fetching orders:', e);
   });
+
+  dispatch(calculateOrderPages(orders.length - 1));
 
   if (!orders || orders === undefined) {
     return dispatch(setOpenOrders([]));
   }
 
   const promiseArray = orders.map(async (order) => {
-    return httpService.get('orders/' + order.orderId);
+    return await httpService.get('orders/' + order.orderId);
   });
 
   Promise.all(promiseArray).then((openOrdersArray) => {
@@ -32,20 +54,50 @@ export const getOrders = (country) => async (dispatch) => {
   });
 };
 
+export const getClosedOrders = (language) => async (dispatch) => {
+  const params = {'status': 'ALL'};
+
+  const httpService = new HttpService(language);
+  const { orders } = await httpService.get('orders', { params }).catch((e) => {
+    console.error('error while fetching orders:', e);
+  });
+
+  if (!orders || orders === undefined) {
+    return dispatch(setClosedOrders([]));
+  }
+
+  const slicedArray = orders.slice(0, 20);
+  const promiseArray = slicedArray.map(async (order) => {
+    return await httpService.get('orders/' + order.orderId);
+  });
+
+  Promise.all(promiseArray).then((closedOrdersArray) => {
+    const onlyClosedOrders = closedOrdersArray.filter((order) => {
+      if (order && order.orderItems[0]) {
+        return order.orderItems[0].quantityShipped;
+      }
+    });
+
+    return dispatch(setClosedOrders(onlyClosedOrders));
+  }).catch((error) => { 
+    console.error('error filtering:', error);
+  });
+};
+
 const toasterMessageWithColor = (color, text) => {
   return { color: color, text: text };
 };
 
-export const shipOrderItem = (orderItem, language) => async (dispatch) => {
+export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
   const httpService = new HttpService(language);
 
-  if (orderItem.fulfilment.method === 'FBR') {
+  if (orderdetail.fulfilment.method === 'FBR') {
     // VVB = Verzenden via bol.com, TNT = PostNL
-    const transporterCode = orderItem.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
+    const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
 
     const shipmentResponse = await httpService
       .put('orders/shipment', {
-        orderItems: { orderItemId: orderItem.orderItemId },
+        orderItems: { orderItemId: orderdetail.orderItemId },
         transport: {
           transporterCode: transporterCode,
         },
@@ -54,7 +106,8 @@ export const shipOrderItem = (orderItem, language) => async (dispatch) => {
         console.error(e);
       });
 
-    const outOfStockMessage = await dispatch(checkStockForOffer(orderItem.offer.offerId, language));
+    const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
+
     if (outOfStockMessage) {
       return toasterMessageWithColor('#F39C12', outOfStockMessage);
     }
