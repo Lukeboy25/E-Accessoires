@@ -35,11 +35,11 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
     console.error('error fetching orders:', e);
   });
 
-  dispatch(calculateOrderPages(orders.length - 1));
-
   if (!orders || orders === undefined) {
     return dispatch(setOpenOrders([]));
   }
+
+  dispatch(calculateOrderPages(orders.length - 1));
 
   const promiseArray = orders.map(async (order) => {
     return await httpService.get('orders/' + order.orderId);
