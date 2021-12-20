@@ -5,11 +5,12 @@ export const printShipmentLabel = async (order) => {
     const shipment = order.shipmentDetails;
 
     const name = `${capitalize(shipment.firstName)} ${capitalizeLastName(shipment.surname)}`;
-    const address = `${shipment.streetName} ${shipment.houseNumber} ${shipment.houseNumberExtension}`
+    const address = `${shipment.streetName} ${shipment.houseNumber}`
+    const houseNumberExtension = shipment.houseNumberExtension ? `${shipment.houseNumberExtension}` : ``;
     const city = `${shipment.zipCode} ${shipment.city}`;
     const country = shipment.countryCode === 'NL' ? 'Nederland' : 'België';
     const orderNumber = order.orderId;
-  
+
     await Print.printAsync({
       html: `
         <html>
@@ -24,7 +25,7 @@ export const printShipmentLabel = async (order) => {
           <body style="text-align: left; width: 100vw; width: 100vw;">
             <p style="font-size: 7vw; font-family: Helvetica Neue; font-weight: normal;">
               ${name} <br />
-              ${address} <br />
+              ${address} ${houseNumberExtension}<br />
               ${city} <br />
               ${country} <br />
               <b>Bestelnummer:</b> ${orderNumber} <br />
