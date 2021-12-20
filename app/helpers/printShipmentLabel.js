@@ -5,7 +5,7 @@ export const printShipmentLabel = async (order) => {
     const shipment = order.shipmentDetails;
 
     const name = `${capitalize(shipment.firstName)} ${capitalizeLastName(shipment.surname)}`;
-    const address = `${shipment.streetName} ${shipment.houseNumber}`
+    const address = `${shipment.streetName} ${shipment.houseNumber} ${shipment.houseNumberExtension}`
     const city = `${shipment.zipCode} ${shipment.city}`;
     const country = shipment.countryCode === 'NL' ? 'Nederland' : 'België';
     const orderNumber = order.orderId;

@@ -12,7 +12,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const Order = ({ 
   order, 
   shipOrderItem, 
-  getOrders, 
   toast, 
   isClosedOrder,
 }) => {
@@ -24,8 +23,6 @@ const Order = ({
     const toastResponse = await shipOrderItem(orderDetail, language);
 
     await printShipmentLabel(order);
-
-    await getOrders(language, 1);
 
     toast &&
       toast.show(

@@ -93,7 +93,7 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
 
   if (orderdetail.fulfilment.method === 'FBR') {
     // VVB = Verzenden via bol.com, TNT = PostNL
-    const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'OTHER';
+    const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'BRIEFPOST';
 
     const shipmentResponse = await httpService
       .put('orders/shipment', {
