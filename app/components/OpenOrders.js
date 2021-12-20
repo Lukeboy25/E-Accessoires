@@ -4,12 +4,12 @@ import { Order } from './index';
 import { View, StyleSheet } from 'react-native';
 import { OrderTitle } from '../components';
 
-const OpenOrders = ({ languageState, switchLanguage, openOrders, toast }) => {
+const OpenOrders = ({ languageState, switchLanguage, openOrders, orderAmount, toast }) => {
 
   const getTitle = () => {
-    return openOrders.length == 1
-      ? `${openOrders.length} openstaande bestelling`
-      : `${openOrders.length} openstaande bestellingen`;
+    return orderAmount == 1
+      ? `${orderAmount} openstaande bestelling`
+      : `${orderAmount} openstaande bestellingen`;
   }
 
   return (

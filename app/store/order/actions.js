@@ -1,6 +1,7 @@
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/actions';
-import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES } from './types';
+import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT} from './types';
+import { calculatePage } from '../../helpers/calculatePage';
 
 export function setOpenOrders(openOrders) {
   return {
@@ -16,34 +17,51 @@ export function setClosedOrders(closedOrders) {
   };
 }
 
-export function setOrderPages(orderPages) {
+export function setOrderPages(orderPages, orderAmount) {
   return {
     type: ORDER_PAGES,
     orderPages: orderPages,
   };
 }
 
-export const calculateOrderPages = (orderAmount) => async (dispatch)  => {
-  const orderPages = parseInt(orderAmount / 50) + 1;
+export function setOrderAmount(orderAmount) {
+  return {
+    type: ORDER_AMOUNT,
+    orderAmount: orderAmount,
+  };
+}
+
+export const calculateOrderPages = (orderAmount) => (dispatch)  => {
+  const orderPages = parseInt((orderAmount - 1) / 10) + 1;
   
-  dispatch(setOrderPages(orderPages));
+  dispatch(setOrderPages(orderPages, orderAmount));
+}
+
+export const getOrderDetails = (httpService, orders, pageNumber, itemsAmount) => {
+  const selectedPage = calculatePage(pageNumber);
+  const slicedArray = orders.slice(selectedPage, selectedPage + itemsAmount);
+  
+  const promiseArray = slicedArray.map(async (order) => {
+    return await httpService.get('orders/' + order.orderId);
+  });
+
+  return promiseArray;
 }
 
 export const getOrders = (language, pageNumber) => async (dispatch) => {
   const httpService = new HttpService(language);
-  const { orders } = await httpService.get(`orders?page=${pageNumber}`).catch((e) => {
+  const { orders } = await httpService.get('orders').catch((e) => {
     console.error('error fetching orders:', e);
-  });
+  }); 
 
   if (!orders || orders === undefined) {
     return dispatch(setOpenOrders([]));
   }
 
-  dispatch(calculateOrderPages(orders.length - 1));
-
-  const promiseArray = orders.map(async (order) => {
-    return await httpService.get('orders/' + order.orderId);
-  });
+  dispatch(calculateOrderPages(orders.length));
+  dispatch(setOrderAmount(orders.length));
+  const sortedItems = orders.sort((a, b) => a.orderPlacedDateTime > b.orderPlacedDateTime);
+  const promiseArray = getOrderDetails(httpService, sortedItems, pageNumber, 10);
 
   Promise.all(promiseArray).then((openOrdersArray) => {
     const notCancelledOrders = openOrdersArray.filter((order) => {
@@ -54,7 +72,7 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
   });
 };
 
-export const getClosedOrders = (language) => async (dispatch) => {
+export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
   const params = {'status': 'ALL'};
 
   const httpService = new HttpService(language);
@@ -66,19 +84,17 @@ export const getClosedOrders = (language) => async (dispatch) => {
     return dispatch(setClosedOrders([]));
   }
 
-  const slicedArray = orders.slice(0, 20);
-  const promiseArray = slicedArray.map(async (order) => {
-    return await httpService.get('orders/' + order.orderId);
+  const onlyClosedOrders = orders.filter((order) => {
+    if (order && order.orderItems[0]) {
+      return order.orderItems[0].quantityShipped === 1;
+    }
   });
 
+  dispatch(calculateOrderPages(onlyClosedOrders.length));
+  
+  const promiseArray = getOrderDetails(httpService, onlyClosedOrders, pageNumber, 15);
   Promise.all(promiseArray).then((closedOrdersArray) => {
-    const onlyClosedOrders = closedOrdersArray.filter((order) => {
-      if (order && order.orderItems[0]) {
-        return order.orderItems[0].quantityShipped;
-      }
-    });
-
-    return dispatch(setClosedOrders(onlyClosedOrders));
+    return dispatch(setClosedOrders(closedOrdersArray));
   }).catch((error) => { 
     console.error('error filtering:', error);
   });

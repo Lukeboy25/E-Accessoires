@@ -5,12 +5,12 @@ import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native'
 import { requestTokenNL, requestTokenBE } from '../store/token/actions';
 import { checkForGoogleUser } from '../store/login/actions';
 import { getClosedOrders } from '../store/order/actions';
-import { GoogleAuthentication, Header, ClosedOrders } from '../components';
+import { GoogleAuthentication, Header, ClosedOrders, Pagination } from '../components';
 import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
 
 class ClosedOrdersScreen extends Component {
-  state = { loading: false, languageState: 'NL' };
+  state = { loading: false, languageState: 'NL', page: 1};
 
   componentDidMount = async () => {
     this.setLoading(true);
@@ -38,7 +38,7 @@ class ClosedOrdersScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getClosedOrders(this.state.languageState);
+      await this.props.getClosedOrders(this.state.languageState, this.state.page);
     } catch (e) {
       console.error(e);
     }
@@ -55,6 +55,11 @@ class ClosedOrdersScreen extends Component {
       this.setState({ languageState: 'NL' });
     }
   };
+
+  setPage = (page) => {
+    this.setState(() => ({ page: page }));
+    this.requestOrders();
+  }
 
   render() {
     if (!this.props.user.name) {
@@ -82,6 +87,11 @@ class ClosedOrdersScreen extends Component {
             toast={this.toast}
           />
         )}
+        <Pagination 
+          onPageChange={(page) => this.setPage(page)}        
+          defaultPage={this.state.page}
+          totalPages={this.props.orderPages}
+        />
       </ScrollView>
       <Toast
         ref={(toast) => (this.toast = toast)}

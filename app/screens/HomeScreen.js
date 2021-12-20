@@ -81,6 +81,7 @@ class HomeScreen extends Component {
         <Header />
         {this.props.openOrders && (
           <OpenOrders
+            orderAmount={this.props.orderAmount}
             languageState={this.state.languageState}
             switchLanguage={this.switchLanguage}
             openOrders={this.props.openOrders}
@@ -123,6 +124,7 @@ const mapStateToProps = (state) => {
     token: state.token.token,
     tokenBE: state.token.tokenBE,
     openOrders: state.order.openOrders,
+    orderAmount: state.order.orderAmount,
     orderPages: state.order.orderPages,
     user: state.login.user,
   };

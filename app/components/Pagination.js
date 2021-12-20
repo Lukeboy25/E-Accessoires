@@ -2,7 +2,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Pagination = ({
@@ -22,22 +22,28 @@ const Pagination = ({
     return (
         <View style={styles.pagination}>
             {page > 1 &&
-                <MaterialIcons
-                    style={styles.previousIcon}
-                    onPress={onPrevClick}
-                    name='keyboard-arrow-left'
-                    color={'black'}
-                    size={30}
-                />
+                <View style={styles.leftArrowContainer}>
+                    <MaterialIcons
+                        style={styles.previousIcon}
+                        onPress={onPrevClick}
+                        name='keyboard-arrow-left'
+                        color={'black'}
+                        size={30}
+                    />
+                    <Text>{page - 1}</Text>
+                 </View>
             }
-            {totalPages > page && 
-                <MaterialIcons
-                    style={styles.nextIcon}
-                    onPress={onNextClick}
-                    name='keyboard-arrow-right'
-                    color={'black'}
-                    size={30}
-                />
+            {totalPages > page &&
+                <View style={styles.rightArrowContainer}>
+                    <Text onPress={onNextClick} style={styles.nextText}>{page + 1}</Text>
+                    <MaterialIcons
+                        style={styles.nextIcon}
+                        onPress={onNextClick}
+                        name='keyboard-arrow-right'
+                        color={'black'}
+                        size={30}
+                    />
+                </View> 
             }
         </View>
     );
@@ -50,12 +56,23 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingVertical: 4,
         paddingHorizontal: 8,
+        flex: 1,
+    },
+    leftArrowContainer: {
+        flexDirection: 'row',
     },
     previousIcon: {
     },
-    nextIcon: {
+    rightArrowContainer: {
         marginLeft: 'auto',
         alignSelf: 'flex-end',
+        flexDirection: 'row',
+    },  
+    nextText: {
+        justifyContent: 'center',
+    },
+    nextIcon: {
+        alignItems: 'center',
     }
 });
 
