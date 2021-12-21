@@ -1,6 +1,5 @@
 import React, {
     useEffect,
-    useState,
 } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -25,20 +24,20 @@ const Pagination = ({
                         style={styles.previousIcon}
                         onPress={onPrevClick}
                         name='keyboard-arrow-left'
-                        color={'black'}
+                        color={'white'}
                         size={30}
                     />
-                    <Text onPress={onPrevClick} style={styles.previousText}>{page - 1}</Text>
+                    <Text onPress={onPrevClick} style={styles.paginateText}>{page - 1}</Text>
                  </View>
             }
             {totalPages > page &&
                 <View style={styles.rightArrowContainer}>
-                    <Text onPress={onNextClick} style={styles.nextText}>{page + 1}</Text>
+                    <Text onPress={onNextClick} style={styles.paginateText}>{page + 1}</Text>
                     <MaterialIcons
                         style={styles.nextIcon}
                         onPress={onNextClick}
                         name='keyboard-arrow-right'
-                        color={'black'}
+                        color={'white'}
                         size={30}
                     />
                 </View> 
@@ -52,28 +51,35 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         backgroundColor: '#fff',
-        paddingVertical: 4,
+        paddingVertical: 8,
         paddingHorizontal: 8,
         flex: 1,
     },
     leftArrowContainer: {
         flexDirection: 'row',
-    },
-    previousText: {
-        justifyContent: 'center',
-    },
-    previousIcon: {
+        width: 50,
+        backgroundColor: '#2194f3',
+        borderRadius: 25,
+        paddingRight: 10,
     },
     rightArrowContainer: {
-        marginLeft: 'auto',
-        alignSelf: 'flex-end',
         flexDirection: 'row',
+        marginLeft: 'auto',
+        width: 50,
+        backgroundColor: '#2194f3',
+        borderRadius: 25,
+        paddingLeft: 10,
     },  
-    nextText: {
-        justifyContent: 'center',
+    paginateText: {
+        alignSelf: 'center',
+        fontSize: 20,
+        color: '#fff',
+    },
+    previousIcon: {
+        flex: 1,
     },
     nextIcon: {
-        alignItems: 'center',
+        flex: 1,
     }
 });
 
