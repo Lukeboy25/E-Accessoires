@@ -1,5 +1,5 @@
-export const calculatePage = (pageNumber) => {
+export const calculatePage = (pageNumber, pageSize) => {
     const amount = pageNumber - 1;
 
-    return amount * 10; 
+    return amount * pageSize; 
 };

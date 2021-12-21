@@ -17,7 +17,7 @@ export function setClosedOrders(closedOrders) {
   };
 }
 
-export function setOrderPages(orderPages, orderAmount) {
+export function setOrderPages(orderPages) {
   return {
     type: ORDER_PAGES,
     orderPages: orderPages,
@@ -31,14 +31,16 @@ export function setOrderAmount(orderAmount) {
   };
 }
 
+const PAGE_SIZE = 10;
+
 export const calculateOrderPages = (orderAmount) => (dispatch)  => {
-  const orderPages = parseInt((orderAmount - 1) / 10) + 1;
-  
-  dispatch(setOrderPages(orderPages, orderAmount));
+  const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
+
+  dispatch(setOrderPages(orderPages));
 }
 
 export const getOrderDetails = (httpService, orders, pageNumber, itemsAmount) => {
-  const selectedPage = calculatePage(pageNumber);
+  const selectedPage = calculatePage(pageNumber, PAGE_SIZE);
   const slicedArray = orders.slice(selectedPage, selectedPage + itemsAmount);
   
   const promiseArray = slicedArray.map(async (order) => {
@@ -55,13 +57,17 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
   }); 
 
   if (!orders || orders === undefined) {
+    dispatch(calculateOrderPages(0));
+    dispatch(setOrderAmount(0));
+
     return dispatch(setOpenOrders([]));
   }
 
   dispatch(calculateOrderPages(orders.length));
   dispatch(setOrderAmount(orders.length));
+
   const sortedItems = orders.sort((a, b) => a.orderPlacedDateTime > b.orderPlacedDateTime);
-  const promiseArray = getOrderDetails(httpService, sortedItems, pageNumber, 10);
+  const promiseArray = getOrderDetails(httpService, sortedItems, pageNumber, PAGE_SIZE);
 
   Promise.all(promiseArray).then((openOrdersArray) => {
     const notCancelledOrders = openOrdersArray.filter((order) => {
@@ -81,6 +87,8 @@ export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
   });
 
   if (!orders || orders === undefined) {
+    dispatch(calculateOrderPages(0));
+
     return dispatch(setClosedOrders([]));
   }
 

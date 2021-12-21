@@ -48,7 +48,9 @@ class HomeScreen extends Component {
     }, 350);
   };
 
-  switchLanguage = async () => {
+  switchLanguage = () => {
+    this.setPage(1);
+    
     if (this.state.languageState === 'NL') {
       this.setState({ languageState: 'BE' });
     } else {
@@ -91,7 +93,7 @@ class HomeScreen extends Component {
         {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
         <Pagination 
           onPageChange={(page) => this.setPage(page)}        
-          defaultPage={this.state.page}
+          page={this.state.page}
           totalPages={this.props.orderPages}
         />
       </ScrollView>

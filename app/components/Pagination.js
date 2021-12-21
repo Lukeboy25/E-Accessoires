@@ -7,18 +7,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Pagination = ({
     onPageChange,
-    defaultPage = 1,
+    page,
     totalPages = 1,
 }) => {
-    const [page, setPage] = useState(defaultPage);
-
     useEffect(() => {
         onPageChange(page);
-    }, [page]);
+    }, [totalPages, page]);
 
-    const onNextClick = () => setPage(page + 1);
-    const onPrevClick = () => setPage(page - 1);
-
+    const onNextClick = () => onPageChange(page + 1);
+    const onPrevClick = () => onPageChange(page - 1);
+    
     return (
         <View style={styles.pagination}>
             {page > 1 &&
