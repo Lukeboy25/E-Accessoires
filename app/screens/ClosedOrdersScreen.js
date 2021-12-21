@@ -10,7 +10,7 @@ import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
 
 class ClosedOrdersScreen extends Component {
-  state = { loading: false, languageState: 'NL', page: 1};
+  state = { loading: false, languageState: 'NL', page: 1 };
 
   componentDidMount = async () => {
     this.setLoading(true);

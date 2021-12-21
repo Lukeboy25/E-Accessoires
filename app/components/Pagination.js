@@ -28,7 +28,7 @@ const Pagination = ({
                         color={'black'}
                         size={30}
                     />
-                    <Text>{page - 1}</Text>
+                    <Text onPress={onPrevClick} style={styles.previousText}>{page - 1}</Text>
                  </View>
             }
             {totalPages > page &&
@@ -58,6 +58,9 @@ const styles = StyleSheet.create({
     },
     leftArrowContainer: {
         flexDirection: 'row',
+    },
+    previousText: {
+        justifyContent: 'center',
     },
     previousIcon: {
     },

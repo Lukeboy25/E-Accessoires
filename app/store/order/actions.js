@@ -1,6 +1,6 @@
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/actions';
-import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT} from './types';
+import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT } from './types';
 import { calculatePage } from '../../helpers/calculatePage';
 
 export function setOpenOrders(openOrders) {
@@ -63,18 +63,19 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
     return dispatch(setOpenOrders([]));
   }
 
+  const notCancelledSortedOrders = orders.filter((order) => {
+    if (order && order.orderItems[0]) {
+      return !order.orderItems[0].cancellationRequest;
+    }
+  }).sort((a, b) => a.orderPlacedDateTime > b.orderPlacedDateTime);
+
   dispatch(calculateOrderPages(orders.length));
   dispatch(setOrderAmount(orders.length));
 
-  const sortedItems = orders.sort((a, b) => a.orderPlacedDateTime > b.orderPlacedDateTime);
-  const promiseArray = getOrderDetails(httpService, sortedItems, pageNumber, PAGE_SIZE);
+  const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE);
 
   Promise.all(promiseArray).then((openOrdersArray) => {
-    const notCancelledOrders = openOrdersArray.filter((order) => {
-      return !order.orderItems[0].cancellationRequest;
-    });
-
-    return dispatch(setOpenOrders(notCancelledOrders));
+    return dispatch(setOpenOrders(openOrdersArray));
   });
 };
 
@@ -96,11 +97,9 @@ export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
     if (order && order.orderItems[0]) {
       return order.orderItems[0].quantityShipped === 1;
     }
-  });
+  }).sort((a, b) => a.orderPlacedDateTime < b.orderPlacedDateTime);
 
-  dispatch(calculateOrderPages(onlyClosedOrders.length));
-  
-  const promiseArray = getOrderDetails(httpService, onlyClosedOrders, pageNumber, 15);
+  const promiseArray = getOrderDetails(httpService, onlyClosedOrders, pageNumber, 20);
   Promise.all(promiseArray).then((closedOrdersArray) => {
     return dispatch(setClosedOrders(closedOrdersArray));
   }).catch((error) => { 

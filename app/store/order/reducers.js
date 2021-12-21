@@ -10,18 +10,14 @@ const initialState = {
 export function orderReducer(state = initialState, action) {
   switch (action.type) {
     case OPEN_ORDERS:
-      const sortedOpenOrders = action.openOrders.sort((a, b) => a.orderPlacedDateTime > b.orderPlacedDateTime);
-
       return {
         ...state,
-        openOrders: sortedOpenOrders,
+        openOrders: action.openOrders,
       };
     case CLOSED_ORDERS:
-      const sortedClosedOrders = action.closedOrders.sort((a, b) => a.orderPlacedDateTime < b.orderPlacedDateTime);
-
       return {
         ...state,
-        closedOrders: sortedClosedOrders,
+        closedOrders: action.closedOrders,
       };
     case ORDER_PAGES:
       return {
