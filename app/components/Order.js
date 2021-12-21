@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import Moment from 'react-moment';
 import { LoadingScreen } from '../screens/index';
-import { shipOrderItem, getOrders } from '../store/order/actions';
+import { shipOrderItem } from '../store/order/actions';
 import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../helpers/printShipmentLabel';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -38,24 +38,26 @@ const Order = ({
   return (
     <View style={[styles.orderCard, isClosedOrder ? styles.orderCardDark : styles.orderCard ]} key={order.orderId}>
       <LoadingScreen show={loading} loadingMessage={'Sending order'} />
-      <View style={styles.orderCardHeader}>
-        <Text style={styles.orderTitle}>
-          {order.orderId} - {order.shipmentDetails.firstName} {order.shipmentDetails.surname}
-        </Text>
-        <View style={styles.orderCardLanguage}>
-          {order.shipmentDetails.countryCode === 'NL' && (
-            <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
-          )}
-          {order.shipmentDetails.countryCode === 'BE' && (
-            <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
-          )}
-          <Text> {order.shipmentDetails.countryCode}</Text>
+      {order.shipmentDetails &&
+        <View style={styles.orderCardHeader}>
+          <Text style={styles.orderTitle}>
+            {order.orderId} - {order.shipmentDetails.firstName} {order.shipmentDetails.surname}
+          </Text>
+          <View style={styles.orderCardLanguage}>
+            {order.shipmentDetails.countryCode === 'NL' && (
+              <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
+            )}
+            {order.shipmentDetails.countryCode === 'BE' && (
+              <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
+            )}
+            <Text> {order.shipmentDetails.countryCode}</Text>
+          </View>
         </View>
-      </View>
-      {order.orderItems.map((orderDetail) => (
+      }
+      {order.orderItems && order.orderItems.map((orderDetail) => (
         <View key={orderDetail.orderItemId}>
           <Text>
-            {orderDetail.product.title} - &euro;{orderDetail.unitPrice}
+            {orderDetail.product && orderDetail.product.title} - &euro;{orderDetail.unitPrice}
           </Text>
           <Text>
             Aantal besteld: <Text style={styles.boldText}>{orderDetail.quantity}</Text>
@@ -69,18 +71,20 @@ const Order = ({
           {!isClosedOrder && 
             <Text>
               Uiterste leverdatum:{' '}
-              <Moment
-                style={[
-                  styles.boldText,
-                  getColorForDeliveryDate(
-                    orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()
-                  ),
-                ]}
-                format='DD-MM-yyyy'
-                element={Text}
-              >
-                {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
-              </Moment>
+              {orderDetail.fulfilment &&
+                <Moment
+                  style={[
+                    styles.boldText,
+                    getColorForDeliveryDate(
+                      orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()
+                    ),
+                  ]}
+                  format='DD-MM-yyyy'
+                  element={Text}
+                >
+                  {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
+                </Moment>
+              }
             </Text>
           }
           <View style={styles.shipmentButtonContainer}>
@@ -164,7 +168,6 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       shipOrderItem,
-      getOrders,
     },
     dispatch
   );

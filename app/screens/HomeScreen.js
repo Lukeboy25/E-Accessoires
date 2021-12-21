@@ -48,7 +48,9 @@ class HomeScreen extends Component {
     }, 350);
   };
 
-  switchLanguage = async () => {
+  switchLanguage = () => {
+    this.setPage(1);
+    
     if (this.state.languageState === 'NL') {
       this.setState({ languageState: 'BE' });
     } else {
@@ -81,6 +83,7 @@ class HomeScreen extends Component {
         <Header />
         {this.props.openOrders && (
           <OpenOrders
+            orderAmount={this.props.orderAmount}
             languageState={this.state.languageState}
             switchLanguage={this.switchLanguage}
             openOrders={this.props.openOrders}
@@ -90,7 +93,7 @@ class HomeScreen extends Component {
         {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
         <Pagination 
           onPageChange={(page) => this.setPage(page)}        
-          defaultPage={this.state.page}
+          page={this.state.page}
           totalPages={this.props.orderPages}
         />
       </ScrollView>
@@ -123,6 +126,7 @@ const mapStateToProps = (state) => {
     token: state.token.token,
     tokenBE: state.token.tokenBE,
     openOrders: state.order.openOrders,
+    orderAmount: state.order.orderAmount,
     orderPages: state.order.orderPages,
     user: state.login.user,
   };
