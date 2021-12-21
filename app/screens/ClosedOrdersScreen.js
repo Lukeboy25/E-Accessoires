@@ -56,11 +56,6 @@ class ClosedOrdersScreen extends Component {
     }
   };
 
-  setPage = (page) => {
-    this.setState(() => ({ page: page }));
-    this.requestOrders();
-  }
-
   render() {
     if (!this.props.user.name) {
       return <GoogleAuthentication />;
@@ -87,11 +82,6 @@ class ClosedOrdersScreen extends Component {
             toast={this.toast}
           />
         )}
-        <Pagination 
-          onPageChange={(page) => this.setPage(page)}        
-          defaultPage={this.state.page}
-          totalPages={this.props.orderPages}
-        />
       </ScrollView>
       <Toast
         ref={(toast) => (this.toast = toast)}
