@@ -9,8 +9,8 @@ class HttpService {
     this.instance = Axios.create({
       baseURL: APP_URL,
       headers: {
-        'Accept': 'application/vnd.retailer.v5+json',
-        'Content-Type': 'application/vnd.retailer.v5+json',
+        'Accept': 'application/vnd.retailer.v6+json',
+        'Content-Type': 'application/vnd.retailer.v6+json',
       },
     });
     this.instance.interceptors.request.use(

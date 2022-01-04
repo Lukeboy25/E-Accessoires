@@ -31,7 +31,7 @@ export function setOrderAmount(orderAmount) {
   };
 }
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 
 export const calculateOrderPages = (orderAmount) => (dispatch)  => {
   const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
