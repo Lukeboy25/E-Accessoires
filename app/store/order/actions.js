@@ -116,28 +116,28 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
 
   if (orderdetail.fulfilment.method === 'FBR') {
     // VVB = Verzenden via bol.com, TNT = PostNL
-    // const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'BRIEFPOST';
+    const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'BRIEFPOST';
 
-    // const shipmentResponse = await httpService
-    //   .put('orders/shipment', {
-    //     orderItems: { orderItemId: orderdetail.orderItemId },
-    //     transport: {
-    //       transporterCode: transporterCode,
-    //     },
-    //   })
-    //   .catch((e) => {
-    //     console.error(e);
-    //   });
+    const shipmentResponse = await httpService
+      .put('orders/shipment', {
+        orderItems: { orderItemId: orderdetail.orderItemId },
+        transport: {
+          transporterCode: transporterCode,
+        },
+      })
+      .catch((e) => {
+        console.error(e);
+      });
 
-    // const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
+    const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
 
-    // if (outOfStockMessage) {
-    //   return toasterMessageWithColor('#F39C12', outOfStockMessage);
-    // }
+    if (outOfStockMessage) {
+      return toasterMessageWithColor('#F39C12', outOfStockMessage);
+    }
 
-    // if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
-    //   return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-    // }
+    if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
+      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    }
   }
 
   return toasterMessageWithColor('#E74C3C', 'Er is iets fout gegaan!');
