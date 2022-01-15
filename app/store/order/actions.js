@@ -33,7 +33,7 @@ export function setOrderAmount(orderAmount) {
 
 const PAGE_SIZE = 15;
 
-export const calculateOrderPages = (orderAmount) => (dispatch)  => {
+export const calculateOrderPages = (orderAmount) => (dispatch) => {
   const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
 
   dispatch(setOrderPages(orderPages));
@@ -42,7 +42,7 @@ export const calculateOrderPages = (orderAmount) => (dispatch)  => {
 export const getOrderDetails = (httpService, orders, pageNumber, itemsAmount) => {
   const selectedPage = calculatePage(pageNumber, PAGE_SIZE);
   const slicedArray = orders.slice(selectedPage, selectedPage + itemsAmount);
-  
+
   const promiseArray = slicedArray.map(async (order) => {
     return await httpService.get('orders/' + order.orderId);
   });
@@ -54,7 +54,7 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders').catch((e) => {
     console.error('error fetching orders:', e);
-  }); 
+  });
 
   if (!orders || orders === undefined) {
     dispatch(calculateOrderPages(0));
@@ -80,7 +80,7 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
 };
 
 export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
-  const params = {'status': 'ALL'};
+  const params = { 'status': 'ALL' };
 
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders', { params }).catch((e) => {
@@ -102,7 +102,7 @@ export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
   const promiseArray = getOrderDetails(httpService, onlyClosedOrders, pageNumber, 20);
   Promise.all(promiseArray).then((closedOrdersArray) => {
     return dispatch(setClosedOrders(closedOrdersArray));
-  }).catch((error) => { 
+  }).catch((error) => {
     console.error('error filtering:', error);
   });
 };
@@ -116,28 +116,28 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
 
   if (orderdetail.fulfilment.method === 'FBR') {
     // VVB = Verzenden via bol.com, TNT = PostNL
-    const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'BRIEFPOST';
+    // const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'BRIEFPOST';
 
-    const shipmentResponse = await httpService
-      .put('orders/shipment', {
-        orderItems: { orderItemId: orderdetail.orderItemId },
-        transport: {
-          transporterCode: transporterCode,
-        },
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    // const shipmentResponse = await httpService
+    //   .put('orders/shipment', {
+    //     orderItems: { orderItemId: orderdetail.orderItemId },
+    //     transport: {
+    //       transporterCode: transporterCode,
+    //     },
+    //   })
+    //   .catch((e) => {
+    //     console.error(e);
+    //   });
 
-    const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
+    // const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
 
-    if (outOfStockMessage) {
-      return toasterMessageWithColor('#F39C12', outOfStockMessage);
-    }
+    // if (outOfStockMessage) {
+    //   return toasterMessageWithColor('#F39C12', outOfStockMessage);
+    // }
 
-    if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
-      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-    }
+    // if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
+    //   return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    // }
   }
 
   return toasterMessageWithColor('#E74C3C', 'Er is iets fout gegaan!');

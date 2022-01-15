@@ -14,7 +14,7 @@ class ClosedOrdersScreen extends Component {
 
   componentDidMount = async () => {
     this.setLoading(true);
-  
+
     this.props.checkForGoogleUser();
     await this.requestOrders();
   };
@@ -66,33 +66,33 @@ class ClosedOrdersScreen extends Component {
     }
 
     return (
-    <>
-      <ScrollView
-        style={styles.background}
-        refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
-      >
-        <StatusBar barStyle={'light-content'} />
-        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching closed orders'} />
-        <Header />
-        {this.props.closedOrders && (
-          <ClosedOrders
-            languageState={this.state.languageState}
-            switchLanguage={this.switchLanguage}
-            closedOrders={this.props.closedOrders}
-            toast={this.toast}
-          />
-        )}
-      </ScrollView>
-      <Toast
-        ref={(toast) => (this.toast = toast)}
-        style={styles.defaultToast}
-        position='top'
-        positionValue={0}
-        fadeInDuration={800}
-        fadeOutDuration={1400}
-        textStyle={{ color: 'white' }}
-      />
-    </>);
+      <>
+        <ScrollView
+          style={styles.background}
+          refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
+        >
+          <StatusBar barStyle={'light-content'} />
+          <LoadingScreen show={this.state.loading} loadingMessage={'Fetching closed orders'} />
+          <Header />
+          {this.props.closedOrders && (
+            <ClosedOrders
+              languageState={this.state.languageState}
+              switchLanguage={this.switchLanguage}
+              closedOrders={this.props.closedOrders}
+              toast={this.toast}
+            />
+          )}
+        </ScrollView>
+        <Toast
+          ref={(toast) => (this.toast = toast)}
+          style={styles.defaultToast}
+          position='top'
+          positionValue={0}
+          fadeInDuration={800}
+          fadeOutDuration={1400}
+          textStyle={{ color: 'white' }}
+        />
+      </>);
   }
 }
 

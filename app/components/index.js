@@ -8,8 +8,8 @@ import Header from './Header';
 import Pagination from './Pagination';
 import OrderTitle from './OrderTitle';
 
-export { 
-    Order, 
+export {
+    Order,
     GoogleAuthentication,
     BackgroundFetcher,
     NotificationSender,

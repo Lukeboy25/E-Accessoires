@@ -15,7 +15,7 @@ const Pagination = ({
 
     const onNextClick = () => onPageChange(page + 1);
     const onPrevClick = () => onPageChange(page - 1);
-    
+
     return (
         <View style={styles.pagination}>
             {page > 1 &&
@@ -28,7 +28,7 @@ const Pagination = ({
                         size={30}
                     />
                     <Text onPress={onPrevClick} style={styles.paginateText}>{page - 1}</Text>
-                 </View>
+                </View>
             }
             {totalPages > page &&
                 <View style={styles.rightArrowContainer}>
@@ -40,7 +40,7 @@ const Pagination = ({
                         color={'white'}
                         size={30}
                     />
-                </View> 
+                </View>
             }
         </View>
     );
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2194f3',
         borderRadius: 25,
         paddingLeft: 10,
-    },  
+    },
     paginateText: {
         alignSelf: 'center',
         fontSize: 20,

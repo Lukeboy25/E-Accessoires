@@ -14,7 +14,7 @@ class HomeScreen extends Component {
 
   componentDidMount = async () => {
     this.setLoading(true);
-  
+
     this.props.checkForGoogleUser();
     await this.requestOrders();
   };
@@ -50,7 +50,7 @@ class HomeScreen extends Component {
 
   switchLanguage = () => {
     this.setPage(1);
-    
+
     if (this.state.languageState === 'NL') {
       this.setState({ languageState: 'BE' });
     } else {
@@ -73,40 +73,40 @@ class HomeScreen extends Component {
     }
 
     return (
-    <>
-      <ScrollView
-        style={styles.background}
-        refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
-      >
-        <StatusBar barStyle={'light-content'} />
-        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
-        <Header />
-        {this.props.openOrders && (
-          <OpenOrders
-            orderAmount={this.props.orderAmount}
-            languageState={this.state.languageState}
-            switchLanguage={this.switchLanguage}
-            openOrders={this.props.openOrders}
-            toast={this.toast}
+      <>
+        <ScrollView
+          style={styles.background}
+          refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
+        >
+          <StatusBar barStyle={'light-content'} />
+          <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
+          <Header />
+          {this.props.openOrders && (
+            <OpenOrders
+              orderAmount={this.props.orderAmount}
+              languageState={this.state.languageState}
+              switchLanguage={this.switchLanguage}
+              openOrders={this.props.openOrders}
+              toast={this.toast}
+            />
+          )}
+          {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
+          <Pagination
+            onPageChange={(page) => this.setPage(page)}
+            page={this.state.page}
+            totalPages={this.props.orderPages}
           />
-        )}
-        {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
-        <Pagination 
-          onPageChange={(page) => this.setPage(page)}        
-          page={this.state.page}
-          totalPages={this.props.orderPages}
+        </ScrollView>
+        <Toast
+          ref={(toast) => (this.toast = toast)}
+          style={styles.defaultToast}
+          position='top'
+          positionValue={0}
+          fadeInDuration={800}
+          fadeOutDuration={1400}
+          textStyle={{ color: 'white' }}
         />
-      </ScrollView>
-      <Toast
-        ref={(toast) => (this.toast = toast)}
-        style={styles.defaultToast}
-        position='top'
-        positionValue={0}
-        fadeInDuration={800}
-        fadeOutDuration={1400}
-        textStyle={{ color: 'white' }}
-      />
-    </>);
+      </>);
   }
 }
 

@@ -7,10 +7,10 @@ export const capitalizeLastName = (string) => {
     const fullString = string.split(' ');
 
     if (fullString.length > 1) {
-        const lastName = fullString.pop(); 
-        
+        const lastName = fullString.pop();
+
         return fullString.join(' ') + ' ' + capitalize(lastName);
     }
-    
+
     return capitalize(string);
 }

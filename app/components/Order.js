@@ -9,10 +9,10 @@ import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../helpers/printShipmentLabel';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const Order = ({ 
-  order, 
-  shipOrderItem, 
-  toast, 
+const Order = ({
+  order,
+  shipOrderItem,
+  toast,
   isClosedOrder,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const Order = ({
   };
 
   return (
-    <View style={[styles.orderCard, isClosedOrder ? styles.orderCardDark : styles.orderCard ]} key={order.orderId}>
+    <View style={[styles.orderCard, isClosedOrder ? styles.orderCardDark : styles.orderCard]} key={order.orderId}>
       <LoadingScreen show={loading} loadingMessage={'Sending order'} />
       {order.shipmentDetails &&
         <View style={styles.orderCardHeader}>
@@ -68,7 +68,7 @@ const Order = ({
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
-          {!isClosedOrder && 
+          {!isClosedOrder &&
             <Text>
               Uiterste leverdatum:{' '}
               {orderDetail.fulfilment &&
@@ -88,25 +88,23 @@ const Order = ({
             </Text>
           }
           <View style={styles.shipmentButtonContainer}>
-            {!isClosedOrder && 
+            {!isClosedOrder ?
               <Button
                 key={orderDetail.orderItemId}
                 disabled={loading || orderDetail.quantity === orderDetail.quantityShipped}
                 onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
                 title='Verzend'
                 disabled={loading}
-              />
-            }
-            {isClosedOrder && 
-               <MaterialIcons 
+              /> :
+              <MaterialIcons
                 key={orderDetail.orderId}
                 style={styles.printIcon}
-                disabled={loading} 
-                onPress={() => printShipmentLabel(order)} 
-                name='print' 
-                color={'grey'} 
-                size={30} 
-               />
+                disabled={loading}
+                onPress={() => printShipmentLabel(order)}
+                name='print'
+                color={'grey'}
+                size={30}
+              />
             }
           </View>
         </View>

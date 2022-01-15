@@ -21,7 +21,7 @@ const Header = () => {
         <LogoIcon />
         <Text style={styles.headerUserName}>{name}</Text>
       </View>
-      {photoUrl ? <Image style={styles.headerImage} source={{ uri: photoUrl }} />: <></>}
+      {photoUrl ? <Image style={styles.headerImage} source={{ uri: photoUrl }} /> : <></>}
     </View>
   );
 };
