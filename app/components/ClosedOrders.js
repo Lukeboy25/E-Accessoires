@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Order } from './index';
 import { View, Text, StyleSheet } from 'react-native';
-import { OrderTitle } from '../components';
+import { Order, OrderTitle } from './index';
 
 export const IS_CLOSED_ORDER = true;
 
-const ClosedOrders = ({ languageState, switchLanguage, closedOrders, toast }) => {
+function ClosedOrders({
+  languageState, switchLanguage, closedOrders, toast,
+}) {
   return (
     <View style={styles.container}>
-      <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={"Afgeronde bestellingen"} />
+      <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title="Afgeronde bestellingen" />
       <View>
         {closedOrders?.map((order) => (
           <Order key={order.orderId} order={order} toast={toast} isClosedOrder={IS_CLOSED_ORDER} />
@@ -17,7 +18,7 @@ const ClosedOrders = ({ languageState, switchLanguage, closedOrders, toast }) =>
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const order = state.order;
+  const { order } = state;
 
   return {
     closedOrders: order.closedOrders,

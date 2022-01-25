@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, StatusBar, ScrollView, Button, RefreshControl } from 'react-native';
+import {
+  StyleSheet, StatusBar, ScrollView, Button, RefreshControl,
+} from 'react-native';
 import { logOutGoogle } from '../store/login/loginActions';
 import { Header } from '../components';
 import { LoadingScreen } from './index';
@@ -25,15 +27,15 @@ class SettingsScreen extends Component {
         style={styles.background}
         refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
       >
-        <StatusBar barStyle={'light-content'} />
-        <LoadingScreen show={this.state.loading} loadingMessage={'Fetching orders'} />
+        <StatusBar barStyle="light-content" />
+        <LoadingScreen show={this.state.loading} loadingMessage="Fetching orders" />
         <Header />
         {this.props.user.name !== undefined && (
           <Button
             style={styles.logOutButton}
             onPress={() => this.sendLogOutGoogle()}
-            title='Uitloggen'
-            accessibilityLabel='Uitloggen'
+            title="Uitloggen"
+            accessibilityLabel="Uitloggen"
           />
         )}
       </ScrollView>
@@ -47,21 +49,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    token: state.token.token,
-    tokenBE: state.token.tokenBE,
-    openOrders: state.order.openOrders,
-    user: state.login.user,
-  };
-};
+const mapStateToProps = (state) => ({
+  token: state.token.token,
+  tokenBE: state.token.tokenBE,
+  openOrders: state.order.openOrders,
+  user: state.login.user,
+});
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      logOutGoogle,
-    },
-    dispatch
-  );
+const mapDispatchToProps = (dispatch) => bindActionCreators(
+  {
+    logOutGoogle,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen);

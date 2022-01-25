@@ -4,7 +4,7 @@ const initialState = {
   user: {},
 };
 
-export function loginReducer(state = initialState, action) {
+export function loginReducer(state = initialState, action: any) {
   switch (action.type) {
     case GOOGLE_LOGIN:
       return {

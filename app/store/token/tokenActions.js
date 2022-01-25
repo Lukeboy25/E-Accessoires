@@ -1,18 +1,20 @@
 import Axios from 'axios';
+import {
+  CLIENT_ID, CLIENT_SECRET, CLIENT_ID_BE, CLIENT_SECRET_BE,
+} from 'react-native-dotenv';
 import { TOKEN, TOKEN_BE } from './types';
-import { CLIENT_ID, CLIENT_SECRET, CLIENT_ID_BE, CLIENT_SECRET_BE } from 'react-native-dotenv';
 
 export function setTokenNL(token) {
   return {
     type: TOKEN,
-    token: token,
+    token,
   };
 }
 
 export function setTokenBE(tokenBE) {
   return {
     type: TOKEN_BE,
-    tokenBE: tokenBE,
+    tokenBE,
   };
 }
 

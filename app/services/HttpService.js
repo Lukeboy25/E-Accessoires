@@ -1,7 +1,7 @@
 import Axios from 'axios';
+import { APP_URL, DEMO_URL } from 'react-native-dotenv';
 import { store } from '../../App';
 import { logOut, requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
-import { APP_URL, DEMO_URL } from 'react-native-dotenv';
 
 class HttpService {
   constructor(language) {
@@ -9,7 +9,7 @@ class HttpService {
     this.instance = Axios.create({
       baseURL: APP_URL,
       headers: {
-        'Accept': 'application/vnd.retailer.v6+json',
+        Accept: 'application/vnd.retailer.v6+json',
         'Content-Type': 'application/vnd.retailer.v6+json',
       },
     });
@@ -20,9 +20,7 @@ class HttpService {
         request.headers.Authorization = `Bearer ${token}`;
         return request;
       },
-      (error) => {
-        return error;
-      }
+      (error) => error,
     );
     this.instance.interceptors.response.use(
       (response) => {
@@ -33,17 +31,14 @@ class HttpService {
       },
       async (error) => {
         if (error?.response?.status === 401) {
-          const token =
-            language === 'NL' ? await store.dispatch(requestTokenNL()) : await store.dispatch(requestTokenBE());
+          const token = language === 'NL' ? await store.dispatch(requestTokenNL()) : await store.dispatch(requestTokenBE());
           if (token) {
             return await this.instance.request(error.config);
           }
-          return;
         } else {
           store.dispatch(logOut());
-          return;
         }
-      }
+      },
     );
   }
 

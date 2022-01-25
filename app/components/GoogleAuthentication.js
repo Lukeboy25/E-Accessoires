@@ -1,12 +1,14 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, Button } from 'react-native';
-import { loginWithGoogle } from '../store/login/loginActions';
+import {
+  StyleSheet, View, Text, Button,
+} from 'react-native';
 import * as Google from 'expo-google-app-auth';
 import { ANDROID_CLIENT_ID, ANDROID_DEMO_CLIENT_ID } from 'react-native-dotenv';
+import { loginWithGoogle } from '../store/login/loginActions';
 
-const GoogleAuthentication = ({ loginWithGoogle }) => {
+function GoogleAuthentication({ loginWithGoogle }) {
   const signIn = async () => {
     try {
       const result = await Google.logInAsync({
@@ -30,11 +32,11 @@ const GoogleAuthentication = ({ loginWithGoogle }) => {
     <View style={styles.container}>
       <Text style={styles.header}>Sign in with Google to get started</Text>
       <View style={styles.buttonContainer}>
-        <Button style={styles.button} title='Login' onPress={() => signIn()} />
+        <Button style={styles.button} title="Login" onPress={() => signIn()} />
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -54,12 +56,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      loginWithGoogle,
-    },
-    dispatch
-  );
+const mapDispatchToProps = (dispatch) => bindActionCreators(
+  {
+    loginWithGoogle,
+  },
+  dispatch,
+);
 
 export default connect(null, mapDispatchToProps)(GoogleAuthentication);

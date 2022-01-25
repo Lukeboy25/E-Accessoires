@@ -1,4 +1,6 @@
-import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT } from './types';
+import {
+  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT,
+} from './types';
 
 const initialState = {
   openOrders: [],

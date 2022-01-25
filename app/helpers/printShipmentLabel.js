@@ -5,8 +5,8 @@ export const printShipmentLabel = async (order) => {
   const shipment = order.shipmentDetails;
 
   const name = `${capitalize(shipment.firstName)} ${capitalizeLastName(shipment.surname)}`;
-  const address = `${shipment.streetName} ${shipment.houseNumber}`
-  const houseNumberExtension = shipment.houseNumberExtension ? `${shipment.houseNumberExtension}` : ``;
+  const address = `${shipment.streetName} ${shipment.houseNumber}`;
+  const houseNumberExtension = shipment.houseNumberExtension ? `${shipment.houseNumberExtension}` : '';
   const city = `${shipment.zipCode} ${shipment.city}`;
   const country = shipment.countryCode === 'NL' ? 'Nederland' : 'België';
   const orderNumber = order.orderId;
@@ -33,6 +33,6 @@ export const printShipmentLabel = async (order) => {
           </body>
         </html>
       `,
-    orientation: Print.Orientation.landscape
+    orientation: Print.Orientation.landscape,
   });
-}
+};

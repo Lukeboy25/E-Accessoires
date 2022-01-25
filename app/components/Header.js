@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { LogoIcon } from '../components/icons/index';
+import {
+  View, Text, StyleSheet, Image,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LogoIcon } from './icons/index';
 
-const Header = () => {
+function Header() {
   const [name, setName] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
 
@@ -13,7 +15,7 @@ const Header = () => {
 
   AsyncStorage.getItem('googlePhotoUrl').then((url) => {
     setPhotoUrl(url);
-  })
+  });
 
   return (
     <View style={styles.header}>
@@ -24,7 +26,7 @@ const Header = () => {
       {photoUrl ? <Image style={styles.headerImage} source={{ uri: photoUrl }} /> : <></>}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   header: {

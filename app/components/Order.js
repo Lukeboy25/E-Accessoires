@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, Image, Button } from 'react-native';
+import {
+  View, Text, StyleSheet, Image, Button,
+} from 'react-native';
 import Moment from 'react-moment';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { LoadingScreen } from '../screens/index';
 import { shipOrderItem } from '../store/order/orderActions';
 import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../helpers/printShipmentLabel';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const Order = ({
+function Order({
   order,
   shipOrderItem,
   toast,
   isClosedOrder,
-}) => {
+}) {
   const [loading, setLoading] = useState(false);
 
   const sendShipOrderItem = async (order, orderDetail, language) => {
@@ -24,10 +26,10 @@ const Order = ({
 
     await printShipmentLabel(order);
 
-    toast &&
-      toast.show(
+    toast
+      && toast.show(
         <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
-        2500
+        2500,
       );
 
     setTimeout(() => {
@@ -37,81 +39,100 @@ const Order = ({
 
   return (
     <View style={[styles.orderCard, isClosedOrder ? styles.orderCardDark : styles.orderCard]} key={order.orderId}>
-      <LoadingScreen show={loading} loadingMessage={'Sending order'} />
-      {order.shipmentDetails &&
+      <LoadingScreen show={loading} loadingMessage="Sending order" />
+      {order.shipmentDetails
+        && (
         <View style={styles.orderCardHeader}>
           <Text style={styles.orderTitle}>
-            {order.orderId} - {order.shipmentDetails.firstName} {order.shipmentDetails.surname}
+            {order.orderId}
+            {' '}
+            -
+            {order.shipmentDetails.firstName}
+            {' '}
+            {order.shipmentDetails.surname}
           </Text>
           <View style={styles.orderCardLanguage}>
             {order.shipmentDetails.countryCode === 'NL' && (
-              <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
+            <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
             )}
             {order.shipmentDetails.countryCode === 'BE' && (
-              <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
+            <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
             )}
-            <Text> {order.shipmentDetails.countryCode}</Text>
+            <Text>
+              {' '}
+              {order.shipmentDetails.countryCode}
+            </Text>
           </View>
         </View>
-      }
+        )}
       {order.orderItems && order.orderItems.map((orderDetail) => (
         <View key={orderDetail.orderItemId}>
           <Text>
-            {orderDetail.product && orderDetail.product.title} - &euro;{orderDetail.unitPrice}
+            {orderDetail.product && orderDetail.product.title}
+            {' '}
+            - &euro;
+            {orderDetail.unitPrice}
           </Text>
           <Text>
-            Aantal besteld: <Text style={styles.boldText}>{orderDetail.quantity}</Text>
+            Aantal besteld:
+            {' '}
+            <Text style={styles.boldText}>{orderDetail.quantity}</Text>
           </Text>
           <Text>
-            Besteld op:{' '}
-            <Moment style={styles.boldText} format='DD-MM-yyyy, HH:mm uur' element={Text}>
+            Besteld op:
+            {' '}
+            <Moment style={styles.boldText} format="DD-MM-yyyy, HH:mm uur" element={Text}>
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
-          {!isClosedOrder &&
+          {!isClosedOrder
+            && (
             <Text>
-              Uiterste leverdatum:{' '}
-              {orderDetail.fulfilment &&
+              Uiterste leverdatum:
+              {' '}
+              {orderDetail.fulfilment
+                && (
                 <Moment
                   style={[
                     styles.boldText,
-                    getColorForDeliveryDate(
-                      orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()
-                    ),
+                    getColorForDeliveryDate(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
                   ]}
-                  format='DD-MM-yyyy'
+                  format="DD-MM-yyyy"
                   element={Text}
                 >
                   {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
                 </Moment>
-              }
+                )}
             </Text>
-          }
+            )}
           <View style={styles.shipmentButtonContainer}>
-            {!isClosedOrder ?
-              <Button
-                key={orderDetail.orderItemId}
-                disabled={loading || orderDetail.quantity === orderDetail.quantityShipped}
-                onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
-                title='Verzend'
-                disabled={loading}
-              /> :
-              <MaterialIcons
-                key={orderDetail.orderId}
-                style={styles.printIcon}
-                disabled={loading}
-                onPress={() => printShipmentLabel(order)}
-                name='print'
-                color={'grey'}
-                size={30}
-              />
-            }
+            {!isClosedOrder
+              ? (
+                <Button
+                  key={orderDetail.orderItemId}
+                  disabled={loading || orderDetail.quantity === orderDetail.quantityShipped}
+                  onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
+                  title="Verzend"
+                  disabled={loading}
+                />
+              )
+              : (
+                <MaterialIcons
+                  key={orderDetail.orderId}
+                  style={styles.printIcon}
+                  disabled={loading}
+                  onPress={() => printShipmentLabel(order)}
+                  name="print"
+                  color="grey"
+                  size={30}
+                />
+              )}
           </View>
         </View>
       ))}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   orderCard: {
@@ -162,12 +183,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      shipOrderItem,
-    },
-    dispatch
-  );
+const mapDispatchToProps = (dispatch) => bindActionCreators(
+  {
+    shipOrderItem,
+  },
+  dispatch,
+);
 
 export default connect(null, mapDispatchToProps)(Order);

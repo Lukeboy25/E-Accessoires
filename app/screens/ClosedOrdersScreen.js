@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native';
+import {
+  StyleSheet, StatusBar, ScrollView, RefreshControl,
+} from 'react-native';
+import Toast from 'react-native-easy-toast';
 import { requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
 import { checkForGoogleUser } from '../store/login/loginActions';
 import { getClosedOrders } from '../store/order/orderActions';
-import { GoogleAuthentication, Header, ClosedOrders, Pagination } from '../components';
+import {
+  GoogleAuthentication, Header, ClosedOrders, Pagination,
+} from '../components';
 import { LoadingScreen } from './index';
-import Toast from 'react-native-easy-toast';
 
 class ClosedOrdersScreen extends Component {
   state = { loading: false, languageState: 'NL', page: 1 };
 
-  componentDidMount = async () => {
+  async componentDidMount() {
     this.setLoading(true);
 
     this.props.checkForGoogleUser();
     await this.requestOrders();
-  };
+  }
 
-  componentDidUpdate = async (prevProps, prevState) => {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevState.languageState !== this.state.languageState) {
       await this.requestOrders();
     }
-  };
+  }
 
   setLoading(loading) {
     this.setState((state) => ({ ...state, loading }));
@@ -71,8 +75,8 @@ class ClosedOrdersScreen extends Component {
           style={styles.background}
           refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
         >
-          <StatusBar barStyle={'light-content'} />
-          <LoadingScreen show={this.state.loading} loadingMessage={'Fetching closed orders'} />
+          <StatusBar barStyle="light-content" />
+          <LoadingScreen show={this.state.loading} loadingMessage="Fetching closed orders" />
           <Header />
           {this.props.closedOrders && (
             <ClosedOrders
@@ -86,7 +90,7 @@ class ClosedOrdersScreen extends Component {
         <Toast
           ref={(toast) => (this.toast = toast)}
           style={styles.defaultToast}
-          position='top'
+          position="top"
           positionValue={0}
           fadeInDuration={800}
           fadeOutDuration={1400}
@@ -108,24 +112,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    token: state.token.token,
-    tokenBE: state.token.tokenBE,
-    closedOrders: state.order.closedOrders,
-    user: state.login.user,
-  };
-};
+const mapStateToProps = (state) => ({
+  token: state.token.token,
+  tokenBE: state.token.tokenBE,
+  closedOrders: state.order.closedOrders,
+  user: state.login.user,
+});
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      requestTokenNL,
-      requestTokenBE,
-      getClosedOrders,
-      checkForGoogleUser,
-    },
-    dispatch
-  );
+const mapDispatchToProps = (dispatch) => bindActionCreators(
+  {
+    requestTokenNL,
+    requestTokenBE,
+    getClosedOrders,
+    checkForGoogleUser,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClosedOrdersScreen);

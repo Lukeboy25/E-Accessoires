@@ -1,16 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Order } from './index';
 import { View, StyleSheet } from 'react-native';
-import { OrderTitle } from '../components';
+import { Order, OrderTitle } from './index';
 
-const OpenOrders = ({ languageState, switchLanguage, openOrders, orderAmount, toast }) => {
-
-  const getTitle = () => {
-    return orderAmount == 1
-      ? `${orderAmount} openstaande bestelling`
-      : `${orderAmount} openstaande bestellingen`;
-  }
+function OpenOrders({
+  languageState, switchLanguage, openOrders, orderAmount, toast,
+}) {
+  const getTitle = () => (orderAmount == 1
+    ? `${orderAmount} openstaande bestelling`
+    : `${orderAmount} openstaande bestellingen`);
 
   return (
     <View style={styles.container}>
@@ -22,7 +20,7 @@ const OpenOrders = ({ languageState, switchLanguage, openOrders, orderAmount, to
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const order = state.order;
+  const { order } = state;
 
   return {
     openOrders: order.openOrders,

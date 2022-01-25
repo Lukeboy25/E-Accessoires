@@ -1,10 +1,14 @@
 import React from 'react';
-import { ActivityIndicator, Modal, View, Text } from 'react-native';
+import {
+  ActivityIndicator, Modal, View, Text,
+} from 'react-native';
 
-const LoadingScreen = (props) => {
-  const { show = false, color = '#ffffff', backgroundColor = 'transparent', dimLights = 0.3, loadingMessage } = props;
+function LoadingScreen(props) {
+  const {
+    show = false, color = '#ffffff', backgroundColor = 'transparent', dimLights = 0.3, loadingMessage,
+  } = props;
   return (
-    <Modal transparent={true} animationType='none' visible={show}>
+    <Modal transparent animationType="none" visible={show}>
       <View
         style={{
           flex: 1,
@@ -21,12 +25,12 @@ const LoadingScreen = (props) => {
             borderRadius: 13,
           }}
         >
-          <ActivityIndicator animating={show} color={color} size='large' />
+          <ActivityIndicator animating={show} color={color} size="large" />
           {loadingMessage && <Text style={{ color: `${color}` }}>{loadingMessage}</Text>}
         </View>
       </View>
     </Modal>
   );
-};
+}
 
 export default LoadingScreen;

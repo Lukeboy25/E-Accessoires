@@ -9,13 +9,13 @@ import Pagination from './Pagination';
 import OrderTitle from './OrderTitle';
 
 export {
-    Order,
-    GoogleAuthentication,
-    BackgroundFetcher,
-    NotificationSender,
-    OpenOrders,
-    ClosedOrders,
-    Header,
-    Pagination,
-    OrderTitle,
+  Order,
+  GoogleAuthentication,
+  BackgroundFetcher,
+  NotificationSender,
+  OpenOrders,
+  ClosedOrders,
+  Header,
+  Pagination,
+  OrderTitle,
 };

@@ -4,8 +4,8 @@ import ClosedOrdersScreen from './ClosedOrdersScreen';
 import SettingsScreen from './SettingsScreen';
 
 export {
-    LoadingScreen,
-    HomeScreen,
-    ClosedOrdersScreen,
-    SettingsScreen
+  LoadingScreen,
+  HomeScreen,
+  ClosedOrdersScreen,
+  SettingsScreen,
 };
