@@ -1,5 +1,5 @@
 import HttpService from '../../services/HttpService';
-import { checkStockForOffer } from '../offer/actions';
+import { checkStockForOffer } from '../offer/offerActions';
 import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT } from './types';
 import { calculatePage } from '../../helpers/calculatePage';
 

@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { store } from '../../App';
-import { logOut, requestTokenNL, requestTokenBE } from '../store/token/actions';
+import { logOut, requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
 import { APP_URL, DEMO_URL } from 'react-native-dotenv';
 
 class HttpService {

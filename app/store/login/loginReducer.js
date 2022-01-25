@@ -1,4 +1,4 @@
-import { GOOGLE_LOGIN } from './types';
+import { GOOGLE_LOGIN } from './loginTypes';
 
 const initialState = {
   user: {},

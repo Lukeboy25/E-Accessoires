@@ -18,3 +18,5 @@ offer-export.csv
 yarn-error.log
 cache/*
 coverage/*
+.vscode
+.idea

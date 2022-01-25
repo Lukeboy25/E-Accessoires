@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GOOGLE_LOGIN } from './types';
+import { GOOGLE_LOGIN } from './loginTypes';
 
 export function setGoogleLogin(user) {
   return {

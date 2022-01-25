@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native';
-import { requestTokenNL, requestTokenBE } from '../store/token/actions';
-import { checkForGoogleUser } from '../store/login/actions';
-import { getClosedOrders } from '../store/order/actions';
+import { requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
+import { checkForGoogleUser } from '../store/login/loginActions';
+import { getClosedOrders } from '../store/order/orderActions';
 import { GoogleAuthentication, Header, ClosedOrders, Pagination } from '../components';
 import { LoadingScreen } from './index';
 import Toast from 'react-native-easy-toast';
@@ -61,7 +61,7 @@ class ClosedOrdersScreen extends Component {
       return <GoogleAuthentication />;
     }
 
-    if (this.props.user.email !== "luke25spaans@gmail.com" && this.props.user.email !== "31nmolenaar@gmail.com") {
+    if (this.props.user.email !== 'luke25spaans@gmail.com' && this.props.user.email !== '31nmolenaar@gmail.com') {
       return <GoogleAuthentication />;
     }
 
@@ -92,7 +92,8 @@ class ClosedOrdersScreen extends Component {
           fadeOutDuration={1400}
           textStyle={{ color: 'white' }}
         />
-      </>);
+      </>
+    );
   }
 }
 

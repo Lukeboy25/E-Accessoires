@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import Moment from 'react-moment';
 import { LoadingScreen } from '../screens/index';
-import { shipOrderItem } from '../store/order/actions';
+import { shipOrderItem } from '../store/order/orderActions';
 import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../helpers/printShipmentLabel';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';

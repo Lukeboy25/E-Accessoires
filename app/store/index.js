@@ -3,10 +3,10 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { tokenReducer } from './token/reducers';
-import { orderReducer } from './order/reducers';
-import { loginReducer } from './login/reducers';
-import { offerReducer } from './offer/reducers';
+import { tokenReducer } from './token/tokenReducer';
+import { orderReducer } from './order/orderReducer';
+import { loginReducer } from './login/loginReducer';
+import { offerReducer } from './offer/offerReducer';
 
 const rootReducer = combineReducers({
   order: orderReducer,
