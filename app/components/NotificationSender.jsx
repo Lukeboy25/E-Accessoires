@@ -38,7 +38,7 @@ function NotificationSender() {
     };
   }, []);
 
-  return <View></View>;
+  return <View />;
 }
 
 async function schedulePushNotification() {

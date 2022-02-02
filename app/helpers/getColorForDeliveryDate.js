@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 export const MONDAY = 1;
 
 export const getColorForDeliveryDate = (date, currentDate) => {
-  var newDate = new Date(date);
+  const newDate = new Date(date);
 
   if (date <= moment(currentDate).format('yyyy-MM-DD')) {
     return styles.errorText;
@@ -14,7 +14,7 @@ export const getColorForDeliveryDate = (date, currentDate) => {
     return styles.dangerText;
   }
 
-  // Add two days over the weekend 
+  // Add two days over the weekend
   if (newDate.getDay() === MONDAY) {
     if (date <= moment(currentDate).add(3, 'days').format('yyyy-MM-DD')) {
       return styles.dangerText;

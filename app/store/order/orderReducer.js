@@ -1,14 +1,29 @@
-import { OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT } from './types';
+import {
+  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, SET_ERROR,
+} from './types';
 
 const initialState = {
   openOrders: [],
   closedOrders: [],
   orderPages: null,
   orderAmount: 0,
+
+  error: '',
+  isLoading: false,
 };
 
 export function orderReducer(state = initialState, action) {
   switch (action.type) {
+    case SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
+    case SET_ERROR:
+      return {
+        ...state,
+        error: action.error,
+      };
     case OPEN_ORDERS:
       return {
         ...state,

@@ -7,15 +7,17 @@ import ClosedOrders from './ClosedOrders';
 import Header from './Header';
 import Pagination from './Pagination';
 import OrderTitle from './OrderTitle';
+import LoadingSpinner from './LoadingSpinner';
 
 export {
-    Order,
-    GoogleAuthentication,
-    BackgroundFetcher,
-    NotificationSender,
-    OpenOrders,
-    ClosedOrders,
-    Header,
-    Pagination,
-    OrderTitle,
+  Order,
+  GoogleAuthentication,
+  BackgroundFetcher,
+  NotificationSender,
+  OpenOrders,
+  ClosedOrders,
+  Header,
+  Pagination,
+  OrderTitle,
+  LoadingSpinner,
 };

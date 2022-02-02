@@ -4,7 +4,7 @@ import { OFFER } from './types';
 export function setOffer(offer) {
   return {
     type: OFFER,
-    offer: offer,
+    offer,
   };
 }
 

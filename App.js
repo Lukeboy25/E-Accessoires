@@ -6,63 +6,64 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect, Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './app/store';
-import { LoadingScreen, HomeScreen, ClosedOrdersScreen, SettingsScreen } from './app/screens';
+import {
+  HomeScreen, ClosedOrdersScreen, SettingsScreen,
+} from './app/screens';
+import { LoadingSpinner } from './app/components';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 export const { store, persistor } = configureStore();
 
-const connectedApp = () => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name='Home' component={BottomTabNavigation} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
+const connectedApp = () => (
+  <NavigationContainer>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Home" component={BottomTabNavigation} />
+    </Stack.Navigator>
+  </NavigationContainer>
+);
 
-const BottomTabNavigation = () => {
+function BottomTabNavigation() {
   return (
     <Tab.Navigator
-      initialRouteName='Home'
-      activeColor={'#000000'}
+      initialRouteName="Home"
+      activeColor="#000000"
       barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#D0D0C0' }}
     >
       <Tab.Screen
-        name='Home'
+        name="Home"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Bestellingen',
-          tabBarIcon: ({ color }) => <MaterialIcons name='shopping-bag' color={color} size={26} />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="shopping-bag" color={color} size={26} />,
         }}
       />
       <Tab.Screen
-        name='ClosedOrders'
+        name="ClosedOrders"
         component={ClosedOrdersScreen}
         options={{
           tabBarLabel: 'Afgerond',
-          tabBarIcon: ({ color }) => <MaterialIcons name='done' color={color} size={26} />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="done" color={color} size={26} />,
         }}
       />
       <Tab.Screen
-        name='Settings'
+        name="Settings"
         component={SettingsScreen}
         options={{
           tabBarLabel: 'Instellingen',
-          tabBarIcon: ({ color }) => <MaterialIcons name='settings' color={color} size={26} />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="settings" color={color} size={26} />,
         }}
       />
     </Tab.Navigator>
   );
-};
+}
 
 const ConnectedApp = connect(null)(connectedApp);
 
 export default function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+      <PersistGate loading={<LoadingSpinner />} persistor={persistor}>
         <ConnectedApp />
       </PersistGate>
     </Provider>

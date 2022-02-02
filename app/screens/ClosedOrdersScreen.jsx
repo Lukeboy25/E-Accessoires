@@ -1,36 +1,32 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native';
-import { requestTokenNL, requestTokenBE } from '../store/token/actions';
-import { checkForGoogleUser } from '../store/login/actions';
-import { getClosedOrders } from '../store/order/actions';
-import { GoogleAuthentication, Header, ClosedOrders, Pagination } from '../components';
-import { LoadingScreen } from './index';
+import {
+  StyleSheet, StatusBar, ScrollView, RefreshControl,
+} from 'react-native';
 import Toast from 'react-native-easy-toast';
+import { requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
+import { checkForGoogleUser } from '../store/login/loginActions';
+import { getClosedOrders } from '../store/order/orderActions';
+import {
+  GoogleAuthentication, Header, ClosedOrders, Pagination, LoadingSpinner,
+} from '../components';
 
 class ClosedOrdersScreen extends Component {
   state = { loading: false, languageState: 'NL', page: 1 };
 
-  componentDidMount = async () => {
-    this.setLoading(true);
-
+  async componentDidMount() {
     this.props.checkForGoogleUser();
     await this.requestOrders();
-  };
+  }
 
-  componentDidUpdate = async (prevProps, prevState) => {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevState.languageState !== this.state.languageState) {
       await this.requestOrders();
     }
-  };
-
-  setLoading(loading) {
-    this.setState((state) => ({ ...state, loading }));
   }
 
   requestOrders = async () => {
-    this.setLoading(true);
     try {
       if (this.state.languageState == 'NL') {
         await this.props.requestTokenNL();
@@ -42,10 +38,6 @@ class ClosedOrdersScreen extends Component {
     } catch (e) {
       console.error(e);
     }
-
-    setTimeout(() => {
-      this.setLoading(false);
-    }, 350);
   };
 
   switchLanguage = async () => {
@@ -61,7 +53,7 @@ class ClosedOrdersScreen extends Component {
       return <GoogleAuthentication />;
     }
 
-    if (this.props.user.email !== "luke25spaans@gmail.com" && this.props.user.email !== "31nmolenaar@gmail.com") {
+    if (this.props.user.email !== 'luke25spaans@gmail.com' && this.props.user.email !== '31nmolenaar@gmail.com') {
       return <GoogleAuthentication />;
     }
 
@@ -69,10 +61,9 @@ class ClosedOrdersScreen extends Component {
       <>
         <ScrollView
           style={styles.background}
-          refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
+          refreshControl={<RefreshControl refreshing={this.props.isLoading} onRefresh={this.requestOrders} />}
         >
-          <StatusBar barStyle={'light-content'} />
-          <LoadingScreen show={this.state.loading} loadingMessage={'Fetching closed orders'} />
+          <StatusBar barStyle="light-content" />
           <Header />
           {this.props.closedOrders && (
             <ClosedOrders
@@ -86,13 +77,14 @@ class ClosedOrdersScreen extends Component {
         <Toast
           ref={(toast) => (this.toast = toast)}
           style={styles.defaultToast}
-          position='top'
+          position="top"
           positionValue={0}
           fadeInDuration={800}
           fadeOutDuration={1400}
           textStyle={{ color: 'white' }}
         />
-      </>);
+      </>
+    );
   }
 }
 
@@ -107,24 +99,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    token: state.token.token,
-    tokenBE: state.token.tokenBE,
-    closedOrders: state.order.closedOrders,
-    user: state.login.user,
-  };
-};
+const mapStateToProps = (state) => ({
+  token: state.token.token,
+  tokenBE: state.token.tokenBE,
+  closedOrders: state.order.closedOrders,
+  user: state.login.user,
+  isLoading: state.order.isLoading,
+});
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      requestTokenNL,
-      requestTokenBE,
-      getClosedOrders,
-      checkForGoogleUser,
-    },
-    dispatch
-  );
+const mapDispatchToProps = (dispatch) => bindActionCreators(
+  {
+    requestTokenNL,
+    requestTokenBE,
+    getClosedOrders,
+    checkForGoogleUser,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClosedOrdersScreen);

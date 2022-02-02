@@ -4,7 +4,9 @@ import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import React from 'react';
 import Moment from 'react-moment';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import {
+  StyleSheet, Text, View, Button,
+} from 'react-native';
 import HttpService from '../services/HttpService';
 import NotificationSender from './NotificationSender';
 
@@ -96,8 +98,9 @@ export default function BackgroundFetcher(props) {
     return (
       <View style={styles.statusContainer}>
         <Text>
-          Laatste meldingen check:{' '}
-          <Moment style={styles.boldText} format='DD-MM-yyyy HH:mm:ss' element={Text}>
+          Laatste meldingen check:
+          {' '}
+          <Moment style={styles.boldText} format="DD-MM-yyyy HH:mm:ss" element={Text}>
             {fetchDate}
           </Moment>
         </Text>
@@ -110,12 +113,16 @@ export default function BackgroundFetcher(props) {
       <Text style={styles.backgroundTitle}>Meldingen</Text>
       <View style={styles.statusContainer}>
         <Text>
-          Status: <Text style={styles.boldText}>{status ? BackgroundFetch.Status[status] : null}</Text>
+          Status:
+          {' '}
+          <Text style={styles.boldText}>{status ? BackgroundFetch.Status[status] : null}</Text>
         </Text>
       </View>
       {renderFetchTime()}
       <Text>
-        Orders: {currentOrderItems}
+        Orders:
+        {' '}
+        {currentOrderItems}
         {willTriggerNotification && <NotificationSender />}
       </Text>
       <View style={styles.buttonContainer}>
