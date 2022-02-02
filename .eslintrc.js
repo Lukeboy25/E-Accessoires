@@ -20,5 +20,12 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    'react/forbid-prop-types': 'off',
+    'react/prop-types': 'off',
+    'react/require-default-props': 'off',
+    'react/default-props-match-prop-types': 'off',
+    'import/prefer-default-export': 'off',
+    'default-param-last': 'off',
+    'max-len': ['error', { code: 200 }],
   },
 };

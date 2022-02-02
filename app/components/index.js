@@ -7,6 +7,7 @@ import ClosedOrders from './ClosedOrders';
 import Header from './Header';
 import Pagination from './Pagination';
 import OrderTitle from './OrderTitle';
+import LoadingSpinner from './LoadingSpinner';
 
 export {
   Order,
@@ -18,4 +19,5 @@ export {
   Header,
   Pagination,
   OrderTitle,
+  LoadingSpinner,
 };

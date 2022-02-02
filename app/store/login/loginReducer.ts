@@ -1,4 +1,4 @@
-import { GOOGLE_LOGIN } from './loginTypes';
+import { GOOGLE_LOGIN, SET_IS_LOADING } from './loginTypes';
 
 const initialState = {
   user: {},
@@ -6,6 +6,11 @@ const initialState = {
 
 export function loginReducer(state = initialState, action: any) {
   switch (action.type) {
+    case SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
     case GOOGLE_LOGIN:
       return {
         ...state,

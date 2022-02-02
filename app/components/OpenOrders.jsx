@@ -4,9 +4,9 @@ import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
 
 function OpenOrders({
-  languageState, switchLanguage, openOrders, orderAmount, toast,
+  languageState, switchLanguage, openOrders, orderAmount, toast, page,
 }) {
-  const getTitle = () => (orderAmount == 1
+  const getTitle = () => (orderAmount === 1
     ? `${orderAmount} openstaande bestelling`
     : `${orderAmount} openstaande bestellingen`);
 
@@ -15,7 +15,7 @@ function OpenOrders({
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
       <View>
         {openOrders?.map((order) => (
-          <Order key={order.orderId} order={order} toast={toast} />
+          <Order key={order.orderId} order={order} toast={toast} languageState={languageState} page={page} />
         ))}
       </View>
     </View>

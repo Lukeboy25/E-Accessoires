@@ -2,33 +2,23 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-  StyleSheet, StatusBar, ScrollView, Button, RefreshControl,
+  StyleSheet, StatusBar, ScrollView, Button,
 } from 'react-native';
 import { logOutGoogle } from '../store/login/loginActions';
 import { Header } from '../components';
-import { LoadingScreen } from './index';
 
 class SettingsScreen extends Component {
-  state = { loading: false };
-
-  setLoading(loading) {
-    this.setState((state) => ({ ...state, loading }));
-  }
 
   sendLogOutGoogle = async () => {
-    this.setLoading(true);
     await this.props.logOutGoogle();
-    this.setLoading(false);
   };
 
   render() {
     return (
       <ScrollView
         style={styles.background}
-        refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
       >
         <StatusBar barStyle="light-content" />
-        <LoadingScreen show={this.state.loading} loadingMessage="Fetching orders" />
         <Header />
         {this.props.user.name !== undefined && (
           <Button

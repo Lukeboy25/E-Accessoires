@@ -7,8 +7,9 @@ import { connect, Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './app/store';
 import {
-  LoadingScreen, HomeScreen, ClosedOrdersScreen, SettingsScreen,
+  HomeScreen, ClosedOrdersScreen, SettingsScreen,
 } from './app/screens';
+import { LoadingSpinner } from './app/components';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -62,7 +63,7 @@ const ConnectedApp = connect(null)(connectedApp);
 export default function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+      <PersistGate loading={<LoadingSpinner />} persistor={persistor}>
         <ConnectedApp />
       </PersistGate>
     </Provider>

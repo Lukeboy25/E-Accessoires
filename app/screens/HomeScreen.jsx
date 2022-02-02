@@ -7,18 +7,15 @@ import {
 import Toast from 'react-native-easy-toast';
 import { requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
 import { checkForGoogleUser } from '../store/login/loginActions';
-import { getClosedOrders } from '../store/order/orderActions';
+import { getOrders } from '../store/order/orderActions';
 import {
-  GoogleAuthentication, Header, ClosedOrders, Pagination,
+  GoogleAuthentication, OpenOrders, Header, Pagination, LoadingSpinner,
 } from '../components';
-import { LoadingScreen } from './index';
 
-class ClosedOrdersScreen extends Component {
-  state = { loading: false, languageState: 'NL', page: 1 };
+class HomeScreen extends Component {
+  state = { languageState: 'NL', page: 1 };
 
   async componentDidMount() {
-    this.setLoading(true);
-
     this.props.checkForGoogleUser();
     await this.requestOrders();
   }
@@ -29,12 +26,7 @@ class ClosedOrdersScreen extends Component {
     }
   }
 
-  setLoading(loading) {
-    this.setState((state) => ({ ...state, loading }));
-  }
-
   requestOrders = async () => {
-    this.setLoading(true);
     try {
       if (this.state.languageState == 'NL') {
         await this.props.requestTokenNL();
@@ -42,22 +34,25 @@ class ClosedOrdersScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getClosedOrders(this.state.languageState, this.state.page);
+      await this.props.getOrders(this.state.languageState, this.state.page);
     } catch (e) {
       console.error(e);
     }
-
-    setTimeout(() => {
-      this.setLoading(false);
-    }, 350);
   };
 
-  switchLanguage = async () => {
+  switchLanguage = () => {
+    this.setPage(1);
+
     if (this.state.languageState === 'NL') {
       this.setState({ languageState: 'BE' });
     } else {
       this.setState({ languageState: 'NL' });
     }
+  };
+
+  setPage = (page) => {
+    this.setState(() => ({ page }));
+    this.requestOrders();
   };
 
   render() {
@@ -73,19 +68,27 @@ class ClosedOrdersScreen extends Component {
       <>
         <ScrollView
           style={styles.background}
-          refreshControl={<RefreshControl refreshing={this.state.loading} onRefresh={this.requestOrders} />}
+          refreshControl={<RefreshControl refreshing={this.props.isLoading} onRefresh={this.requestOrders} />}
         >
           <StatusBar barStyle="light-content" />
-          <LoadingScreen show={this.state.loading} loadingMessage="Fetching closed orders" />
+          <LoadingSpinner show={this.props.isLoading} />
           <Header />
-          {this.props.closedOrders && (
-            <ClosedOrders
+          {this.props.openOrders && (
+            <OpenOrders
+              orderAmount={this.props.orderAmount}
               languageState={this.state.languageState}
               switchLanguage={this.switchLanguage}
-              closedOrders={this.props.closedOrders}
+              openOrders={this.props.openOrders}
               toast={this.toast}
+              page={this.state.page}
             />
           )}
+          {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
+          <Pagination
+            onPageChange={(page) => this.setPage(page)}
+            page={this.state.page}
+            totalPages={this.props.orderPages}
+          />
         </ScrollView>
         <Toast
           ref={(toast) => (this.toast = toast)}
@@ -115,18 +118,21 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   token: state.token.token,
   tokenBE: state.token.tokenBE,
-  closedOrders: state.order.closedOrders,
+  openOrders: state.order.openOrders,
+  orderAmount: state.order.orderAmount,
+  orderPages: state.order.orderPages,
   user: state.login.user,
+  isLoading: state.order.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(
   {
     requestTokenNL,
     requestTokenBE,
-    getClosedOrders,
+    getOrders,
     checkForGoogleUser,
   },
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClosedOrdersScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

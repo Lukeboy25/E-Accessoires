@@ -1,9 +1,16 @@
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/offerActions';
 import {
-  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT,
+  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING,
 } from './types';
 import { calculatePage } from '../../helpers/calculatePage';
+
+export function setIsLoading(isLoading) {
+  return {
+    type: SET_IS_LOADING,
+    isLoading,
+  };
+}
 
 export function setOpenOrders(openOrders) {
   return {
@@ -51,6 +58,7 @@ export const getOrderDetails = (httpService, orders, pageNumber, itemsAmount) =>
 };
 
 export const getOrders = (language, pageNumber) => async (dispatch) => {
+  dispatch(setIsLoading(true));
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders').catch((e) => {
     console.error('error fetching orders:', e);
@@ -59,6 +67,7 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
   if (!orders || orders === undefined) {
     dispatch(calculateOrderPages(0));
     dispatch(setOrderAmount(0));
+    dispatch(setIsLoading(false));
 
     return dispatch(setOpenOrders([]));
   }
@@ -75,9 +84,11 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
   const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE);
 
   Promise.all(promiseArray).then((openOrdersArray) => dispatch(setOpenOrders(openOrdersArray)));
+  dispatch(setIsLoading(false));
 };
 
 export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
+  dispatch(setIsLoading(true));
   const params = { status: 'ALL' };
 
   const httpService = new HttpService(language);
@@ -87,6 +98,7 @@ export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
 
   if (!orders || orders === undefined) {
     dispatch(calculateOrderPages(0));
+    dispatch(setIsLoading(false));
 
     return dispatch(setClosedOrders([]));
   }
@@ -101,11 +113,13 @@ export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
   Promise.all(promiseArray).then((closedOrdersArray) => dispatch(setClosedOrders(closedOrdersArray))).catch((error) => {
     console.error('error filtering:', error);
   });
+  dispatch(setIsLoading(false));
 };
 
 const toasterMessageWithColor = (color, text) => ({ color, text });
 
 export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
+  dispatch(setIsLoading(true));
   const httpService = new HttpService(language);
 
   if (orderdetail.fulfilment.method === 'FBR') {
@@ -120,7 +134,7 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
         },
       })
       .catch((e) => {
-        console.error(e);
+        dispatch(setIsLoading(false));
       });
 
     const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
@@ -129,10 +143,12 @@ export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
       return toasterMessageWithColor('#F39C12', outOfStockMessage);
     }
 
-    if (shipmentResponse && shipmentResponse.eventType == 'CONFIRM_SHIPMENT') {
+    if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
       return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
     }
   }
+
+  dispatch(setIsLoading(false));
 
   return toasterMessageWithColor('#E74C3C', 'Er is iets fout gegaan!');
 };
