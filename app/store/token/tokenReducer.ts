@@ -1,11 +1,11 @@
-import { TOKEN, TOKEN_BE } from './types';
+import { TOKEN, TOKEN_BE } from './tokenTypes';
 
 const initialState = {
   token: null,
   tokenBE: null,
 };
 
-export function tokenReducer(state = initialState, action) {
+export function tokenReducer(state = initialState, action: any) {
   switch (action.type) {
     case TOKEN:
       return {
