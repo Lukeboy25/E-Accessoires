@@ -11,7 +11,7 @@ export interface FulfilmentViewModel {
 
 export interface OfferViewModel {
     offerId: string;
-    ean: number;
+    ean: string;
     stock: StockViewModel;
     fulfilment: FulfilmentViewModel;
 }

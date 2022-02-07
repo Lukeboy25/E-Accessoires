@@ -2,10 +2,12 @@ import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/offerActions';
 import {
   OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING,
-} from './types';
+} from './orderTypes';
 import { calculatePage } from '../../helpers/calculatePage';
+import { Dispatch } from 'redux';
+import { DetailOrderItemViewModel, OrderDetailViewModel } from '../../entities/Order/OrderDetail';
 
-export function setIsLoading(isLoading) {
+export function setIsLoading(isLoading: boolean) {
   return {
     type: SET_IS_LOADING,
     isLoading,
@@ -26,14 +28,14 @@ export function setClosedOrders(closedOrders) {
   };
 }
 
-export function setOrderPages(orderPages) {
+export function setOrderPages(orderPages: number) {
   return {
     type: ORDER_PAGES,
     orderPages,
   };
 }
 
-export function setOrderAmount(orderAmount) {
+export function setOrderAmount(orderAmount: number) {
   return {
     type: ORDER_AMOUNT,
     orderAmount,
@@ -42,7 +44,7 @@ export function setOrderAmount(orderAmount) {
 
 const PAGE_SIZE = 15;
 
-export const calculateOrderPages = (orderAmount) => (dispatch) => {
+export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch) => {
   const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
 
   dispatch(setOrderPages(orderPages));
@@ -57,7 +59,7 @@ export const getOrderDetails = (httpService, orders, pageNumber, itemsAmount) =>
   return promiseArray;
 };
 
-export const getOrders = (language, pageNumber) => async (dispatch) => {
+export const getOrders = (language: string, pageNumber: number) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders').catch((e) => {
@@ -72,7 +74,7 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
     return dispatch(setOpenOrders([]));
   }
 
-  const notCancelledSortedOrders = orders.filter((order) => {
+  const notCancelledSortedOrders = orders.filter((order: OrderDetailViewModel) => {
     if (order && order.orderItems[0]) {
       return !order.orderItems[0].cancellationRequest;
     }
@@ -87,7 +89,7 @@ export const getOrders = (language, pageNumber) => async (dispatch) => {
   dispatch(setIsLoading(false));
 };
 
-export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
+export const getClosedOrders = (language: string, pageNumber: number) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const params = { status: 'ALL' };
 
@@ -103,11 +105,11 @@ export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
     return dispatch(setClosedOrders([]));
   }
 
-  const onlyClosedOrders = orders.filter((order) => {
+  const onlyClosedOrders = orders.filter((order: OrderDetailViewModel) => {
     if (order && order.orderItems[0]) {
       return order.orderItems[0].quantityShipped === 1;
     }
-  }).sort((a, b) => a.orderPlacedDateTime < b.orderPlacedDateTime);
+  }).sort((a: OrderDetailViewModel, b: OrderDetailViewModel) => a.orderPlacedDateTime < b.orderPlacedDateTime);
 
   const promiseArray = getOrderDetails(httpService, onlyClosedOrders, pageNumber, 20);
   Promise.all(promiseArray).then((closedOrdersArray) => dispatch(setClosedOrders(closedOrdersArray))).catch((error) => {
@@ -116,15 +118,14 @@ export const getClosedOrders = (language, pageNumber) => async (dispatch) => {
   dispatch(setIsLoading(false));
 };
 
-const toasterMessageWithColor = (color, text) => ({ color, text });
+const toasterMessageWithColor = (color: string, text: string) => ({ color, text });
 
-export const shipOrderItem = (orderdetail, language) => async (dispatch) => {
+export const shipOrderItem = (orderdetail: DetailOrderItemViewModel, language: string) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const httpService = new HttpService(language);
 
   if (orderdetail.fulfilment.method === 'FBR') {
-    // VVB = Verzenden via bol.com, TNT = PostNL
-    const transporterCode = orderdetail.fulfilment.deliveryCode === 'VVB' ? 'TNT' : 'BRIEFPOST';
+    const transporterCode = 'BRIEFPOST';
 
     const shipmentResponse = await httpService
       .put('orders/shipment', {
