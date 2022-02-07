@@ -22,9 +22,8 @@ function Order({
   const sendShipOrderItem = async (order, orderDetail, language) => {
     const toastResponse = await shipOrderItem(orderDetail, language);
 
-    await printShipmentLabel(order);
-
     await getOrders(languageState, page);
+    await printShipmentLabel(order);
 
     toast
       && toast.show(

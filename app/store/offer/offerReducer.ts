@@ -1,10 +1,10 @@
-import { OFFER } from './types';
+import { OFFER } from './offerTypes';
 
 const initialState = {
   offer: {},
 };
 
-export function offerReducer(state = initialState, action) {
+export function offerReducer(state = initialState, action: any) {
   switch (action.type) {
     case OFFER:
       return {

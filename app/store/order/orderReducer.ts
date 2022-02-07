@@ -1,6 +1,6 @@
 import {
   OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, SET_ERROR,
-} from './types';
+} from './orderTypes';
 
 const initialState = {
   openOrders: [],
@@ -12,7 +12,7 @@ const initialState = {
   isLoading: false,
 };
 
-export function orderReducer(state = initialState, action) {
+export function orderReducer(state = initialState, action: any) {
   switch (action.type) {
     case SET_IS_LOADING:
       return {
