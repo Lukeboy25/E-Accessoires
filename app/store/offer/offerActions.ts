@@ -13,11 +13,11 @@ export function setOffer(offer: OfferViewModel) {
 const getOfferByUuid = (offerUuid: string, language: string) => async () => {
   const httpService = new HttpService(language);
 
-  return await httpService.get(`offers/${offerUuid}`);
+  return httpService.get(`offers/${offerUuid}`);
 };
 
 export const checkStockForOffer = (offerUuid: string, language: string) => async (dispatch: Dispatch) => {
-  const offer = dispatch(getOfferByUuid(offerUuid, language));
+  const offer = await dispatch(getOfferByUuid(offerUuid, language));
 
   if (offer.stock.correctedStock === 0) {
     return `Let op! De voorraad van ${offer.store.productTitle} is opgeraakt!`;
