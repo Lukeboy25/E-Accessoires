@@ -41,7 +41,7 @@ class HomeScreen extends Component {
   };
 
   switchLanguage = () => {
-    this.setPage(1);
+    this.setState(() => ({ page: 1 }));
 
     if (this.state.languageState === 'NL') {
       this.setState({ languageState: 'BE' });
