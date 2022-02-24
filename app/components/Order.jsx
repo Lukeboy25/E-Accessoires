@@ -22,11 +22,18 @@ function Order({
   const sendShipOrderItem = async (order, orderDetail, language) => {
     const toastResponse = await shipOrderItem(orderDetail, language);
 
-    await getOrders(languageState, page);
+    if (!order) {
+      return toast
+      && toast.show(
+        <Text style={[{ backgroundColor: '#E74C3C' }, styles.toastStyle]}>Kan geen order vinden.</Text>,
+        2500,
+      );
+    }
+
+    await getOrders(language, page);
     await printShipmentLabel(order);
 
-    toast
-      && toast.show(
+   toast.show(
         <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
         2500,
       );
