@@ -23,6 +23,9 @@ module.exports = {
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/no-unused-expressions': 'off',
+    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'react/function-component-definition': 'off',
+    'no-use-before-define': ['error', { variables: false }],
     'import/extensions': [
       'error',
       'ignorePackages',

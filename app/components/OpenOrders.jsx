@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
+import SearchBar from './SearchBar';
 
 function OpenOrders({
-  languageState, switchLanguage, openOrders, orderAmount, toast, page,
+  languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
 }) {
   const getTitle = () => (orderAmount === 1
     ? `${orderAmount} openstaande bestelling`
@@ -13,9 +14,10 @@ function OpenOrders({
   return (
     <View style={styles.container}>
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
+      <SearchBar />
       <View>
         {openOrders?.map((order) => (
-          <Order key={order.orderId} order={order} toast={toast} languageState={languageState} page={page} />
+          <Order key={order.orderId} order={order} toast={toast} page={page} />
         ))}
       </View>
     </View>
@@ -33,6 +35,7 @@ const mapStateToProps = (state) => {
 
   return {
     openOrders: order.openOrders,
+    orderCategories: order.orderCategories,
   };
 };
 

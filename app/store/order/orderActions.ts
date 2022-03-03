@@ -1,11 +1,12 @@
+import { Dispatch } from 'redux';
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/offerActions';
 import {
-  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING,
+  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, ORDER_CATEGORIES,
 } from './orderTypes';
 import { calculatePage } from '../../helpers/calculatePage';
-import { Dispatch } from 'redux';
-import { DetailOrderItemViewModel, OrderDetailViewModel } from '../../entities/Order/OrderDetail';
+import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
+import { OrderViewModel } from '../../entities/Order/Order';
 
 export function setIsLoading(isLoading: boolean) {
   return {
@@ -42,6 +43,13 @@ export function setOrderAmount(orderAmount: number) {
   };
 }
 
+export function setOrderCategories(orderCategories: string[]) {
+  return {
+    type: ORDER_CATEGORIES,
+    orderCategories,
+  };
+}
+
 const PAGE_SIZE = 15;
 
 export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch) => {
@@ -74,7 +82,7 @@ export const getOrders = (language: string, pageNumber: number) => async (dispat
     return dispatch(setOpenOrders([]));
   }
 
-  const notCancelledSortedOrders = orders.filter((order: OrderDetailViewModel) => {
+  const notCancelledSortedOrders = orders.filter((order: OrderViewModel) => {
     if (order && order.orderItems[0]) {
       return !order.orderItems[0].cancellationRequest;
     }
@@ -85,7 +93,21 @@ export const getOrders = (language: string, pageNumber: number) => async (dispat
 
   const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE);
 
-  Promise.all(promiseArray).then((openOrdersArray) => dispatch(setOpenOrders(openOrdersArray)));
+  Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
+    dispatch(setOpenOrders(openOrdersArray));
+
+    let orderCategories = [];
+    openOrdersArray.map((openOrderItem: OrderViewModel) => {
+      openOrderItem.orderItems.map((detailorderItem: DetailOrderItemViewModel) => {
+        orderCategories = [...orderCategories, detailorderItem.product.title];
+      });
+    });
+
+    // TO DO split on character
+
+    dispatch(setOrderCategories(orderCategories));
+  });
+
   dispatch(setIsLoading(false));
 };
 

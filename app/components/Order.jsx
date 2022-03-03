@@ -16,7 +16,6 @@ function Order({
   toast,
   isClosedOrder,
   getOrders,
-  languageState,
   page,
 }) {
   const sendShipOrderItem = async (order, orderDetail, language) => {

@@ -1,10 +1,11 @@
 import {
-  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, SET_ERROR,
+  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, SET_ERROR, ORDER_CATEGORIES,
 } from './orderTypes';
 
 const initialState = {
   openOrders: [],
   closedOrders: [],
+  orderCategories: [],
   orderPages: null,
   orderAmount: 0,
 
@@ -33,6 +34,11 @@ export function orderReducer(state = initialState, action: any) {
       return {
         ...state,
         closedOrders: action.closedOrders,
+      };
+    case ORDER_CATEGORIES:
+      return {
+        ...state,
+        orderCategories: action.orderCategories,
       };
     case ORDER_PAGES:
       return {
