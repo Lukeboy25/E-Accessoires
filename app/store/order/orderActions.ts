@@ -67,6 +67,25 @@ export const getOrderDetails = (httpService, orders, pageNumber, itemsAmount) =>
   return promiseArray;
 };
 
+const fetchOrderCategories = (promiseArray: OrderViewModel[]) => async (dispatch: Dispatch) => {
+  Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
+    dispatch(setOpenOrders(openOrdersArray));
+
+    const orderCategories = [];
+    openOrdersArray.map((openOrderItem: OrderViewModel) => {
+      openOrderItem.orderItems.map((detailorderItem: DetailOrderItemViewModel) => {
+        const orderCategoryTitle = detailorderItem.product.title.split('-', 1)[0];
+
+        orderCategories.push(orderCategoryTitle);
+      });
+    });
+
+    const uniqueOrderCategories = [...new Set(orderCategories)];
+
+    dispatch(setOrderCategories(uniqueOrderCategories));
+  });
+};
+
 export const getOrders = (language: string, pageNumber: number) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const httpService = new HttpService(language);
@@ -93,20 +112,7 @@ export const getOrders = (language: string, pageNumber: number) => async (dispat
 
   const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE);
 
-  Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
-    dispatch(setOpenOrders(openOrdersArray));
-
-    let orderCategories = [];
-    openOrdersArray.map((openOrderItem: OrderViewModel) => {
-      openOrderItem.orderItems.map((detailorderItem: DetailOrderItemViewModel) => {
-        orderCategories = [...orderCategories, detailorderItem.product.title];
-      });
-    });
-
-    // TO DO split on character
-
-    dispatch(setOrderCategories(orderCategories));
-  });
+  dispatch(fetchOrderCategories(promiseArray));
 
   dispatch(setIsLoading(false));
 };

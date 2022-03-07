@@ -8,7 +8,7 @@ import Header from './Header';
 import Pagination from './Pagination';
 import OrderTitle from './OrderTitle';
 import LoadingSpinner from './LoadingSpinner';
-import SearchBar from './SearchBar';
+import SearchPicker from './SearchPicker';
 
 export {
   Order,
@@ -21,5 +21,5 @@ export {
   Pagination,
   OrderTitle,
   LoadingSpinner,
-  SearchBar,
+  SearchPicker,
 };
