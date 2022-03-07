@@ -16,7 +16,7 @@ export function setShipments(shipments) {
   };
 }
 
-exp`or`t const getShipments = (language: string) => async (dispatch: Dispatch) => {
+export const getShipments = (language: string) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const params = { 'fulfilment-method': 'FBR' };
 
