@@ -1,0 +1,23 @@
+.container {
+    flex: 1;
+}
+
+.searchable-value-input {
+    position: relative;
+
+    .searchable-value-input__result-list {
+        max-height: 22em;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        border: 1px solid rgb(230, 232, 234);
+        border-top: none;
+    }
+
+    &__result-option {
+
+        & + & {
+            border-top: 1px solid rgb(230, 232, 234);
+        }
+    }
+}

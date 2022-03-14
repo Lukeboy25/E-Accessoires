@@ -32,6 +32,10 @@ export default {
       },
       permissions: [],
     },
+    packagerOpts: {
+      config: 'metro.config.js',
+      sourceExts: ['js', 'jsx', 'scss', 'sass'],
+    },
   },
   extra: {},
 };

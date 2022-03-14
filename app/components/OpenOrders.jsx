@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
-import SearchPicker from './SearchPicker';
+import SearchableValueInput from '../compositions/SearchableValueInput/SearchableValueInput';
+import { SearchableOption } from '../compositions/types/index';
+import { transformOrderCategoriesToSearchableValue } from './transformOrderCategoryToSearchableValue';
+import { black } from 'react-native-paper/lib/typescript/styles/colors';
 
 function OpenOrders({
   languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
 }) {
+  const [orderCategory, setOrderCategory] = useState('');
+
+  const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
+    setOrderCategory(orderCategoryValue.label);
+
+    const selectedOccupation = orderCategoryValue.id
+      ? orderCategories.find((option) => option.id === orderCategoryValue.id)
+      : undefined;
+
+    if (selectedOccupation) {
+      // Fetch order categories
+      // onSelectOccupation(selectedOccupation);
+    }
+  };
+
   const getTitle = () => (orderAmount === 1
     ? `${orderAmount} openstaande bestelling`
     : `${orderAmount} openstaande bestellingen`);
@@ -14,8 +32,14 @@ function OpenOrders({
   return (
     <View style={styles.container}>
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
-      <SearchPicker orderCategories={orderCategories} />
-      <View>
+      <SearchableValueInput
+        isSearchable
+        label="Zoek op categorie"
+        value={orderCategory}
+        options={orderCategories && orderCategories.map((value, index) => transformOrderCategoriesToSearchableValue(value, index))}
+        onChange={handleChangeOrderCategory}
+      />
+      <View style={styles.orders}>
         {openOrders?.map((order) => (
           <Order key={order.orderId} order={order} toast={toast} page={page} />
         ))}
@@ -27,6 +51,10 @@ function OpenOrders({
 const styles = StyleSheet.create({
   container: {
     padding: 5,
+  },
+  orders: {
+    marginTop: 50,
+    borderTopWidth: 1,
   },
 });
 

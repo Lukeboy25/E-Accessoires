@@ -8,7 +8,7 @@ import Header from './Header';
 import Pagination from './Pagination';
 import OrderTitle from './OrderTitle';
 import LoadingSpinner from './LoadingSpinner';
-import SearchPicker from './SearchPicker';
+import SearchPicker from '../compositions/SearchableValueInput/SearchableValueInput';
 
 export {
   Order,

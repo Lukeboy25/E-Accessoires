@@ -1,0 +1,37 @@
+.search-input {
+
+    &__wrapper {
+        display: flex;
+        border: 1px solid rgb(230, 232, 234);
+        // box-shadow: 2px;
+
+        // @include dark-mode {
+        //     border: none;
+        // }
+    }
+
+    &__icon-wrapper {
+        // @extend %flex-align-center;
+
+        padding: 1rem;
+        background-color: white;
+
+        // @include dark-mode {
+        //     background-color: rgb(247, 248, 250);
+        // }
+    }
+
+    &__icon {
+        color: rgb(95, 105, 116);
+    }
+
+    &__input {
+        border-color: transparent;
+        background-color: white;
+        box-shadow: none;
+    }
+
+    &__error {
+        margin-top: .5rem;
+    }
+}
