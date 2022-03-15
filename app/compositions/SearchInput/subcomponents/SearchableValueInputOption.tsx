@@ -1,7 +1,9 @@
 import React, { FC, ReactElement } from 'react';
-import { Button, FlatList, StyleSheet } from 'react-native';
+import { Button, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { generateQueryHighlight } from '../../../helpers/string';
 import { SearchableOption } from '../../types';
+
+import styles from './SearchableValueInputOption.scss';
 
 interface SearchableValueInputOptionProps {
     option: SearchableOption;
@@ -21,10 +23,10 @@ const SearchableValueInputOption: FC<SearchableValueInputOptionProps> = ({
   const handleClick = (): void => onSelect(option);
 
   return (
-    <FlatList style={styles[`searchable-value-input-option ${className}`]}>
-      <Button
-        title={option.label}
-        onPress={handleClick}
+    <View style={styles[`searchable-value-input-option ${className}`]}>
+      <TouchableOpacity
+        // title={option.label}
+        onAccessibilityTap={handleClick}
         style={styles['searchable-value-input-option__button']}
       >
         {query ? (
@@ -46,14 +48,9 @@ const SearchableValueInputOption: FC<SearchableValueInputOptionProps> = ({
           {option.secondaryLabel}
         </Text>
         )}
-      </Button>
-    </FlatList>
+      </TouchableOpacity>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  'searchable-value-input-option__button': {
-  },
-});
 
 export default SearchableValueInputOption;

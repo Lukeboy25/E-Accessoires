@@ -1,23 +1,19 @@
-.container {
-    flex: 1;
-}
-
 .searchable-value-input {
-    position: relative;
+  flex: 1;
 
-    .searchable-value-input__result-list {
-        max-height: 22em;
-        margin: 0;
-        padding: 0;
-        overflow: auto;
-        border: 1px solid rgb(230, 232, 234);
-        border-top: none;
+  .searchable-value-input__result-list {
+    flex: 1;
+    max-height: 22em;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    border: 1px solid rgb(230, 232, 234);
+    border-top: none;
+  }
+
+  &__result-option {
+    & + & {
+      border-top: 1px solid rgb(230, 232, 234);
     }
-
-    &__result-option {
-
-        & + & {
-            border-top: 1px solid rgb(230, 232, 234);
-        }
-    }
+  }
 }
