@@ -15,10 +15,11 @@ export function setIsLoading(isLoading: boolean) {
   };
 }
 
-export function setOpenOrders(openOrders) {
+export function setOpenOrders(openOrders: OrderViewModel[], search: string) {
   return {
     type: OPEN_ORDERS,
     openOrders,
+    search,
   };
 }
 
@@ -58,35 +59,31 @@ export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch)
   dispatch(setOrderPages(orderPages));
 };
 
-export const getOrderDetails = (httpService, orders, pageNumber, itemsAmount) => {
+export const getOrderDetails = (httpService: HttpService, orders: OrderViewModel[], pageNumber: number, itemsAmount: number) => {
   const selectedPage = calculatePage(pageNumber, PAGE_SIZE);
   const slicedArray = orders.slice(selectedPage, selectedPage + itemsAmount);
 
-  const promiseArray = slicedArray.map(async (order) => await httpService.get(`orders/${order.orderId}`));
+  const promiseArray = slicedArray.map(async (order) => httpService.get(`orders/${order.orderId}`));
 
   return promiseArray;
 };
 
-const fetchOrderCategories = (promiseArray: OrderViewModel[]) => async (dispatch: Dispatch) => {
-  Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
-    dispatch(setOpenOrders(openOrdersArray));
+const fetchOrderCategories = (openOrdersArray: OrderViewModel[]) => (dispatch: Dispatch) => {
+  const orderCategories = [];
+  openOrdersArray.map((openOrderItem: OrderViewModel) => {
+    openOrderItem.orderItems.map((detailorderItem: DetailOrderItemViewModel) => {
+      const orderCategoryTitle = detailorderItem.product.title.split('-', 1)[0];
 
-    const orderCategories = [];
-    openOrdersArray.map((openOrderItem: OrderViewModel) => {
-      openOrderItem.orderItems.map((detailorderItem: DetailOrderItemViewModel) => {
-        const orderCategoryTitle = detailorderItem.product.title.split('-', 1)[0];
-
-        orderCategories.push(orderCategoryTitle);
-      });
+      orderCategories.push(orderCategoryTitle);
     });
-
-    const uniqueOrderCategories = [...new Set(orderCategories)];
-
-    dispatch(setOrderCategories(uniqueOrderCategories));
   });
+
+  const uniqueOrderCategories = [...new Set(orderCategories)];
+
+  dispatch(setOrderCategories(uniqueOrderCategories));
 };
 
-export const getOrders = (language: string, pageNumber: number) => async (dispatch: Dispatch) => {
+export const getOrders = (language: string, pageNumber: number, search?: string) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders').catch((e) => {
@@ -105,14 +102,17 @@ export const getOrders = (language: string, pageNumber: number) => async (dispat
     if (order && order.orderItems[0]) {
       return !order.orderItems[0].cancellationRequest;
     }
-  }).sort((a, b) => a.orderPlacedDateTime > b.orderPlacedDateTime);
+  }).sort((a: OrderViewModel, b: OrderViewModel) => a.orderPlacedDateTime > b.orderPlacedDateTime);
 
   dispatch(calculateOrderPages(orders.length));
   dispatch(setOrderAmount(orders.length));
 
   const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE);
 
-  dispatch(fetchOrderCategories(promiseArray));
+  Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
+    dispatch(setOpenOrders(openOrdersArray, search));
+    dispatch(fetchOrderCategories(openOrdersArray));
+  });
 
   dispatch(setIsLoading(false));
 };
@@ -133,11 +133,11 @@ export const getClosedOrders = (language: string, pageNumber: number) => async (
     return dispatch(setClosedOrders([]));
   }
 
-  const onlyClosedOrders = orders.filter((order: OrderDetailViewModel) => {
+  const onlyClosedOrders = orders.filter((order: OrderViewModel) => {
     if (order && order.orderItems[0]) {
       return order.orderItems[0].quantityShipped === 1;
     }
-  }).sort((a: OrderDetailViewModel, b: OrderDetailViewModel) => a.orderPlacedDateTime < b.orderPlacedDateTime);
+  }).sort((a: OrderViewModel, b: OrderViewModel) => a.orderPlacedDateTime < b.orderPlacedDateTime);
 
   const promiseArray = getOrderDetails(httpService, onlyClosedOrders, pageNumber, 20);
   Promise.all(promiseArray).then((closedOrdersArray) => dispatch(setClosedOrders(closedOrdersArray))).catch((error) => {

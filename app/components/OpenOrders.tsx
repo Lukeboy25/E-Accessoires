@@ -4,23 +4,21 @@ import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
 import SearchableValueInput from '../compositions/SearchableValueInput/SearchableValueInput';
 import { SearchableOption } from '../compositions/types/index';
-import { transformOrderCategoriesToSearchableValue } from './transformOrderCategoryToSearchableValue';
 
 function OpenOrders({
-  languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
+  fetchOrders, search, languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
 }) {
   const [orderCategory, setOrderCategory] = useState('');
 
   const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
     setOrderCategory(orderCategoryValue.label);
 
-    const selectedOccupation = orderCategoryValue.id
-      ? orderCategories.find((option) => option.id === orderCategoryValue.id)
+    const selectedOccupation = orderCategoryValue.id !== null
+      ? orderCategories.find((option: SearchableOption) =>option.id === orderCategoryValue.id)
       : undefined;
 
     if (selectedOccupation) {
-      // Fetch order categories
-      onSelectOccupation(selectedOccupation);
+      fetchOrders(search);
     }
   };
 
@@ -33,13 +31,10 @@ function OpenOrders({
         isSearchable
         label="Zoek op categorie"
         value={orderCategory}
-        options={
-          orderCategories
-          && orderCategories.map((value, index) => transformOrderCategoriesToSearchableValue(value, index))
-        }
+        options={orderCategories}
         onChange={handleChangeOrderCategory}
       />
-      <View style={styles.orders}>
+      <View>
         {openOrders?.map((order) => (
           <Order key={order.orderId} order={order} toast={toast} page={page} />
         ))}

@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { Button, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { generateQueryHighlight } from '../../../helpers/string';
 import { SearchableOption } from '../../types';
 
@@ -25,8 +25,7 @@ const SearchableValueInputOption: FC<SearchableValueInputOptionProps> = ({
   return (
     <View style={styles[`searchable-value-input-option ${className}`]}>
       <TouchableOpacity
-        // title={option.label}
-        onAccessibilityTap={handleClick}
+        onPress={handleClick}
         style={styles['searchable-value-input-option__button']}
       >
         {query ? (

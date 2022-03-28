@@ -74,9 +74,11 @@ class HomeScreen extends Component {
           <LoadingSpinner show={this.props.isLoading} />
           <Header />
           {this.props.openOrders && (
-            <OpenOrders
-              orderAmount={this.props.orderAmount}
+            <OpenOrders              
+              fetchOrders={this.requestOrders}
+              search={this.state.search}
               languageState={this.state.languageState}
+              orderAmount={this.props.orderAmount}
               switchLanguage={this.switchLanguage}
               openOrders={this.props.openOrders}
               toast={this.toast}

@@ -1,6 +1,8 @@
+import { transformOrderCategoriesToSearchableValue } from './transformOrderCategoryToSearchableValue';
 import {
   OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, SET_ERROR, ORDER_CATEGORIES,
 } from './orderTypes';
+import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 
 const initialState = {
   openOrders: [],
@@ -26,9 +28,14 @@ export function orderReducer(state = initialState, action: any) {
         error: action.error,
       };
     case OPEN_ORDERS:
+      // eslint-disable-next-line no-case-declarations
+      const filteredOrders = action.search
+        ? action.openOrders.orderItems.filter((detailorderItem: DetailOrderItemViewModel) => detailorderItem.product.title.split('-', 1)[0] === action.search)
+        : action.openOrders;
+
       return {
         ...state,
-        openOrders: action.openOrders,
+        openOrders: filteredOrders,
       };
     case CLOSED_ORDERS:
       return {
@@ -38,7 +45,7 @@ export function orderReducer(state = initialState, action: any) {
     case ORDER_CATEGORIES:
       return {
         ...state,
-        orderCategories: action.orderCategories,
+        orderCategories: action.orderCategories.map((value: string, index: string) => transformOrderCategoriesToSearchableValue(value, index)),
       };
     case ORDER_PAGES:
       return {

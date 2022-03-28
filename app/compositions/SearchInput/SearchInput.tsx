@@ -1,5 +1,9 @@
-import React, { ChangeEvent, forwardRef, ForwardRefExoticComponent, ReactElement, RefAttributes } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, {
+  forwardRef, ForwardRefExoticComponent, ReactElement, RefAttributes,
+} from 'react';
+import {
+  View, Text, TextInput,
+} from 'react-native';
 import { SearchIcon } from '../../components/icons';
 import { HTMLInputProps } from '../../components/Input/Input';
 
@@ -22,28 +26,26 @@ const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardR
   hideIcon = false,
   onChange,
   className = '',
-  ...inputProps
 }): ReactElement => {
   const handleChange = (value: string) => {
     onChange(value);
   };
 
-    return (
-      <View aria-label={hideLabel ? label : undefined} style={styles[`search-input ${className}`]}>
-        {!hideLabel && <Text>{label}</Text>}
+  return (
+    <View aria-label={hideLabel ? label : undefined} style={styles[`search-input ${className}`]}>
+      {!hideLabel && <Text>{label}</Text>}
 
-        <View style={styles['search-input__wrapper']}>
-          {!hideIcon && (
-            <View style={styles['search-input__icon-wrapper']}>
-              <SearchIcon className='search-input__icon' />
-            </View>
-          )}
-
-          <TextInput onChangeText={handleChange} style={styles['search-input__input']} />
+      <View style={styles['search-input__wrapper']}>
+        {!hideIcon && (
+        <View style={styles['search-input__icon-wrapper']}>
+          <SearchIcon className="search-input__icon" />
         </View>
+        )}
+
+        <TextInput onChangeText={handleChange} style={styles['search-input__input']} />
       </View>
-    );
-  }
-);
+    </View>
+  );
+});
 
 export default SearchInput;
