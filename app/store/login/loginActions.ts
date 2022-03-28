@@ -10,7 +10,7 @@ export function setIsLoading(isLoading: boolean) {
   };
 }
 
-export function setGoogleLogin(user: {}) {
+export function setGoogleLogin(user: object) {
   return {
     type: GOOGLE_LOGIN,
     user,
@@ -32,9 +32,17 @@ export const checkForGoogleUser = () => async (dispatch: Dispatch) => {
 export const loginWithGoogle = (googleUser: GoogleUserViewModel) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
 
-  googleUser.name && await AsyncStorage.setItem('googleName', googleUser.name);
-  googleUser.email && await AsyncStorage.setItem('googleEmail', googleUser.email);
-  googleUser.photoUrl && await AsyncStorage.setItem('googlePhotoUrl', googleUser.photoUrl);
+  if (googleUser.name) {
+    await AsyncStorage.setItem('googleName', googleUser.name);
+  }
+
+  if (googleUser.email) {
+    await AsyncStorage.setItem('googleEmail', googleUser.email);
+  }
+
+  if (googleUser.photoUrl) {
+    await AsyncStorage.setItem('googlePhotoUrl', googleUser.photoUrl);
+  }
 
   dispatch(setIsLoading(false));
 
