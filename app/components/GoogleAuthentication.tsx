@@ -32,7 +32,7 @@ function GoogleAuthentication({ loginWithGoogle }) {
     <View style={styles.container}>
       <Text style={styles.header}>Sign in with Google to get started</Text>
       <View style={styles.buttonContainer}>
-        <Button style={styles.button} title="Login" onPress={() => signIn()} />
+        <Button title="Login" onPress={() => signIn()} />
       </View>
     </View>
   );

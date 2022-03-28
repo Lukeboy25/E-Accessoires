@@ -19,31 +19,31 @@ function Pagination({
   return (
     <View style={styles.pagination}>
       {page > 1
-                && (
-                <View style={styles.leftArrowContainer}>
-                  <MaterialIcons
-                    style={styles.previousIcon}
-                    onPress={onPrevClick}
-                    name="keyboard-arrow-left"
-                    color="white"
-                    size={30}
-                  />
-                  <Text onPress={onPrevClick} style={styles.paginateText}>{page - 1}</Text>
-                </View>
-                )}
+        && (
+        <View style={styles.leftArrowContainer}>
+          <MaterialIcons
+            style={styles.previousIcon}
+            onPress={onPrevClick}
+            name="keyboard-arrow-left"
+            color="white"
+            size={30}
+          />
+          <Text onPress={onPrevClick} style={styles.paginateText}>{page - 1}</Text>
+        </View>
+        )}
       {totalPages > page
-                && (
-                <View style={styles.rightArrowContainer}>
-                  <Text onPress={onNextClick} style={styles.paginateText}>{page + 1}</Text>
-                  <MaterialIcons
-                    style={styles.nextIcon}
-                    onPress={onNextClick}
-                    name="keyboard-arrow-right"
-                    color="white"
-                    size={30}
-                  />
-                </View>
-                )}
+        && (
+        <View style={styles.rightArrowContainer}>
+          <Text onPress={onNextClick} style={styles.paginateText}>{page + 1}</Text>
+          <MaterialIcons
+            style={styles.nextIcon}
+            onPress={onNextClick}
+            name="keyboard-arrow-right"
+            color="white"
+            size={30}
+          />
+        </View>
+        )}
     </View>
   );
 }

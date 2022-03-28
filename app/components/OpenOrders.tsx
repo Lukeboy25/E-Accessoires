@@ -6,7 +6,9 @@ import SearchableValueInput from '../compositions/SearchableValueInput/Searchabl
 import { SearchableOption } from '../compositions/types/index';
 import { transformOrderCategoriesToSearchableValue } from './transformOrderCategoryToSearchableValue';
 
-function OpenOrders({ languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories }) {
+function OpenOrders({
+  languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
+}) {
   const [orderCategory, setOrderCategory] = useState('');
 
   const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
@@ -18,23 +20,22 @@ function OpenOrders({ languageState, switchLanguage, openOrders, orderAmount, to
 
     if (selectedOccupation) {
       // Fetch order categories
-      // onSelectOccupation(selectedOccupation);
+      onSelectOccupation(selectedOccupation);
     }
   };
 
-  const getTitle = () =>
-    orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`;
+  const getTitle = () => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
 
   return (
     <View style={styles.container}>
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
       <SearchableValueInput
         isSearchable
-        label='Zoek op categorie'
+        label="Zoek op categorie"
         value={orderCategory}
         options={
-          orderCategories &&
-          orderCategories.map((value, index) => transformOrderCategoriesToSearchableValue(value, index))
+          orderCategories
+          && orderCategories.map((value, index) => transformOrderCategoriesToSearchableValue(value, index))
         }
         onChange={handleChangeOrderCategory}
       />

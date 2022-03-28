@@ -32,10 +32,10 @@ function Order({
     await getOrders(language, page);
     await printShipmentLabel(order);
 
-   toast.show(
-        <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
-        2500,
-      );
+    toast.show(
+      <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
+      2500,
+    );
   };
 
   return (
