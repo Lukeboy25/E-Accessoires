@@ -1,5 +1,7 @@
-import React, { FC, ReactElement, useEffect, useRef, useState } from 'react';
-import { StyleSheet, SafeAreaView, View, FlatList } from 'react-native';
+import React, {
+  FC, ReactElement, useEffect, useRef, useState,
+} from 'react';
+import { SafeAreaView, View } from 'react-native';
 import useHandleClickOutside from '../../hooks/useHandleClickOutside';
 import SearchInput, { SearchInputProps } from '../SearchInput/SearchInput';
 import SearchableValueInputOption from '../SearchInput/subcomponents/SearchableValueInputOption';
@@ -81,12 +83,12 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
           <View ref={() => resultListRef} style={styles[`searchable-value-input__result-list ${listClassName}`]}>
             {searchResults.map((option) => (
               <SearchableValueInputOption
-              key={option.id}
-              option={option}
-              query={query}
-              onSelect={handleClick}
-              className='searchable-value-input__result-option'
-            />
+                key={option.id}
+                option={option}
+                query={query}
+                onSelect={handleClick}
+                className="searchable-value-input__result-option"
+              />
             ))}
           </View>
         )}

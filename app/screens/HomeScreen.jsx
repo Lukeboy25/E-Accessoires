@@ -13,7 +13,7 @@ import {
 } from '../components';
 
 class HomeScreen extends Component {
-  state = { languageState: 'NL', page: 1 };
+  state = { languageState: 'NL', page: 1, search: '' };
 
   async componentDidMount() {
     this.props.checkForGoogleUser();
@@ -26,7 +26,7 @@ class HomeScreen extends Component {
     }
   }
 
-  requestOrders = async () => {
+  requestOrders = async (search) => {
     try {
       if (this.state.languageState == 'NL') {
         await this.props.requestTokenNL();
@@ -34,7 +34,7 @@ class HomeScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getOrders(this.state.languageState, this.state.page);
+      await this.props.getOrders(this.state.languageState, this.state.page, search);
     } catch (e) {
       console.error(e);
     }

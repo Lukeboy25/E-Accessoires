@@ -15,7 +15,7 @@ export function setIsLoading(isLoading: boolean) {
   };
 }
 
-export function setOpenOrders(openOrders: OrderViewModel[], search: string) {
+export function setOpenOrders(openOrders: OrderViewModel[], search?: string) {
   return {
     type: OPEN_ORDERS,
     openOrders,

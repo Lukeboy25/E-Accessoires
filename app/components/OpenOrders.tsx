@@ -13,12 +13,12 @@ function OpenOrders({
   const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
     setOrderCategory(orderCategoryValue.label);
 
-    const selectedOccupation = orderCategoryValue.id !== null
-      ? orderCategories.find((option: SearchableOption) =>option.id === orderCategoryValue.id)
+    const selectedOrder = orderCategoryValue.id !== null
+      ? orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id)
       : undefined;
 
-    if (selectedOccupation) {
-      fetchOrders(search);
+    if (selectedOrder) {
+      fetchOrders(selectedOrder);
     }
   };
 
