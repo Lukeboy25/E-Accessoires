@@ -10,25 +10,27 @@ import { HTMLInputProps } from '../../components/Input/Input';
 import styles from './SearchInput.scss';
 
 export interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
-    label: string;
-    hideLabel?: boolean;
-    icon?: string;
-    hideIcon?: boolean;
-    onChange: (value: string) => void;
-    className?: string;
+  value: string;
+  label: string;
+  hideLabel?: boolean;
+  icon?: string;
+  hideIcon?: boolean;
+  onChange: (value: string) => void;
+  className?: string;
 }
 
 type SearchInputWithRefProps = SearchInputProps & RefAttributes<HTMLInputElement>;
 
 const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardRef(({
+  value,
   label,
   hideLabel = false,
   hideIcon = false,
   onChange,
   className = '',
 }): ReactElement => {
-  const handleChange = (value: string) => {
-    onChange(value);
+  const handleChange = (value2: string) => {
+    onChange(value2);
   };
 
   return (
@@ -42,7 +44,7 @@ const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardR
         </View>
         )}
 
-        <TextInput onChangeText={handleChange} style={styles['search-input__input']} />
+        <TextInput value={value} onChangeText={handleChange} style={styles['search-input__input']} />
       </View>
     </View>
   );

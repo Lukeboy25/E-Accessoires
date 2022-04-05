@@ -7,13 +7,11 @@ function LoadingSpinner(props) {
   const {
     show = false, color = '#ffffff', backgroundColor = 'transparent', dimLights = 0.3,
   } = props;
-  const [isShowing, setShowing] = React.useState();
+  const [isShowing, setShowing] = React.useState(false);
 
   useEffect(() => {
     setShowing(true);
-    setTimeout(() => {
-      setShowing(false);
-    }, 700);
+    setTimeout(() => setShowing(false), 700);
   }, [show]);
 
   return (
