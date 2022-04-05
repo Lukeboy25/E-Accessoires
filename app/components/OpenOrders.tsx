@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
@@ -6,12 +6,10 @@ import SearchableValueInput from '../compositions/SearchableValueInput/Searchabl
 import { SearchableOption } from '../compositions/types/index';
 
 function OpenOrders({
-  fetchOrders, search, languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
+  fetchOrders, selectedOrderCategory, onSelectedOrderCategory, languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
 }) {
-  const [orderCategory, setOrderCategory] = useState('');
-
   const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
-    setOrderCategory(orderCategoryValue.label);
+    onSelectedOrderCategory(orderCategoryValue);
 
     const selectedOrder = orderCategoryValue.id !== null
       ? orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id)
@@ -30,13 +28,13 @@ function OpenOrders({
       <SearchableValueInput
         isSearchable
         label="Zoek op categorie"
-        value={orderCategory}
+        value={selectedOrderCategory.label}
         options={orderCategories}
         onChange={handleChangeOrderCategory}
       />
       <View>
         {openOrders?.map((order) => (
-          <Order key={order.orderId} order={order} toast={toast} page={page} />
+          <Order key={order.orderId} order={order} toast={toast} page={page} isClosedOrder={false} />
         ))}
       </View>
     </View>

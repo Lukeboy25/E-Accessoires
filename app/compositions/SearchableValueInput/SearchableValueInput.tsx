@@ -28,7 +28,6 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
   onChange,
   inputClassName = '',
   listClassName = '',
-  className = '',
   ...inputProps
 }): ReactElement => {
   const defaultFocusIndex = -1;

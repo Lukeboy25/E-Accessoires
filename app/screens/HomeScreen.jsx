@@ -13,7 +13,7 @@ import {
 } from '../components';
 
 class HomeScreen extends Component {
-  state = { languageState: 'NL', page: 1, search: '' };
+  state = { languageState: 'NL', page: 1, selectedOrderCategory: '' };
 
   async componentDidMount() {
     this.props.checkForGoogleUser();
@@ -26,7 +26,7 @@ class HomeScreen extends Component {
     }
   }
 
-  requestOrders = async (search) => {
+  requestOrders = async () => {
     try {
       if (this.state.languageState == 'NL') {
         await this.props.requestTokenNL();
@@ -34,14 +34,14 @@ class HomeScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getOrders(this.state.languageState, this.state.page, search);
+      await this.props.getOrders(this.state.languageState, this.state.page, this.state.selectedOrderCategory);
     } catch (e) {
       console.error(e);
     }
   };
 
   switchLanguage = () => {
-    this.setState(() => ({ page: 1 }));
+    this.setState(() => ({ page: 1, selectedOrderCategory: '' }));
 
     if (this.state.languageState === 'NL') {
       this.setState({ languageState: 'BE' });
@@ -53,6 +53,10 @@ class HomeScreen extends Component {
   setPage = (page) => {
     this.setState(() => ({ page }));
     this.requestOrders();
+  };
+
+  onSelectedOrderCategory = (selectedOrderCategory) => {
+    this.setState(() => ({ selectedOrderCategory }));
   };
 
   render() {
@@ -74,15 +78,16 @@ class HomeScreen extends Component {
           <LoadingSpinner show={this.props.isLoading} />
           <Header />
           {this.props.openOrders && (
-            <OpenOrders              
+            <OpenOrders
               fetchOrders={this.requestOrders}
-              search={this.state.search}
-              languageState={this.state.languageState}
-              orderAmount={this.props.orderAmount}
               switchLanguage={this.switchLanguage}
               openOrders={this.props.openOrders}
+              orderAmount={this.props.orderAmount}
               toast={this.toast}
+              languageState={this.state.languageState}
               page={this.state.page}
+              selectedOrderCategory={this.state.selectedOrderCategory}
+              onSelectedOrderCategory={this.onSelectedOrderCategory}
             />
           )}
           {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
