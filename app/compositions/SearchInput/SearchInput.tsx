@@ -4,9 +4,10 @@ import React, {
 import {
   View, Text, TextInput,
 } from 'react-native';
-import { SearchIcon } from '../../components/icons';
+import { DeleteIcon, SearchIcon } from '../../components/icons';
 import { HTMLInputProps } from '../../components/Input/Input';
 
+// @ts-ignore
 import styles from './SearchInput.scss';
 
 export interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
@@ -17,6 +18,7 @@ export interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
   hideIcon?: boolean;
   onChange: (value: string) => void;
   className?: string;
+  onDeleteIconPress: () => void;
 }
 
 type SearchInputWithRefProps = SearchInputProps & RefAttributes<HTMLInputElement>;
@@ -28,9 +30,10 @@ const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardR
   hideIcon = false,
   onChange,
   className = '',
+  onDeleteIconPress,
 }): ReactElement => {
-  const handleChange = (value2: string) => {
-    onChange(value2);
+  const handleChange = (newValue: string) => {
+    onChange(newValue);
   };
 
   return (
@@ -38,13 +41,8 @@ const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardR
       {!hideLabel && <Text>{label}</Text>}
 
       <View style={styles['search-input__wrapper']}>
-        {!hideIcon && (
-        <View style={styles['search-input__icon-wrapper']}>
-          <SearchIcon className="search-input__icon" />
-        </View>
-        )}
-
         <TextInput value={value} onChangeText={handleChange} style={styles['search-input__input']} />
+        <DeleteIcon onPress={onDeleteIconPress} style={{ padding: 20, marginVertical: 5, }} />
       </View>
     </View>
   );

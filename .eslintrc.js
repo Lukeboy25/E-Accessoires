@@ -24,8 +24,9 @@ module.exports = {
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/no-unused-expressions': 'off',
-    'no-unused-vars': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
+    'no-unused-vars': 'warning',
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'jsx-a11y/label-has-associated-control': ['error', {

@@ -19,6 +19,7 @@ interface SearchableValueInputProps extends Omit<SearchInputProps, 'onChange'> {
   inputClassName?: string;
   inputWrapperClassName?: string;
   listClassName?: string;
+  onDeleteIconPress: () => void;
 }
 
 const SearchableValueInput: FC<SearchableValueInputProps> = ({
@@ -29,6 +30,7 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
   onChange,
   inputClassName = '',
   listClassName = '',
+  onDeleteIconPress,
   ...inputProps
 }): ReactElement => {
   const defaultFocusIndex = -1;
@@ -77,6 +79,7 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
           hideIcon={hideIcon || !isSearchable}
           onChange={handleChange}
           className={inputClassName}
+          onDeleteIconPress={onDeleteIconPress}
         />
 
         {searchResults.length > 0 && (

@@ -22,15 +22,22 @@ function OpenOrders({
 
   const getTitle = () => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
 
+  const onDeleteIconPress = () => {
+      onSelectedOrderCategory(undefined);
+
+      fetchOrders();
+  }
+
   return (
     <View style={styles.container}>
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
       <SearchableValueInput
         isSearchable
         label="Zoek op categorie"
-        value={selectedOrderCategory.label}
+        value={selectedOrderCategory && selectedOrderCategory.label}
         options={orderCategories}
-        onChange={handleChangeOrderCategory}
+        onChange={handleChangeOrderCategory} 
+        onDeleteIconPress={onDeleteIconPress}      
       />
       <View>
         {openOrders?.map((order) => (

@@ -6,23 +6,20 @@
 
   &__wrapper {
     flex: 1;
+    flex-direction: row;
     // display: flex;
   }
 
-  &__icon-wrapper {
-    flex: 1;
-    // padding: 1rem;
-    background-color: white;
-  }
-
   &__icon {
-    flex: 1;
-    color: rgb(95, 105, 116);
+    padding: 5px 10px;
+    margin: 5px;
+    color: rgb(0, 0, 0);
   }
 
   &__input {
     padding: 5px 10px;
     margin: 5px;
+    width: 85%;
     border-radius: 10px;
     border: 1px solid rgb(230, 232, 234);
     border-color: transparent;

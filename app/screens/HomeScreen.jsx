@@ -17,7 +17,7 @@ import {
 } from '../components';
 
 class HomeScreen extends Component {
-  state = { languageState: 'NL', page: 1, selectedOrderCategory: '' };
+  state = { languageState: 'NL', page: 1, selectedOrderCategory: undefined };
 
   async componentDidMount() {
     this.props.checkForGoogleUser();
