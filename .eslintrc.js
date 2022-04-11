@@ -45,6 +45,7 @@ module.exports = {
         tsx: 'never',
       },
     ],
+    'import/no-cycle': 'off',
     'react/forbid-prop-types': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',

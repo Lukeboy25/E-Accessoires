@@ -1,4 +1,4 @@
-import { transformOrderCategoriesToSearchableValue } from './transformOrderCategoryToSearchableValue';
+import { transformOrderCategoriesToSearchableValue } from './helpers/transformOrderCategoryToSearchableValue';
 import {
   OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, SET_ERROR, ORDER_CATEGORIES,
 } from './orderTypes';
@@ -30,7 +30,7 @@ export function orderReducer(state = initialState, action: any) {
     case OPEN_ORDERS: {
       const filteredOrders = action.search
         ? action.openOrders.filter(
-          (detailorderItem: OrderViewModel) => detailorderItem.orderItems[0].product.title.split('-', 1)[0] === action.search.label,
+          (detailorderItem: OrderViewModel) => detailorderItem.orderItems[0].product.title.split('-', 1)[0].trim() === action.search.label,
         )
         : action.openOrders;
 

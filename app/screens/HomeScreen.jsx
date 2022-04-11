@@ -9,7 +9,11 @@ import { requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
 import { checkForGoogleUser } from '../store/login/loginActions';
 import { getOrders } from '../store/order/orderActions';
 import {
-  GoogleAuthentication, OpenOrders, Header, Pagination, LoadingSpinner,
+  GoogleAuthentication,
+  OpenOrders,
+  Header,
+  Pagination,
+  LoadingSpinner,
 } from '../components';
 
 class HomeScreen extends Component {
@@ -91,11 +95,14 @@ class HomeScreen extends Component {
             />
           )}
           {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
+          {!this.state.selectedOrderCategory
+          && (
           <Pagination
             onPageChange={(page) => this.setPage(page)}
             page={this.state.page}
             totalPages={this.props.orderPages}
           />
+          )}
         </ScrollView>
         <Toast
           ref={(toast) => (this.toast = toast)}

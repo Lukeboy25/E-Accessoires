@@ -7,6 +7,7 @@ import {
 import { calculatePage } from '../../helpers/calculatePage';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { OrderViewModel } from '../../entities/Order/Order';
+import { fetchOrderCategoriesFromOrders } from './helpers/fetchOrderCategoriesFromOrders';
 
 export function setIsLoading(isLoading: boolean) {
   return {
@@ -51,7 +52,7 @@ export function setOrderCategories(orderCategories: string[]) {
   };
 }
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 10;
 
 export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch) => {
   const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
@@ -59,28 +60,21 @@ export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch)
   dispatch(setOrderPages(orderPages));
 };
 
-export const getOrderDetails = (httpService: HttpService, orders: OrderViewModel[], pageNumber: number, itemsAmount: number) => {
+export const getOrderDetails = (httpService: HttpService, orders: OrderViewModel[], pageNumber: number, itemsAmount: number, search?: string) => {
+  if (search) {
+    return orders.map(async (order) => httpService.get(`orders/${order.orderId}`));
+  }
+
   const selectedPage = calculatePage(pageNumber, PAGE_SIZE);
   const slicedArray = orders.slice(selectedPage, selectedPage + itemsAmount);
 
-  const promiseArray = slicedArray.map(async (order) => httpService.get(`orders/${order.orderId}`));
-
-  return promiseArray;
+  return slicedArray.map(async (order) => httpService.get(`orders/${order.orderId}`));
 };
 
 const fetchOrderCategories = (openOrdersArray: OrderViewModel[]) => (dispatch: Dispatch) => {
-  const orderCategories = [];
-  openOrdersArray.map((openOrderItem: OrderViewModel) => {
-    openOrderItem.orderItems.map((detailorderItem: DetailOrderItemViewModel) => {
-      const orderCategoryTitle = detailorderItem.product.title.split('-', 1)[0];
+  const orderCategories = fetchOrderCategoriesFromOrders(openOrdersArray);
 
-      orderCategories.push(orderCategoryTitle);
-    });
-  });
-
-  const uniqueOrderCategories = [...new Set(orderCategories)];
-
-  dispatch(setOrderCategories(uniqueOrderCategories));
+  dispatch(setOrderCategories(orderCategories));
 };
 
 export const getOrders = (language: string, pageNumber: number, search?: string) => async (dispatch: Dispatch) => {
@@ -107,14 +101,14 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
   dispatch(calculateOrderPages(orders.length));
   dispatch(setOrderAmount(orders.length));
 
-  const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE);
+  const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE, search);
 
-  Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
+  dispatch(setIsLoading(false));
+
+  return Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
     dispatch(setOpenOrders(openOrdersArray, search));
     dispatch(fetchOrderCategories(openOrdersArray));
   });
-
-  dispatch(setIsLoading(false));
 };
 
 export const getClosedOrders = (language: string, pageNumber: number) => async (dispatch: Dispatch) => {
@@ -155,26 +149,26 @@ export const shipOrderItem = (orderdetail: DetailOrderItemViewModel, language: s
   if (orderdetail.fulfilment.method === 'FBR') {
     const transporterCode = 'BRIEFPOST';
 
-    const shipmentResponse = await httpService
-      .put('orders/shipment', {
-        orderItems: { orderItemId: orderdetail.orderItemId },
-        transport: {
-          transporterCode,
-        },
-      })
-      .catch((e) => {
-        dispatch(setIsLoading(false));
-      });
+    // const shipmentResponse = await httpService
+    //   .put('orders/shipment', {
+    //     orderItems: { orderItemId: orderdetail.orderItemId },
+    //     transport: {
+    //       transporterCode,
+    //     },
+    //   })
+    //   .catch((e) => {
+    //     dispatch(setIsLoading(false));
+    //   });
 
-    const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
+    // const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
 
-    if (outOfStockMessage) {
-      return toasterMessageWithColor('#F39C12', outOfStockMessage);
-    }
+    // if (outOfStockMessage) {
+    //   return toasterMessageWithColor('#F39C12', outOfStockMessage);
+    // }
 
-    if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
-      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-    }
+    // if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
+    //   return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    // }
   }
 
   dispatch(setIsLoading(false));

@@ -17,6 +17,7 @@ function Order({
   isClosedOrder,
   getOrders,
   page,
+  selectedOrderCategory,
 }) {
   const sendShipOrderItem = async (order, orderDetail, language) => {
     const toastResponse = await shipOrderItem(orderDetail, language);
@@ -29,7 +30,7 @@ function Order({
       );
     }
 
-    await getOrders(language, page);
+    await getOrders(language, page, selectedOrderCategory);
     await printShipmentLabel(order);
 
     toast.show(

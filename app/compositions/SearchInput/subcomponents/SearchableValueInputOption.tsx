@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { generateQueryHighlight } from '../../../helpers/string';
 import { SearchableOption } from '../../types';
 
+// @ts-ignore
 import styles from './SearchableValueInputOption.scss';
 
 interface SearchableValueInputOptionProps {

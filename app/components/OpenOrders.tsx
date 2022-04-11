@@ -34,7 +34,14 @@ function OpenOrders({
       />
       <View>
         {openOrders?.map((order) => (
-          <Order key={order.orderId} order={order} toast={toast} page={page} isClosedOrder={false} />
+          <Order
+            key={order.orderId}
+            order={order}
+            toast={toast}
+            page={page}
+            isClosedOrder={false}
+            selectedOrderCategory={selectedOrderCategory}
+          />
         ))}
       </View>
     </View>

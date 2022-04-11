@@ -8,6 +8,7 @@ import SearchableValueInputOption from '../SearchInput/subcomponents/SearchableV
 import { SearchableOption } from '../types';
 import { createCustomOption, searchOptionsOnQuery } from './helpers';
 
+// @ts-ignore
 import styles from './SearchableValueInput.scss';
 
 interface SearchableValueInputProps extends Omit<SearchInputProps, 'onChange'> {
