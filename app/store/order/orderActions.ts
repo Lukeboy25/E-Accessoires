@@ -52,7 +52,7 @@ export function setOrderCategories(orderCategories: string[]) {
   };
 }
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 
 export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch) => {
   const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
@@ -149,26 +149,26 @@ export const shipOrderItem = (orderdetail: DetailOrderItemViewModel, language: s
   if (orderdetail.fulfilment.method === 'FBR') {
     const transporterCode = 'BRIEFPOST';
 
-    // const shipmentResponse = await httpService
-    //   .put('orders/shipment', {
-    //     orderItems: { orderItemId: orderdetail.orderItemId },
-    //     transport: {
-    //       transporterCode,
-    //     },
-    //   })
-    //   .catch((e) => {
-    //     dispatch(setIsLoading(false));
-    //   });
+    const shipmentResponse = await httpService
+      .put('orders/shipment', {
+        orderItems: { orderItemId: orderdetail.orderItemId },
+        transport: {
+          transporterCode,
+        },
+      })
+      .catch((e) => {
+        dispatch(setIsLoading(false));
+      });
 
-    // const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
+    const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
 
-    // if (outOfStockMessage) {
-    //   return toasterMessageWithColor('#F39C12', outOfStockMessage);
-    // }
+    if (outOfStockMessage) {
+      return toasterMessageWithColor('#F39C12', outOfStockMessage);
+    }
 
-    // if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
-    //   return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-    // }
+    if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
+      return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    }
   }
 
   dispatch(setIsLoading(false));
