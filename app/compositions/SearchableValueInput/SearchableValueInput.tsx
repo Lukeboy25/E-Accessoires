@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react';
 import { SafeAreaView, View } from 'react-native';
-import useHandleClickOutside from '../../hooks/useHandleClickOutside';
 import SearchInput, { SearchInputProps } from '../SearchInput/SearchInput';
 import SearchableValueInputOption from '../SearchInput/subcomponents/SearchableValueInputOption';
 import { SearchableOption } from '../types';
@@ -42,15 +41,12 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
   const [searchResults, setSearchResults] = useState<SearchableOption[]>([]);
   const [focusIndex, setFocusIndex] = useState<number>(defaultFocusIndex);
 
-  const searchableValueInputRef = useRef<HTMLDivElement>(null);
   const resultListRef = useRef<HTMLUListElement>(null);
 
   const clearResults = (): void => {
     setSearchResults([]);
     setFocusIndex(defaultFocusIndex);
   };
-
-  useHandleClickOutside(searchableValueInputRef, clearResults);
 
   useEffect((): void => {
     if (resultListRef.current && focusIndex >= 0) {
@@ -74,6 +70,11 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
     clearResults();
   };
 
+  const handleDeleteIconPress = () => {
+    setSearchResults([]);
+    onDeleteIconPress();
+  }
+
   return (
     <SafeAreaView style={styles['searchable-value-input']}>
       <View style={styles['searchable-value-input']}>
@@ -81,7 +82,7 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
           {...inputProps}
           onChange={handleChange}
           className={inputClassName}
-          onDeleteIconPress={onDeleteIconPress}
+          onDeleteIconPress={handleDeleteIconPress}
         />
 
         {searchResults.length > 0 && (
