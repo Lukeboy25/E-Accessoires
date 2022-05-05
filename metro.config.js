@@ -11,7 +11,7 @@ module.exports = (async () => {
             ),
         },
         resolver: {
-            sourceExts: [...sourceExts, 'scss', 'sass', 'js', 'jsx'],
+            sourceExts: [...sourceExts, 'scss', 'sass', 'js', 'jsx', 'ts', 'tsx'],
         },
     };
 })();

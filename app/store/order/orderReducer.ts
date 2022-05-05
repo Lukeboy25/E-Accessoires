@@ -1,6 +1,12 @@
 import { transformOrderCategoriesToSearchableValue } from './helpers/transformOrderCategoryToSearchableValue';
 import {
-  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, SET_ERROR, ORDER_CATEGORIES,
+  OPEN_ORDERS, 
+  CLOSED_ORDERS, 
+  ORDER_PAGES, 
+  ORDER_AMOUNT, 
+  SET_IS_LOADING, 
+  SET_ERROR, 
+  ORDER_CATEGORIES,
 } from './orderTypes';
 import { OrderViewModel } from '../../entities/Order/Order';
 

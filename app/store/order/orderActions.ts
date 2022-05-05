@@ -2,7 +2,12 @@ import { Dispatch } from 'redux';
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/offerActions';
 import {
-  OPEN_ORDERS, CLOSED_ORDERS, ORDER_PAGES, ORDER_AMOUNT, SET_IS_LOADING, ORDER_CATEGORIES,
+  OPEN_ORDERS, 
+  CLOSED_ORDERS, 
+  ORDER_PAGES, 
+  ORDER_AMOUNT, 
+  SET_IS_LOADING, 
+  ORDER_CATEGORIES,
 } from './orderTypes';
 import { calculatePage } from '../../helpers/calculatePage';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
@@ -60,7 +65,13 @@ export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch)
   dispatch(setOrderPages(orderPages));
 };
 
-export const getOrderDetails = (httpService: HttpService, orders: OrderViewModel[], pageNumber: number, itemsAmount: number, search?: string) => {
+export const getOrderDetails = (
+  httpService: HttpService, 
+  orders: OrderViewModel[], 
+  pageNumber: number, 
+  itemsAmount: number, 
+  search?: string,
+) => {
   if (search) {
     return orders.map(async (order) => httpService.get(`orders/${order.orderId}`));
   }
