@@ -1,4 +1,4 @@
-export const calculatePage = (pageNumber, pageSize) => {
+export const calculatePage = (pageNumber: number, pageSize: number) => {
   if (pageNumber === undefined) {
     return 1;
   }

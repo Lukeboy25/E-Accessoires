@@ -6,11 +6,11 @@ it('validate different dates returns correct color', () => {
   const orange = { color: '#F39C12' };
   const red = { color: '#E74C3C' };
 
-  const currentDayMonday = moment('2021-11-15');
-  const currentDayFriday = moment('2021-11-19');
-  const currentDaySaturday = moment('2021-11-20');
+  const currentDayMonday = new Date('2021-11-15');
+  const currentDayFriday = new Date('2021-11-19');
+  const currentDaySaturday = new Date('2021-11-20');
 
-  const today = moment(currentDayMonday);
+  const today = new Date(currentDayMonday);
   const tomorrow = moment(currentDayMonday).add(1, 'days').format('yyyy-MM-DD');
   const plusTwoDays = moment(currentDayMonday).add(2, 'days').format('yyyy-MM-DD');
 
@@ -36,11 +36,11 @@ it('validate different dates returns correct color', () => {
   const orange = { color: '#F39C12' };
   const red = { color: '#E74C3C' };
 
-  const currentDayMonday = moment('2021-11-15');
-  const currentDayFriday = moment('2021-11-19');
-  const currentDaySaturday = moment('2021-11-20');
+  const currentDayMonday = new Date('2021-11-15');
+  const currentDayFriday = new Date('2021-11-19');
+  const currentDaySaturday = new Date('2021-11-20');
 
-  const today = moment(currentDayMonday);
+  const today = new Date(currentDayMonday);
   const tomorrow = moment(currentDayMonday).add(1, 'days').format('yyyy-MM-DD');
   const plusTwoDays = moment(currentDayMonday).add(2, 'days').format('yyyy-MM-DD');
 
