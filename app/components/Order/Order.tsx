@@ -7,11 +7,12 @@ import {
 } from 'react-native';
 import Moment from 'react-moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { getColorForDeliveryDate } from '../../helpers/getColorForDeliveryDate';
+import { getColorForDeliveryDateBE, getColorForDeliveryDateNL } from '../../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../../helpers/printShipmentLabel';
 import { OrderViewModel } from '../../entities/Order/Order';
+import { shipOrderItem } from '../../store/order/orderActions';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
-import { ToastResponse } from '../../entities/Toast/Toast';
+import { useDispatch } from 'react-redux';
 
 // @ts-ignore
 import styles from './Order.scss';
@@ -22,7 +23,7 @@ interface OrderProps {
   toast: any;
   page: number;
   selectedOrderCategory: string;
-  shipOrderItem: (orderdetail: DetailOrderItemViewModel, language: string) => ToastResponse;
+  languageState: string;
   getOrders: (language: string, page: number, selectedOrderCategory?: string) => void;
 };
 
@@ -32,15 +33,16 @@ const Order: FC<OrderProps> = ({
   toast,
   page,
   selectedOrderCategory,
-  shipOrderItem,
+  languageState,
   getOrders,
 }) => {
-  const sendShipOrderItem = async (order, orderDetail, language) => {
-    const toastResponse = await shipOrderItem(orderDetail, language);
+  const dispatch = useDispatch();
+
+  const sendShipOrderItem = async (order: OrderViewModel, orderDetail: DetailOrderItemViewModel, language: string) => {
+    const toastResponse = shipOrderItem(orderDetail, language);
 
     if (!order) {
-      return toast
-      && toast.show(
+      return toast && toast.show(
         <Text style={[{ backgroundColor: '#E74C3C' }, styles['order__toast']]}>Kan geen order vinden.</Text>,
         2500,
       );
@@ -49,8 +51,10 @@ const Order: FC<OrderProps> = ({
     await getOrders(language, page, selectedOrderCategory);
     await printShipmentLabel(order);
 
-    toast.show(
-      <Text style={[{ backgroundColor: toastResponse.color }, styles['order__toast']]}>{toastResponse.text}</Text>,
+    const toastRes = await toastResponse(dispatch);
+
+    return toast.show(
+      <Text style={[{ backgroundColor: toastRes.color }, styles['order__toast']]}>{toastRes.text}</Text>,
       2500,
     );
   };
@@ -114,7 +118,9 @@ const Order: FC<OrderProps> = ({
                     // @ts-ignore
                       style={[
                         styles['order__bold-label'],
-                        getColorForDeliveryDate(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
+                        languageState === 'NL' 
+                        ? getColorForDeliveryDateNL(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()) 
+                        : getColorForDeliveryDateBE(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
                       ]}
                       format="DD-MM-yyyy"
                       element={Text}

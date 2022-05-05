@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { getColorForBEDeliveryDate, getColorForDeliveryDate } from './getColorForDeliveryDate';
+import { getColorForDeliveryDateBE, getColorForDeliveryDateNL } from './getColorForDeliveryDate';
 
 it('validate different dates returns correct color', () => {
   const green = { color: '#2ECC71' };
@@ -20,15 +20,15 @@ it('validate different dates returns correct color', () => {
   const plusTwoDaysSaturday = moment(currentDaySaturday).add(2, 'days').format('yyyy-MM-DD');
   const plusThreeDaysSaturday = moment(currentDaySaturday).add(3, 'days').format('yyyy-MM-DD');
 
-  expect(getColorForDeliveryDate(today, currentDayMonday)).toStrictEqual(red);
-  expect(getColorForDeliveryDate(tomorrow, currentDayMonday)).toStrictEqual(orange);
-  expect(getColorForDeliveryDate(plusTwoDays, currentDayMonday)).toStrictEqual(green);
+  expect(getColorForDeliveryDateNL(today, currentDayMonday)).toStrictEqual(red);
+  expect(getColorForDeliveryDateNL(tomorrow, currentDayMonday)).toStrictEqual(orange);
+  expect(getColorForDeliveryDateNL(plusTwoDays, currentDayMonday)).toStrictEqual(green);
 
-  expect(getColorForDeliveryDate(plusThreeDays, currentDayFriday)).toStrictEqual(orange);
-  expect(getColorForDeliveryDate(plusFourDays, currentDayFriday)).toStrictEqual(green);
+  expect(getColorForDeliveryDateNL(plusThreeDays, currentDayFriday)).toStrictEqual(orange);
+  expect(getColorForDeliveryDateNL(plusFourDays, currentDayFriday)).toStrictEqual(green);
 
-  expect(getColorForDeliveryDate(plusTwoDaysSaturday, currentDaySaturday)).toStrictEqual(orange);
-  expect(getColorForDeliveryDate(plusThreeDaysSaturday, currentDaySaturday)).toStrictEqual(green);
+  expect(getColorForDeliveryDateNL(plusTwoDaysSaturday, currentDaySaturday)).toStrictEqual(orange);
+  expect(getColorForDeliveryDateNL(plusThreeDaysSaturday, currentDaySaturday)).toStrictEqual(green);
 });
 
 it('validate different dates returns correct color', () => {
@@ -50,13 +50,13 @@ it('validate different dates returns correct color', () => {
   const plusTwoDaysSaturday = moment(currentDaySaturday).add(2, 'days').format('yyyy-MM-DD');
   const plusThreeDaysSaturday = moment(currentDaySaturday).add(3, 'days').format('yyyy-MM-DD');
 
-  expect(getColorForBEDeliveryDate(today, currentDayMonday)).toStrictEqual(red);
-  expect(getColorForBEDeliveryDate(tomorrow, currentDayMonday)).toStrictEqual(red);
-  expect(getColorForBEDeliveryDate(plusTwoDays, currentDayMonday)).toStrictEqual(orange);
+  expect(getColorForDeliveryDateBE(today, currentDayMonday)).toStrictEqual(red);
+  expect(getColorForDeliveryDateBE(tomorrow, currentDayMonday)).toStrictEqual(red);
+  expect(getColorForDeliveryDateBE(plusTwoDays, currentDayMonday)).toStrictEqual(orange);
 
-  expect(getColorForBEDeliveryDate(plusThreeDays, currentDayFriday)).toStrictEqual(orange);
-  expect(getColorForBEDeliveryDate(plusFourDays, currentDayFriday)).toStrictEqual(green);
+  expect(getColorForDeliveryDateBE(plusThreeDays, currentDayFriday)).toStrictEqual(orange);
+  expect(getColorForDeliveryDateBE(plusFourDays, currentDayFriday)).toStrictEqual(green);
 
-  expect(getColorForBEDeliveryDate(plusTwoDaysSaturday, currentDaySaturday)).toStrictEqual(orange);
-  expect(getColorForBEDeliveryDate(plusThreeDaysSaturday, currentDaySaturday)).toStrictEqual(green);
+  expect(getColorForDeliveryDateBE(plusTwoDaysSaturday, currentDaySaturday)).toStrictEqual(orange);
+  expect(getColorForDeliveryDateBE(plusThreeDaysSaturday, currentDaySaturday)).toStrictEqual(green);
 });

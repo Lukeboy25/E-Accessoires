@@ -54,9 +54,11 @@ function OpenOrders({
             order={order}
             toast={toast}
             page={page}
-            isClosedOrder={false}
+            isClosedOrder={false} 
             selectedOrderCategory={selectedOrderCategory}
-          />
+            languageState={languageState}
+            getOrders={fetchOrders}          
+            />
         ))}
       </View>
     </View>
