@@ -6,7 +6,16 @@ import SearchableValueInput from '../compositions/SearchableValueInput/Searchabl
 import { SearchableOption } from '../compositions/types/index';
 
 function OpenOrders({
-  fetchOrders, selectedOrderCategory, onSelectedOrderCategory, languageState, switchLanguage, openOrders, orderAmount, toast, page, orderCategories,
+  fetchOrders, 
+  selectedOrderCategory,
+  onSelectedOrderCategory,
+  languageState,
+  switchLanguage, 
+  openOrders, 
+  orderAmount, 
+  toast,
+  page, 
+  orderCategories,
 }) {
   const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
     onSelectedOrderCategory(orderCategoryValue);
@@ -24,7 +33,6 @@ function OpenOrders({
 
   const onDeleteIconPress = () => {
       onSelectedOrderCategory(undefined);
-
       fetchOrders();
   }
 

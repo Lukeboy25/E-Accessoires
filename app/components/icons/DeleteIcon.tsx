@@ -2,7 +2,6 @@ import React, { FC, ReactElement } from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { SvgIconProps } from './Icon';
 
-
 const DeleteIcon: FC<SvgIconProps> = (props): ReactElement => (
   <Svg fill="#ffffff" stroke='#D0D0C0' viewBox="0 0 30 30" width="30px" height="30px" {...props}>
     {/* eslint-disable-next-line max-len */}

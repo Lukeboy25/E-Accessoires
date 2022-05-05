@@ -1,5 +1,9 @@
 import React, {
-  FC, ReactElement, useEffect, useRef, useState,
+  FC, 
+  ReactElement, 
+  useEffect, 
+  useRef, 
+  useState,
 } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import useHandleClickOutside from '../../hooks/useHandleClickOutside';
@@ -24,7 +28,6 @@ interface SearchableValueInputProps extends Omit<SearchInputProps, 'onChange'> {
 
 const SearchableValueInput: FC<SearchableValueInputProps> = ({
   isSearchable,
-  hideIcon,
   options,
   resultLimit = 10,
   onChange,
@@ -76,7 +79,6 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
       <View style={styles['searchable-value-input']}>
         <SearchInput
           {...inputProps}
-          hideIcon={hideIcon || !isSearchable}
           onChange={handleChange}
           className={inputClassName}
           onDeleteIconPress={onDeleteIconPress}
