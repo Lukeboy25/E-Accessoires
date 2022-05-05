@@ -9,11 +9,15 @@ import { requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
 import { checkForGoogleUser } from '../store/login/loginActions';
 import { getOrders } from '../store/order/orderActions';
 import {
-  GoogleAuthentication, OpenOrders, Header, Pagination, LoadingSpinner,
+  GoogleAuthentication,
+  OpenOrders,
+  Header,
+  Pagination,
+  LoadingSpinner,
 } from '../components';
 
 class HomeScreen extends Component {
-  state = { languageState: 'NL', page: 1 };
+  state = { languageState: 'NL', page: 1, selectedOrderCategory: undefined };
 
   async componentDidMount() {
     this.props.checkForGoogleUser();
@@ -34,14 +38,14 @@ class HomeScreen extends Component {
         await this.props.requestTokenBE();
       }
 
-      await this.props.getOrders(this.state.languageState, this.state.page);
+      await this.props.getOrders(this.state.languageState, this.state.page, this.state.selectedOrderCategory);
     } catch (e) {
       console.error(e);
     }
   };
 
   switchLanguage = () => {
-    this.setState(() => ({ page: 1 }));
+    this.setState(() => ({ page: 1, selectedOrderCategory: '' }));
 
     if (this.state.languageState === 'NL') {
       this.setState({ languageState: 'BE' });
@@ -53,6 +57,10 @@ class HomeScreen extends Component {
   setPage = (page) => {
     this.setState(() => ({ page }));
     this.requestOrders();
+  };
+
+  onSelectedOrderCategory = (selectedOrderCategory) => {
+    this.setState(() => ({ selectedOrderCategory }));
   };
 
   render() {
@@ -75,20 +83,26 @@ class HomeScreen extends Component {
           <Header />
           {this.props.openOrders && (
             <OpenOrders
-              orderAmount={this.props.orderAmount}
-              languageState={this.state.languageState}
+              fetchOrders={this.requestOrders}
               switchLanguage={this.switchLanguage}
               openOrders={this.props.openOrders}
+              orderAmount={this.props.orderAmount}
               toast={this.toast}
+              languageState={this.state.languageState}
               page={this.state.page}
+              selectedOrderCategory={this.state.selectedOrderCategory}
+              onSelectedOrderCategory={this.onSelectedOrderCategory}
             />
           )}
           {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
+          {!this.state.selectedOrderCategory
+          && (
           <Pagination
             onPageChange={(page) => this.setPage(page)}
             page={this.state.page}
             totalPages={this.props.orderPages}
           />
+          )}
         </ScrollView>
         <Toast
           ref={(toast) => (this.toast = toast)}

@@ -20,3 +20,4 @@ cache/*
 coverage/*
 .vscode
 .idea
+.jest

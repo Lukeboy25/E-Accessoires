@@ -6,6 +6,7 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
+    'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -23,6 +24,18 @@ module.exports = {
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/no-unused-expressions': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
+    'no-unused-vars': 'warning',
+    'react/jsx-props-no-spreading': 'off',
+    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'jsx-a11y/label-has-associated-control': ['error', {
+      required: {
+        some: ['nesting', 'id'],
+      },
+    }],
+    'react/function-component-definition': 'off',
+    'no-use-before-define': ['error', { variables: false }],
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -33,6 +46,7 @@ module.exports = {
         tsx: 'never',
       },
     ],
+    'import/no-cycle': 'off',
     'react/forbid-prop-types': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',

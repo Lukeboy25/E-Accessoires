@@ -1,6 +1,10 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Image, TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 
 function OrderTitle({ switchLanguage, languageState, title }) {

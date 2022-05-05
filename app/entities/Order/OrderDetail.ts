@@ -46,16 +46,12 @@ export interface DetailOrderItemViewModel {
     offer: {
         offerId: string;
     },
+    product: {
+        ean: string;
+        title: string;
+    }
     quantity: number;
     quantityShipped: number;
     quantityCancelled: number;
     unitPrice: number;
 }
-
-export interface OrderDetailViewModel {
-    orderId: string;
-    orderPlacedDateTime: Date;
-    shipmentDetails: ShipmentDetailsViewModel;
-    billingDetails: BillingDetailsViewModel;
-    orderItems?: DetailOrderItemViewModel[];
-  }

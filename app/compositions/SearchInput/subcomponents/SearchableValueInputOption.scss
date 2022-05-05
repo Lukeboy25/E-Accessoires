@@ -1,0 +1,35 @@
+.searchable-value-input-option {
+    flex: 1;
+    list-style-type: none;
+
+    &__button {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        padding: 1rem;
+        text-align: left;
+        text-transform: none;
+        border-radius: 0;
+
+        &:enabled:hover,
+        &:enabled:focus {
+            background-color: rgb(230, 232, 234);
+        }
+    }
+
+    &__label {
+      color: rgb(95, 105, 116);
+    }
+
+    &__query {
+        color: rgb(17, 23, 29);
+        font-weight: 700;
+    }
+
+    &__secondary-label {
+        margin-top: .25rem;
+        font-size: .875rem;
+        text-transform: uppercase;
+        color: rgb(95, 105, 116);
+    }
+}
