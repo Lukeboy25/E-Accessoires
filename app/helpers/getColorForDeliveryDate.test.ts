@@ -10,7 +10,7 @@ it('validate different dates returns correct color', () => {
   const currentDayFriday = new Date('2021-11-19');
   const currentDaySaturday = new Date('2021-11-20');
 
-  const today = new Date(currentDayMonday);
+  const today = moment(currentDayMonday).format('yyyy-MM-DD');
   const tomorrow = moment(currentDayMonday).add(1, 'days').format('yyyy-MM-DD');
   const plusTwoDays = moment(currentDayMonday).add(2, 'days').format('yyyy-MM-DD');
 
@@ -40,7 +40,7 @@ it('validate different dates returns correct color', () => {
   const currentDayFriday = new Date('2021-11-19');
   const currentDaySaturday = new Date('2021-11-20');
 
-  const today = new Date(currentDayMonday);
+  const today = moment(currentDayMonday).format('yyyy-MM-DD');
   const tomorrow = moment(currentDayMonday).add(1, 'days').format('yyyy-MM-DD');
   const plusTwoDays = moment(currentDayMonday).add(2, 'days').format('yyyy-MM-DD');
 

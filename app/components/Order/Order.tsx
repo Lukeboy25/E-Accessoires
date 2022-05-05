@@ -1,31 +1,47 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { FC } from 'react';
 import {
-  View, Text, StyleSheet, Image, Button,
+  View, 
+  Text, 
+  Image, 
+  Button,
 } from 'react-native';
 import Moment from 'react-moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { getOrders, shipOrderItem } from '../store/order/orderActions';
-import { getColorForDeliveryDate } from '../helpers/getColorForDeliveryDate';
-import { printShipmentLabel } from '../helpers/printShipmentLabel';
+import { getColorForDeliveryDate } from '../../helpers/getColorForDeliveryDate';
+import { printShipmentLabel } from '../../helpers/printShipmentLabel';
+import { OrderViewModel } from '../../entities/Order/Order';
+import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
+import { ToastResponse } from '../../entities/Toast/Toast';
 
-function Order({
-  order,
-  shipOrderItem,
-  toast,
+// @ts-ignore
+import styles from './Order.scss';
+
+interface OrderProps {
+  isClosedOrder: boolean;
+  order: OrderViewModel;
+  toast: any;
+  page: number;
+  selectedOrderCategory: string;
+  shipOrderItem: (orderdetail: DetailOrderItemViewModel, language: string) => ToastResponse;
+  getOrders: (language: string, page: number, selectedOrderCategory?: string) => void;
+};
+
+const Order: FC<OrderProps> = ({
   isClosedOrder,
-  getOrders,
+  order,
+  toast,
   page,
   selectedOrderCategory,
-}) {
+  shipOrderItem,
+  getOrders,
+}) => {
   const sendShipOrderItem = async (order, orderDetail, language) => {
     const toastResponse = await shipOrderItem(orderDetail, language);
 
     if (!order) {
       return toast
       && toast.show(
-        <Text style={[{ backgroundColor: '#E74C3C' }, styles.toastStyle]}>Kan geen order vinden.</Text>,
+        <Text style={[{ backgroundColor: '#E74C3C' }, styles['order__toast']]}>Kan geen order vinden.</Text>,
         2500,
       );
     }
@@ -34,17 +50,17 @@ function Order({
     await printShipmentLabel(order);
 
     toast.show(
-      <Text style={[{ backgroundColor: toastResponse.color }, styles.toastStyle]}>{toastResponse.text}</Text>,
+      <Text style={[{ backgroundColor: toastResponse.color }, styles['order__toast']]}>{toastResponse.text}</Text>,
       2500,
     );
   };
 
   return (
-    <View style={[styles.orderCard, isClosedOrder ? styles.orderCardDark : styles.orderCard]} key={order.orderId}>
+    <View style={[styles['order'], isClosedOrder && styles['order__dark']]} key={order.orderId}>
       {order.shipmentDetails
         && (
-          <View style={styles.orderCardHeader}>
-            <Text style={styles.orderTitle}>
+          <View style={styles['order__header']}>
+            <Text style={styles['order__title']}>
               {order.orderId}
               {' '}
               -
@@ -53,12 +69,12 @@ function Order({
               {' '}
               {order.shipmentDetails.surname}
             </Text>
-            <View style={styles.orderCardLanguage}>
+            <View style={styles['order__language']}>
               {order.shipmentDetails.countryCode === 'NL' && (
-                <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
+                <Image style={styles['order__language-logo']} source={require('../../assets/netherlands.png')} />
               )}
               {order.shipmentDetails.countryCode === 'BE' && (
-                <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
+                <Image style={styles['order__language-logo']} source={require('../../assets/belgium.png')} />
               )}
               <Text>
                 {' '}
@@ -67,7 +83,7 @@ function Order({
             </View>
           </View>
         )}
-      {order.orderItems && order.orderItems.map((orderDetail) => (
+      {order.orderItems && order.orderItems.map(orderDetail => (
         <View key={orderDetail.orderItemId}>
           <Text>
             {orderDetail.product && orderDetail.product.title}
@@ -78,12 +94,12 @@ function Order({
           <Text>
             Aantal besteld:
             {' '}
-            <Text style={styles.boldText}>{orderDetail.quantity}</Text>
+            <Text style={styles['order__bold-label']}>{orderDetail.quantity}</Text>
           </Text>
           <Text>
             Besteld op:
             {' '}
-            <Moment style={styles.boldText} format="DD-MM-yyyy, HH:mm uur" element={Text}>
+            <Moment style={styles['order__bold-label']} format="DD-MM-yyyy, HH:mm uur" element={Text}>
               {order.orderPlacedDateTime}
             </Moment>
           </Text>
@@ -95,8 +111,9 @@ function Order({
                 {orderDetail.fulfilment
                   && (
                     <Moment
+                    // @ts-ignore
                       style={[
-                        styles.boldText,
+                        styles['order__bold-label'],
                         getColorForDeliveryDate(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
                       ]}
                       format="DD-MM-yyyy"
@@ -107,7 +124,7 @@ function Order({
                   )}
               </Text>
             )}
-          <View style={styles.shipmentButtonContainer}>
+          <View style={styles['order__send-container']}>
             {!isClosedOrder
               ? (
                 <Button
@@ -119,8 +136,8 @@ function Order({
               )
               : (
                 <MaterialIcons
-                  key={orderDetail.orderId}
-                  style={styles.printIcon}
+                  key={orderDetail.orderItemId}
+                  style={styles['order__send-container-print']}
                   onPress={() => printShipmentLabel(order)}
                   name="print"
                   color="grey"
@@ -134,61 +151,4 @@ function Order({
   );
 }
 
-const styles = StyleSheet.create({
-  orderCard: {
-    margin: 5,
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-  },
-  orderCardDark: {
-    backgroundColor: '#d6d6d6',
-    color: 'white',
-  },
-  orderCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  orderTitle: {
-    fontWeight: 'bold',
-    alignSelf: 'stretch',
-    width: '90%',
-  },
-  orderCardLanguage: {
-    flexDirection: 'row',
-  },
-  languageLogo: {
-    width: 20,
-    height: 20,
-  },
-
-  shipmentButtonContainer: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    alignSelf: 'stretch',
-    width: 100,
-  },
-  printIcon: {
-    alignSelf: 'flex-end',
-  },
-  toastStyle: {
-    borderRadius: 5,
-    padding: 10,
-    color: 'white',
-  },
-
-  boldText: {
-    fontWeight: 'bold',
-  },
-});
-
-const mapDispatchToProps = (dispatch) => bindActionCreators(
-  {
-    shipOrderItem,
-    getOrders,
-  },
-  dispatch,
-);
-
-export default connect(null, mapDispatchToProps)(Order);
+export default Order;

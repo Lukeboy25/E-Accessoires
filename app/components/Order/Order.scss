@@ -1,0 +1,53 @@
+.order {
+    margin: 5px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+
+    &__dark {
+        background-color: #d6d6d6;
+        color: white;
+    }
+
+    &__header {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    &__title {
+        font-weight: bold;
+        align-self: stretch;
+        width: 90%;
+    }
+
+    &__language {
+        flex-direction: row;
+    }
+
+    &__language-logo {
+        width: 20px;
+        height: 20px;
+    }
+
+    &__bold-label {
+        font-weight: bold;
+    }
+
+    &__send-container {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        align-self: stretch;
+
+        &-print {
+            align-self: flex-end;
+        }
+    }
+
+    &__toast {
+        border-radius: 5px;
+        padding: 10px;
+        color: white;
+    }
+}

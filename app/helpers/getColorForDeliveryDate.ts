@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 export const MONDAY = 1;
 
-export const getColorForDeliveryDate = (date: string, currentDate: Date) => {
+export const getColorForDeliveryDate = (date: string, currentDate: Date): { color: string; } => {
   const newDate = new Date(date);
 
   if (date <= moment(currentDate).format('yyyy-MM-DD')) {
