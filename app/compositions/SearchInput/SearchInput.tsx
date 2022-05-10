@@ -14,8 +14,6 @@ import styles from './SearchInput.scss';
 export interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
   value: string;
   label: string;
-  hideLabel?: boolean;
-  icon?: string;
   onChange: (value: string) => void;
   className?: string;
   onDeleteIconPress: () => void;
@@ -26,7 +24,6 @@ type SearchInputWithRefProps = SearchInputProps & RefAttributes<HTMLInputElement
 const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardRef(({
   value,
   label,
-  hideLabel = false,
   onChange,
   className = '',
   onDeleteIconPress,
@@ -36,11 +33,9 @@ const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardR
   };
 
   return (
-    <View aria-label={hideLabel ? label : undefined} style={styles[`search-input ${className}`]}>
-      {!hideLabel && <Text>{label}</Text>}
-
+    <View aria-label={label} style={styles[`search-input ${className}`]}>
       <View style={styles['search-input__wrapper']}>
-        <TextInput value={value} onChangeText={handleChange} style={styles['search-input__input']} />
+        <TextInput placeholder={label} value={value} onChangeText={handleChange} style={styles['search-input__input']} />
         <DeleteIcon onPress={onDeleteIconPress} style={{ padding: 20, marginVertical: 5, }} />
       </View>
     </View>
