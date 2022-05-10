@@ -14,7 +14,7 @@ export default {
       fallbackToCacheTimeout: 0,
     },
     assetBundlePatterns: ['**/*'],
-    sdkVersion: '42.0.0',
+    sdkVersion: '44.0.0',
     platforms: ['ios', 'android'],
     ios: {
       infoPlist: {

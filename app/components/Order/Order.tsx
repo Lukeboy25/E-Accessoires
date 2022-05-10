@@ -53,7 +53,7 @@ const Order: FC<OrderProps> = ({
 
     const toastRes = await toastResponse(dispatch);
 
-    return toast.show(
+    toast.show(
       <Text style={[{ backgroundColor: toastRes.color }, styles['order__toast']]}>{toastRes.text}</Text>,
       2500,
     );
