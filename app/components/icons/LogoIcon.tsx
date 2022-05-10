@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 
-function LogoIcon(props) {
+function LogoIcon() {
   return <Image style={styles.headerLogo} resizeMode="contain" source={require('../../assets/logo-new-middle.png')} />;
 }
 

@@ -15,11 +15,7 @@ function OrderTitle({ switchLanguage, languageState, title }) {
         {title}
       </Text>
       <TouchableOpacity onPress={switchLanguage} style={styles.languageContainer}>
-        {languageState === 'NL' ? (
-          <Image style={styles.languageLogo} source={require('../assets/netherlands.png')} />
-        ) : (
-          <Image style={styles.languageLogo} source={require('../assets/belgium.png')} />
-        )}
+        <Image style={styles.languageLogo} source={languageState === 'NL' ? require('../assets/netherlands.png') : require('../assets/belgium.png')} />
       </TouchableOpacity>
     </View>
   );
@@ -45,7 +41,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    margin: 15,
+    margin: 8,
   },
   languageLogo: {
     width: 50,
