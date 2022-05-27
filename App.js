@@ -18,7 +18,7 @@ export const { store, persistor } = configureStore();
 const connectedApp = (props) => {
   const dispatch = useDispatch();
 
-  useEffect(async () => {
+  useEffect(() => {
     dispatch(checkForGoogleUser());
   }, []);
 
