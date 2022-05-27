@@ -2,6 +2,7 @@ import { BillingDetailsViewModel, DetailOrderItemViewModel, ShipmentDetailsViewM
 
 export interface OrderItemViewModel {
     orderItemId: string;
+    quantityShipped: number;
 }
 
 export interface OrdersViewModel {

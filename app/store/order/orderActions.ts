@@ -11,7 +11,7 @@ import {
 } from './orderTypes';
 import { calculatePage } from '../../helpers/calculatePage';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
-import { OrderViewModel } from '../../entities/Order/Order';
+import { OrdersViewModel, OrderViewModel } from '../../entities/Order/Order';
 import { fetchOrderCategoriesFromOrders } from './helpers/fetchOrderCategoriesFromOrders';
 
 export function setIsLoading(isLoading: boolean) {
@@ -138,7 +138,7 @@ export const getClosedOrders = (language: string, pageNumber: number) => async (
     return dispatch(setClosedOrders([]));
   }
 
-  const onlyClosedOrders = orders.filter((order: OrderViewModel) => {
+  const onlyClosedOrders = orders.filter((order: OrdersViewModel) => {
     if (order && order.orderItems[0]) {
       return order.orderItems[0].quantityShipped === 1;
     }
