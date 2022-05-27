@@ -5,15 +5,24 @@ import { Order, OrderTitle } from './index';
 
 export const IS_CLOSED_ORDER = true;
 
-function ClosedOrders({
-  languageState, switchLanguage, closedOrders, toast,
-}) {
+const ClosedOrders = ({
+  languageState, 
+  switchLanguage, 
+  closedOrders, 
+  toast,
+}) => {
   return (
     <View style={styles.container}>
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title="Afgeronde bestellingen" />
       <View>
         {closedOrders?.map((order) => (
-          <Order key={order.orderId} order={order} toast={toast} isClosedOrder={IS_CLOSED_ORDER} />
+          <Order 
+            key={order.orderId} 
+            order={order} 
+            toast={toast} 
+            isClosedOrder={IS_CLOSED_ORDER} 
+            languageState={languageState} 
+          />
         ))}
       </View>
     </View>

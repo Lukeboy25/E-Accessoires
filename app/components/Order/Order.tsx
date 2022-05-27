@@ -21,10 +21,10 @@ interface OrderProps {
   isClosedOrder: boolean;
   order: OrderViewModel;
   toast: any;
-  page: number;
-  selectedOrderCategory: string;
   languageState: string;
-  getOrders: (language: string, page: number, selectedOrderCategory?: string) => void;
+  selectedOrderCategory?: string;
+  page?: number;
+  getOrders?: (language: string, page: number, selectedOrderCategory?: string) => void;
 };
 
 const Order: FC<OrderProps> = ({
