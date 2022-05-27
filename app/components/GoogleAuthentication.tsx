@@ -2,7 +2,10 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-  StyleSheet, View, Text, Button,
+  StyleSheet, 
+  View, 
+  Text, 
+  Button,
 } from 'react-native';
 import * as Google from 'expo-google-app-auth';
 import { ANDROID_CLIENT_ID, ANDROID_DEMO_CLIENT_ID } from 'react-native-dotenv';

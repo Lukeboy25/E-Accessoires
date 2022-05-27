@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-  StyleSheet, StatusBar, ScrollView, Button,
+  StyleSheet, 
+  StatusBar, 
+  ScrollView, 
+  Button,
 } from 'react-native';
 import { logOutGoogle } from '../store/login/loginActions';
 import { Header } from '../components';
