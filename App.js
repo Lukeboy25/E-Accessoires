@@ -33,7 +33,7 @@ const connectedApp = (props) => {
     </NavigationContainer>
 )};
 
-function BottomTabNavigation() {
+const BottomTabNavigation = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"

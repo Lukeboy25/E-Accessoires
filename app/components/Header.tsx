@@ -20,7 +20,7 @@ function Header() {
   return (
     <View style={styles.header}>
       <View style={styles.headerLeftSection}>
-        <LogoIcon />
+        <LogoIcon style={{ width: 50, height: 50 }} />
         <Text style={styles.headerUserName}>{name}</Text>
       </View>
       {photoUrl ? <Image style={styles.headerImage} source={{ uri: photoUrl }} /> : <></>}

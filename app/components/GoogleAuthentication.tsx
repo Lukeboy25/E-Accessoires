@@ -10,6 +10,7 @@ import {
 import * as Google from 'expo-google-app-auth';
 import { ANDROID_CLIENT_ID, ANDROID_DEMO_CLIENT_ID } from 'react-native-dotenv';
 import { loginWithGoogle } from '../store/login/loginActions';
+import { LogoIcon } from './icons';
 
 function GoogleAuthentication({ loginWithGoogle }) {
   const signIn = async () => {
@@ -33,6 +34,7 @@ function GoogleAuthentication({ loginWithGoogle }) {
 
   return (
     <View style={styles.container}>
+      <LogoIcon style={{ width: 100, height: 100 }} />
       <Text style={styles.header}>Sign in with Google to get started</Text>
       <View style={styles.buttonContainer}>
         <Button title="Login" onPress={() => signIn()} />
