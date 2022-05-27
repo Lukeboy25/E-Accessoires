@@ -37,7 +37,7 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
 }): ReactElement => {
   const defaultFocusIndex = -1;
 
-  const [query, setQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<SearchableOption[]>([]);
   const [focusIndex, setFocusIndex] = useState<number>(defaultFocusIndex);
 
@@ -59,7 +59,7 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
     onChange(createCustomOption(value));
 
     if (isSearchable) {
-      setQuery(value);
+      setSearchQuery(value);
       setSearchResults(searchOptionsOnQuery(options, value, resultLimit));
       setFocusIndex(defaultFocusIndex);
     }
@@ -71,8 +71,11 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
   };
 
   const handleDeleteIconPress = () => {
-    setSearchResults([]);
-    onDeleteIconPress();
+    if (searchQuery !== '') {
+      setSearchResults([]);
+      setSearchQuery('');
+      onDeleteIconPress();
+    }
   }
 
   return (
@@ -91,7 +94,7 @@ const SearchableValueInput: FC<SearchableValueInputProps> = ({
               <SearchableValueInputOption
                 key={option.id}
                 option={option}
-                query={query}
+                searchQuery={searchQuery}
                 onSelect={handleClick}
                 className="searchable-value-input__result-option"
               />

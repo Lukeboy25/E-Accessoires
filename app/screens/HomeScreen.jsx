@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-  StyleSheet, StatusBar, ScrollView, RefreshControl,
+  StyleSheet, 
+  StatusBar,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import Toast from 'react-native-easy-toast';
 import { requestTokenNL, requestTokenBE } from '../store/token/tokenActions';
-import { checkForGoogleUser } from '../store/login/loginActions';
 import { getOrders } from '../store/order/orderActions';
 import {
-  GoogleAuthentication,
   OpenOrders,
   Header,
   Pagination,
@@ -20,7 +21,6 @@ class HomeScreen extends Component {
   state = { languageState: 'NL', page: 1, selectedOrderCategory: undefined };
 
   async componentDidMount() {
-    this.props.checkForGoogleUser();
     await this.requestOrders();
   }
 
@@ -64,14 +64,6 @@ class HomeScreen extends Component {
   };
 
   render() {
-    if (!this.props.user.name) {
-      return <GoogleAuthentication />;
-    }
-
-    if (this.props.user.email !== 'luke25spaans@gmail.com' && this.props.user.email !== '31nmolenaar@gmail.com') {
-      return <GoogleAuthentication />;
-    }
-
     return (
       <>
         <ScrollView
@@ -135,7 +127,6 @@ const mapStateToProps = (state) => ({
   openOrders: state.order.openOrders,
   orderAmount: state.order.orderAmount,
   orderPages: state.order.orderPages,
-  user: state.login.user,
   isLoading: state.order.isLoading,
 });
 
@@ -144,7 +135,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators(
     requestTokenNL,
     requestTokenBE,
     getOrders,
-    checkForGoogleUser,
   },
   dispatch,
 );

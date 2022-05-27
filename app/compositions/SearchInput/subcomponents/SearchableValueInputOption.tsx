@@ -8,18 +8,18 @@ import styles from './SearchableValueInputOption.scss';
 
 interface SearchableValueInputOptionProps {
     option: SearchableOption;
-    query?: string;
+    searchQuery?: string;
     onSelect: (fieldOfStudy: SearchableOption) => void;
     className?: string;
 }
 
 const SearchableValueInputOption: FC<SearchableValueInputOptionProps> = ({
   option,
-  query,
+  searchQuery,
   onSelect,
   className = '',
 }): ReactElement => {
-  const [labelStart, labelHighlight, labelEnd] = generateQueryHighlight(option.label, query);
+  const [labelStart, labelHighlight, labelEnd] = generateQueryHighlight(option.label, searchQuery);
 
   const handleClick = (): void => onSelect(option);
 
@@ -29,7 +29,7 @@ const SearchableValueInputOption: FC<SearchableValueInputOptionProps> = ({
         onPress={handleClick}
         style={styles['searchable-value-input-option__button']}
       >
-        {query ? (
+        {searchQuery ? (
           <Text style={styles['searchable-value-input-option__label']}>
             {labelStart}
             <Text style={styles['searchable-value-input-option__query']}>

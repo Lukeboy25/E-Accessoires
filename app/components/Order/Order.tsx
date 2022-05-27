@@ -53,7 +53,7 @@ const Order: FC<OrderProps> = ({
 
     const toastRes = await toastResponse(dispatch);
 
-    return toast.show(
+    toast.show(
       <Text style={[{ backgroundColor: toastRes.color }, styles['order__toast']]}>{toastRes.text}</Text>,
       2500,
     );
@@ -74,12 +74,7 @@ const Order: FC<OrderProps> = ({
               {order.shipmentDetails.surname}
             </Text>
             <View style={styles['order__language']}>
-              {order.shipmentDetails.countryCode === 'NL' && (
-                <Image style={styles['order__language-logo']} source={require('../../assets/netherlands.png')} />
-              )}
-              {order.shipmentDetails.countryCode === 'BE' && (
-                <Image style={styles['order__language-logo']} source={require('../../assets/belgium.png')} />
-              )}
+                <Image style={styles['order__language-logo']} source={order.shipmentDetails.countryCode === 'NL' ? require('../../assets/netherlands.png') : require('../../assets/belgium.png')} />
               <Text>
                 {' '}
                 {order.shipmentDetails.countryCode}
