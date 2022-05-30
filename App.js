@@ -10,6 +10,7 @@ import { HomeScreen, ClosedOrdersScreen, SettingsScreen } from './app/screens';
 import { GoogleAuthentication, LoadingSpinner } from './app/components';
 import { checkForGoogleUser } from './app/store/login/loginActions';
 import { useDispatch } from 'react-redux';
+import { GOOGLE_LUKE, GOOGLE_KOEN, GOOGLE_NICK } from 'react-native-dotenv';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -25,7 +26,7 @@ const connectedApp = (props) => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {(props.user.email === 'luke25spaans@gmail.com' || props.user.email === '31nmolenaar@gmail.com') 
+        {(props.user.email === GOOGLE_LUKE || props.user.email === GOOGLE_NICK || props.user.email === GOOGLE_KOEN) 
           ? <Stack.Screen name="Home" component={BottomTabNavigation} />
           : <Stack.Screen name="Login" component={GoogleAuthentication} />
         }
