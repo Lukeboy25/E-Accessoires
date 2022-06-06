@@ -1,0 +1,28 @@
+.no-network {
+    flex: 1;
+    background-color: '#ffffff';
+
+    &__logo {
+        flex: 0.5;
+        align-self: center;
+        width: 6rem;
+        height: 6rem;
+    }
+
+    &__container {
+        flex: 0.3;
+        justify-content: center;
+        align-items: center;
+    }
+
+     &__title {    
+        color: black;
+        font-size: 24;
+        font-weight: bold;
+    }
+
+    &__text {    
+        color: black;
+        font-size: 18;
+    }
+}

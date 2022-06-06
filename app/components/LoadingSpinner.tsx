@@ -1,17 +1,24 @@
 import React, { useEffect } from 'react';
 import {
-  ActivityIndicator, Modal, View, Text,
+  ActivityIndicator, 
+  Modal, 
+  View, 
+  Text,
 } from 'react-native';
 
-function LoadingSpinner(props) {
+const LoadingSpinner = (props) => {
   const {
-    show = false, color = '#ffffff', backgroundColor = 'transparent', dimLights = 0.3,
+    show = false, 
+    color = '#ffffff', 
+    backgroundColor = 'transparent', 
+    dimLights = 0.3,
+    withTimeOut = true,
   } = props;
   const [isShowing, setShowing] = React.useState(false);
 
   useEffect(() => {
     setShowing(true);
-    setTimeout(() => setShowing(false), 700);
+    withTimeOut && setTimeout(() => setShowing(false), 700);
   }, [show]);
 
   return (

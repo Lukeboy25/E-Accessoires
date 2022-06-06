@@ -8,14 +8,14 @@ export function setIsLoading(isLoading: boolean) {
     type: SET_IS_LOADING,
     isLoading,
   };
-}
+};
 
 export function setGoogleLogin(user: object) {
   return {
     type: GOOGLE_LOGIN,
     user,
   };
-}
+};
 
 export const checkForGoogleUser = () => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));

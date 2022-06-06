@@ -33,6 +33,7 @@
     "@babel/helper-environment-visitor": "^7.16.7",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/netinfo": "^9.0.0",
     "@react-navigation/material-bottom-tabs": "^5.3.15",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.4",

@@ -6,11 +6,17 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect, Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './app/store';
-import { HomeScreen, ClosedOrdersScreen, SettingsScreen } from './app/screens';
+import { 
+  HomeScreen, 
+  ClosedOrdersScreen, 
+  SettingsScreen,
+  NoNetworkScreen,
+} from './app/screens';
 import { GoogleAuthentication, LoadingSpinner } from './app/components';
 import { checkForGoogleUser } from './app/store/login/loginActions';
 import { useDispatch } from 'react-redux';
 import { GOOGLE_LUKE, GOOGLE_KOEN, GOOGLE_NICK } from 'react-native-dotenv';
+import { checkForActiveConnection } from './app/store/network/networkActions';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -21,11 +27,13 @@ const connectedApp = (props) => {
 
   useEffect(() => {
     dispatch(checkForGoogleUser());
+    dispatch(checkForActiveConnection());
   }, []);
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {!props.hasConnection && <Stack.Screen name="InternetDisruption" component={NoNetworkScreen} />}
         {(props.user.email === GOOGLE_LUKE || props.user.email === GOOGLE_NICK || props.user.email === GOOGLE_KOEN) 
           ? <Stack.Screen name="Home" component={BottomTabNavigation} />
           : <Stack.Screen name="Login" component={GoogleAuthentication} />
@@ -34,47 +42,28 @@ const connectedApp = (props) => {
     </NavigationContainer>
 )};
 
-const BottomTabNavigation = () => {
-  return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      activeColor="#000000"
-      barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#D0D0C0' }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarLabel: 'Bestellingen',
-          tabBarIcon: ({ color }) => <MaterialIcons name="shopping-bag" color={color} size={26} />,
-        }}
-      />
-      <Tab.Screen
-        name="ClosedOrders"
-        component={ClosedOrdersScreen}
-        options={{
-          tabBarLabel: 'Afgerond',
-          tabBarIcon: ({ color }) => <MaterialIcons name="done" color={color} size={26} />,
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          tabBarLabel: 'Instellingen',
-          tabBarIcon: ({ color }) => <MaterialIcons name="settings" color={color} size={26} />,
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
-
-function LoginScreen() {
+const BottomTabNavigation = () => (
   <Tab.Navigator
     initialRouteName="Home"
     activeColor="#000000"
     barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#D0D0C0' }}
   >
+    <Tab.Screen
+      name="Home"
+      component={HomeScreen}
+      options={{
+        tabBarLabel: 'Bestellingen',
+        tabBarIcon: ({ color }) => <MaterialIcons name="shopping-bag" color={color} size={26} />,
+      }}
+    />
+    <Tab.Screen
+      name="ClosedOrders"
+      component={ClosedOrdersScreen}
+      options={{
+        tabBarLabel: 'Afgerond',
+        tabBarIcon: ({ color }) => <MaterialIcons name="done" color={color} size={26} />,
+      }}
+    />
     <Tab.Screen
       name="Settings"
       component={SettingsScreen}
@@ -83,11 +72,12 @@ function LoginScreen() {
         tabBarIcon: ({ color }) => <MaterialIcons name="settings" color={color} size={26} />,
       }}
     />
-    </Tab.Navigator>
-}
+  </Tab.Navigator>
+);
 
 const mapStateToProps = (state) => ({
   user: state.login.user,
+  hasConnection: state.network.hasConnection,
 });
 
 const ConnectedApp = connect(mapStateToProps, null)(connectedApp);

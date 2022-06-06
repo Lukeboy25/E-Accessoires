@@ -7,12 +7,14 @@ import { tokenReducer } from './token/tokenReducer';
 import { orderReducer } from './order/orderReducer';
 import { loginReducer } from './login/loginReducer';
 import { offerReducer } from './offer/offerReducer';
+import { networkReducer } from './network/networkReducer';
 
 const rootReducer = combineReducers({
   order: orderReducer,
   token: tokenReducer,
   login: loginReducer,
   offer: offerReducer,
+  network: networkReducer,
 });
 
 // Middleware: Redux Persist Config
