@@ -1,7 +1,7 @@
 import { SET_HAS_CONNECTION } from './networkTypes';
 
 const initialState = {
-    hasConnection: false,
+    hasConnection: true,
 };
 
 export const networkReducer = (state = initialState, action: any) => {
