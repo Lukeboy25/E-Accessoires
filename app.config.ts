@@ -14,7 +14,7 @@ export default {
       fallbackToCacheTimeout: 0,
     },
     assetBundlePatterns: ['**/*'],
-    sdkVersion: '45.0.0',
+    sdkVersion: '44.0.0',
     platforms: ['ios', 'android'],
     ios: {
       infoPlist: {
@@ -23,7 +23,7 @@ export default {
       supportsTablet: true,
     },
     android: {
-      versionCode: 16,
+      versionCode: 17,
       package: 'eaccessoires.app',
       googleServicesFile: './google-services.json',
       adaptiveIcon: {
