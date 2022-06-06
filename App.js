@@ -10,7 +10,7 @@ import {
   HomeScreen, 
   ClosedOrdersScreen, 
   SettingsScreen,
-  InternetDisruptionScreen,
+  NoNetworkScreen,
 } from './app/screens';
 import { GoogleAuthentication, LoadingSpinner } from './app/components';
 import { checkForGoogleUser } from './app/store/login/loginActions';
@@ -33,7 +33,7 @@ const connectedApp = (props) => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!props.hasConnection && <Stack.Screen name="InternetDisruption" component={InternetDisruptionScreen} />}
+        {!props.hasConnection && <Stack.Screen name="InternetDisruption" component={NoNetworkScreen} />}
         {(props.user.email === GOOGLE_LUKE || props.user.email === GOOGLE_NICK || props.user.email === GOOGLE_KOEN) 
           ? <Stack.Screen name="Home" component={BottomTabNavigation} />
           : <Stack.Screen name="Login" component={GoogleAuthentication} />
