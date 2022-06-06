@@ -2,7 +2,7 @@ export default {
   expo: {
     name: 'E-accessoires',
     slug: 'e-accessoires-app',
-    version: '4.0.0',
+    version: '4.0.1',
     orientation: 'portrait',
     icon: './app/assets/logo-new-middle.png',
     splash: {
@@ -14,7 +14,7 @@ export default {
       fallbackToCacheTimeout: 0,
     },
     assetBundlePatterns: ['**/*'],
-    sdkVersion: '44.0.0',
+    sdkVersion: '45.0.0',
     platforms: ['ios', 'android'],
     ios: {
       infoPlist: {
