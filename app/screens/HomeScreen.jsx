@@ -68,6 +68,7 @@ class HomeScreen extends Component {
     if (!this.props.hasConnection) {
       return (
         <>
+          <StatusBar barStyle="light-content" />
           <Header />
           <NoNetworkNote />
         </>

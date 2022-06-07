@@ -3,7 +3,7 @@ import Svg, { Circle, Path } from 'react-native-svg';
 import { SvgIconProps } from './Icon';
 
 const WifiIcon: FC<SvgIconProps> = (props): ReactElement => (
-  <Svg fill={props.color} viewBox="0 0 489.3 489.3" {...props}>
+  <Svg viewBox="0 0 489.3 489.3" {...props}>
     <Path d="M79.55,229.675c-10.2,10.2-10.2,26.8,0,37.1c10.2,10.2,26.8,10.2,37.1,0c70.6-70.6,185.5-70.6,256.1,0
     c5.1,5.1,11.8,7.7,18.5,7.7s13.4-2.6,18.5-7.7c10.2-10.2,10.2-26.8,0-37.1C318.75,138.575,170.55,138.575,79.55,229.675z"/>
     <Path d="M150.35,300.475c-10.2,10.2-10.2,26.8,0,37.1c10.2,10.2,26.8,10.2,37.1,0c31.5-31.6,82.9-31.6,114.4,0
