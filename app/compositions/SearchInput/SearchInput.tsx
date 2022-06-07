@@ -36,7 +36,7 @@ const SearchInput: ForwardRefExoticComponent<SearchInputWithRefProps> = forwardR
     <View aria-label={label} style={styles[`search-input ${className}`]}>
       <View style={styles['search-input__wrapper']}>
         <TextInput placeholder={label} value={value} onChangeText={handleChange} style={styles['search-input__input']} />
-        <DeleteIcon onPress={onDeleteIconPress} style={{ padding: 20, marginVertical: 5, }} />
+        <DeleteIcon color='#ffffff' onPress={onDeleteIconPress} style={{ padding: 20, marginVertical: 5, }} />
       </View>
     </View>
   );

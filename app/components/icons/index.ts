@@ -1,7 +1,7 @@
 import LogoIcon from './LogoIcon';
-import SearchIcon from './SearchIcon';
 import DeleteIcon from './DeleteIcon';
+import WifiIcon from './WifiIcon';
 
 export { LogoIcon };
-export { SearchIcon };
 export { DeleteIcon };
+export { WifiIcon };
