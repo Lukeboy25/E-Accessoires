@@ -87,7 +87,7 @@ class HomeScreen extends Component {
             />
           )}
           {/* <BackgroundFetcher openOrdersAmount={this.props.openOrders.length} /> */}
-          {!this.state.selectedOrderCategory
+          {!this.state.selectedOrderCategory && this.props.orderPages > 1
           && (
           <Pagination
             onPageChange={(page) => this.setPage(page)}

@@ -46,21 +46,19 @@ function OpenOrders({
         options={orderCategories}
         onChange={handleChangeOrderCategory} 
         onDeleteIconPress={onDeleteIconPress}      
-      />
-      <View>
-        {openOrders?.map((order) => (
-          <Order
-            key={order.orderId}
-            order={order}
-            toast={toast}
-            page={page}
-            isClosedOrder={false} 
-            selectedOrderCategory={selectedOrderCategory}
-            languageState={languageState}
-            getOrders={fetchOrders}          
-            />
-        ))}
-      </View>
+      />    
+      {openOrders?.map((order) => (
+        <Order
+          key={order.orderId}
+          order={order}
+          toast={toast}
+          page={page}
+          isClosedOrder={false} 
+          selectedOrderCategory={selectedOrderCategory}
+          languageState={languageState}
+          getOrders={fetchOrders}          
+          />
+      ))}
     </View>
   );
 }
