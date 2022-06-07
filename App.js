@@ -6,16 +6,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect, Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './app/store';
-import { 
-  HomeScreen, 
-  ClosedOrdersScreen, 
-  SettingsScreen,
-  NoNetworkScreen,
-} from './app/screens';
+import { HomeScreen, ClosedOrdersScreen, SettingsScreen } from './app/screens';
 import { GoogleAuthentication, LoadingSpinner } from './app/components';
 import { checkForGoogleUser } from './app/store/login/loginActions';
 import { useDispatch } from 'react-redux';
-import { GOOGLE_LUKE, GOOGLE_KOEN, GOOGLE_NICK } from 'react-native-dotenv';
+import { GOOGLE_LUKE, GOOGLE_NICK, GOOGLE_KOEN } from 'react-native-dotenv';
 import { checkForActiveConnection } from './app/store/network/networkActions';
 
 const Stack = createStackNavigator();
@@ -33,7 +28,6 @@ const connectedApp = (props) => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!props.hasConnection && <Stack.Screen name="InternetDisruption" component={NoNetworkScreen} />}
         {(props.user.email === GOOGLE_LUKE || props.user.email === GOOGLE_NICK || props.user.email === GOOGLE_KOEN) 
           ? <Stack.Screen name="Home" component={BottomTabNavigation} />
           : <Stack.Screen name="Login" component={GoogleAuthentication} />

@@ -8,6 +8,7 @@ import Header from './Header';
 import Pagination from './Pagination';
 import OrderTitle from './OrderTitle';
 import LoadingSpinner from './LoadingSpinner';
+import NoNetworkNote from './NoNetworkNote/NoNetworkNote';
 
 export {
   Order,
@@ -20,4 +21,5 @@ export {
   Pagination,
   OrderTitle,
   LoadingSpinner,
+  NoNetworkNote,
 };

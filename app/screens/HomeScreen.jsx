@@ -15,6 +15,7 @@ import {
   Header,
   Pagination,
   LoadingSpinner,
+  NoNetworkNote,
 } from '../components';
 
 class HomeScreen extends Component {
@@ -64,10 +65,20 @@ class HomeScreen extends Component {
   };
 
   render() {
+    if (!this.props.hasConnection) {
+      return (
+        <>
+          <Header />
+          <NoNetworkNote />
+        </>
+      );
+    }
+
     return (
       <>
         <ScrollView
           style={styles.background}
+          contentContainerStyle={{ flexGrow: 1 }}
           refreshControl={<RefreshControl refreshing={this.props.isLoading} onRefresh={this.requestOrders} />}
         >
           <StatusBar barStyle="light-content" />
@@ -128,6 +139,7 @@ const mapStateToProps = (state) => ({
   orderAmount: state.order.orderAmount,
   orderPages: state.order.orderPages,
   isLoading: state.order.isLoading,
+  hasConnection: state.network.hasConnection,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(

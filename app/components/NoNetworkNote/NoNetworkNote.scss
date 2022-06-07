@@ -1,17 +1,15 @@
-.no-network {
+.no-network-note {
     flex: 1;
-    background-color: '#ffffff';
+    align-items: center;
 
     &__logo {
-        flex: 0.5;
-        align-self: center;
+        flex: 0.6;
         width: 6rem;
         height: 6rem;
     }
 
     &__container {
-        flex: 0.3;
-        justify-content: center;
+        flex: 1;
         align-items: center;
     }
 
