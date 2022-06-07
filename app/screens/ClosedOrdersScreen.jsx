@@ -58,6 +58,7 @@ class ClosedOrdersScreen extends Component {
           <Header />
           {this.props.closedOrders && (
             <ClosedOrders
+              isLoading={this.props.isLoading}
               languageState={this.state.languageState}
               switchLanguage={this.switchLanguage}
               closedOrders={this.props.closedOrders}

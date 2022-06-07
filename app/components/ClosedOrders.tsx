@@ -2,15 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
+import LoadingSpinner from './LoadingSpinner';
 
 export const IS_CLOSED_ORDER = true;
 
 const ClosedOrders = ({
+  isLoading,
   languageState, 
   switchLanguage, 
   closedOrders, 
   toast,
 }) => {
+  if (isLoading) {
+    return <LoadingSpinner show={isLoading} />;
+  }
+
   return (
     <View style={styles.container}>
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title="Afgeronde bestellingen" />

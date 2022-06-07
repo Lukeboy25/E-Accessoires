@@ -4,8 +4,10 @@ import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
 import SearchableValueInput from '../compositions/SearchableValueInput/SearchableValueInput';
 import { SearchableOption } from '../compositions/types/index';
+import LoadingSpinner from './LoadingSpinner';
 
 function OpenOrders({
+  isLoading,
   fetchOrders, 
   selectedOrderCategory,
   onSelectedOrderCategory,
@@ -36,6 +38,10 @@ function OpenOrders({
       fetchOrders();
   }
 
+  if (isLoading) {
+    return <LoadingSpinner show={isLoading} />;
+  }
+
   return (
     <View style={styles.container}>
       <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
@@ -46,7 +52,7 @@ function OpenOrders({
         options={orderCategories}
         onChange={handleChangeOrderCategory} 
         onDeleteIconPress={onDeleteIconPress}      
-      />    
+      />
       {openOrders?.map((order) => (
         <Order
           key={order.orderId}

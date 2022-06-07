@@ -83,10 +83,10 @@ class HomeScreen extends Component {
           refreshControl={<RefreshControl refreshing={this.props.isLoading} onRefresh={this.requestOrders} />}
         >
           <StatusBar barStyle="light-content" />
-          <LoadingSpinner show={this.props.isLoading} />
           <Header />
           {this.props.openOrders && (
             <OpenOrders
+              isLoading={this.props.isLoading}
               fetchOrders={this.requestOrders}
               switchLanguage={this.switchLanguage}
               openOrders={this.props.openOrders}
