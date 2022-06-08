@@ -82,6 +82,7 @@ class HomeScreen extends Component {
           contentContainerStyle={{ flexGrow: 1 }}
           refreshControl={<RefreshControl refreshing={this.props.isLoading} onRefresh={this.requestOrders} />}
         >
+          <LoadingSpinner show={this.props.isLoading} />
           <StatusBar barStyle="light-content" />
           <Header />
           {this.props.openOrders && (

@@ -38,9 +38,9 @@ function OpenOrders({
       fetchOrders();
   }
 
-  if (isLoading) {
-    return <LoadingSpinner show={isLoading} />;
-  }
+  // if (isLoading) {
+  //   return <LoadingSpinner show={isLoading} />;
+  // }
 
   return (
     <View style={styles.container}>
