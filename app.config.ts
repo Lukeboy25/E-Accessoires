@@ -2,7 +2,7 @@ export default {
   expo: {
     name: 'E-accessoires',
     slug: 'e-accessoires-app',
-    version: '4.0.3',
+    version: '4.0.4',
     orientation: 'portrait',
     icon: './app/assets/logo-new-middle.png',
     splash: {
@@ -23,7 +23,7 @@ export default {
       supportsTablet: true,
     },
     android: {
-      versionCode: 19,
+      versionCode: 20,
       package: 'eaccessoires.app',
       googleServicesFile: './google-services.json',
       adaptiveIcon: {
