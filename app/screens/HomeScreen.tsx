@@ -112,9 +112,9 @@ const HomeScreen: FC<HomeScreenProps> = ({
         {!selectedOrderCategory && orderPages > 1
         && (
         <Pagination
-          onPageChange={page => handleSetPage(page)}
-          page={page}
+          currentPage={page}
           totalPages={orderPages}
+          onPageChange={page => handleSetPage(page)}
         />
         )}
       </ScrollView>

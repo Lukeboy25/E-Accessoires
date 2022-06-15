@@ -1,24 +1,28 @@
-import React, {
-  useEffect,
-} from 'react';
+import { FC, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-function Pagination({
-  onPageChange,
-  page,
-  totalPages = 1,
-}) {
-  useEffect(() => {
-    onPageChange(page);
-  }, [totalPages, page]);
+export interface PaginationProps {
+  currentPage: number;
+  totalPages?: number;
+  onPageChange: (page: number) => void;
+}
 
-  const onNextClick = () => onPageChange(page + 1);
-  const onPrevClick = () => onPageChange(page - 1);
+const Pagination: FC<PaginationProps> = ({
+  currentPage,
+  totalPages = 1,
+  onPageChange,
+}) => {
+  useEffect(() => {
+    onPageChange(currentPage);
+  }, [totalPages, currentPage]);
+
+  const onNextClick = () => onPageChange(currentPage + 1);
+  const onPrevClick = () => onPageChange(currentPage - 1);
 
   return (
     <View style={styles.pagination}>
-      {page > 1
+      {currentPage > 1
         && (
         <View style={styles.leftArrowContainer}>
           <MaterialIcons
@@ -28,13 +32,13 @@ function Pagination({
             color="white"
             size={30}
           />
-          <Text onPress={onPrevClick} style={styles.paginateText}>{page - 1}</Text>
+          <Text onPress={onPrevClick} style={styles.paginateText}>{currentPage - 1}</Text>
         </View>
         )}
-      {totalPages > page
+      {totalPages > currentPage
         && (
         <View style={styles.rightArrowContainer}>
-          <Text onPress={onNextClick} style={styles.paginateText}>{page + 1}</Text>
+          <Text onPress={onNextClick} style={styles.paginateText}>{currentPage + 1}</Text>
           <MaterialIcons
             style={styles.nextIcon}
             onPress={onNextClick}
