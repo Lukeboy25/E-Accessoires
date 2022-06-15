@@ -121,7 +121,7 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
   });
 };
 
-export const getClosedOrders = (language: string, pageNumber: number) => async (dispatch: Dispatch) => {
+export const getClosedOrders = (language: string, pageNumber = 1) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const params = { status: 'ALL' };
 
