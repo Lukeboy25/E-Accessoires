@@ -36,7 +36,7 @@ export function orderReducer(state = initialState, action: any) {
     case OPEN_ORDERS: {
       const filteredOrders = action.search
         ? action.openOrders.filter(
-          (detailorderItem: OrderViewModel) => detailorderItem.orderItems[0].product.title.split('-', 1)[0].trim() === action.search.label,
+          (detailorderItem: OrderViewModel) => detailorderItem.orderItems[0].product.title.split('-', 1)[0].trim() === action.search,
         )
         : action.openOrders;
 

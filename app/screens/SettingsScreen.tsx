@@ -10,7 +10,7 @@ import { logOutGoogle } from '../store/login/loginActions';
 import { Header } from '../components';
 import { GoogleUserViewModel } from '../entities/GoogleUser/GoogleUserViewModel';
 
-export interface SettingsScreenProps {
+interface SettingsScreenProps {
   user: GoogleUserViewModel;
 }
 

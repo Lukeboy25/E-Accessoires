@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-export interface PaginationProps {
+interface PaginationProps {
   currentPage: number;
   totalPages?: number;
   onPageChange: (page: number) => void;

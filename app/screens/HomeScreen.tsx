@@ -19,10 +19,11 @@ import {
 } from '../components';
 import { SearchableOption } from '../compositions/types';
 
-export interface HomeScreenProps {
+interface HomeScreenProps {
   hasConnection: boolean;
   isLoading: boolean;
   openOrders: OrderViewModel[];
+  orderCategories: SearchableOption[];
   orderAmount: number;
   orderPages: number;
   toast: any;
@@ -32,6 +33,7 @@ const HomeScreen: FC<HomeScreenProps> = ({
   hasConnection,
   isLoading,
   openOrders,
+  orderCategories,
   orderAmount,
   toast,
   orderPages,
@@ -40,7 +42,7 @@ const HomeScreen: FC<HomeScreenProps> = ({
 
   const [languageState, setLanguageState] = useState<string>('NL');
   const [page, setPage] = useState<number>(1);
-  const [selectedOrderCategory, setSelectedOrderCategory] = useState<SearchableOption | undefined>(undefined);
+  const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
 
   useEffect(() => {
     requestOrders();
@@ -53,12 +55,12 @@ const HomeScreen: FC<HomeScreenProps> = ({
       dispatch(requestTokenBE());
     }
 
-    dispatch(getOrders(languageState, page, selectedOrderCategory?.label));
+    dispatch(getOrders(languageState, page, orderCategory?.label));
   };
 
   const switchLanguage = () => {
     setPage(1);
-    setSelectedOrderCategory(undefined);
+    setOrderCategory(undefined);
 
     languageState === 'NL' ? setLanguageState('BE') : setLanguageState('NL');
   };
@@ -68,9 +70,9 @@ const HomeScreen: FC<HomeScreenProps> = ({
     requestOrders();
   };
 
-  const onSelectedOrderCategory = (selectedOrderCategory: SearchableOption) => {
-    console.log(selectedOrderCategory);
-    setSelectedOrderCategory(selectedOrderCategory);
+  const onSelectedOrderCategory = (selectedOrderCategory?: SearchableOption) => {
+    setOrderCategory(selectedOrderCategory);
+    dispatch(getOrders(languageState, page, selectedOrderCategory?.label));
   };
 
 
@@ -97,19 +99,18 @@ const HomeScreen: FC<HomeScreenProps> = ({
         {openOrders && (
           <OpenOrders
             isLoading={isLoading}
-            fetchOrders={requestOrders}
+            orderCategories={orderCategories}
             switchLanguage={switchLanguage}
             openOrders={openOrders}
             orderAmount={orderAmount}
             toast={toast}
             languageState={languageState}
             page={page}
-            selectedOrderCategory={selectedOrderCategory}
-            onSelectedOrderCategory={onSelectedOrderCategory} 
-            orderCategories={undefined}         
+            selectedOrderCategory={orderCategory}
+            onSelectedOrderCategory={onSelectedOrderCategory}
           />
         )}
-        {!selectedOrderCategory && orderPages > 1
+        {!orderCategory && orderPages > 1
         && (
         <Pagination
           currentPage={page}
@@ -148,6 +149,7 @@ const mapStateToProps = (state: any) => ({
   openOrders: state.order.openOrders,
   orderAmount: state.order.orderAmount,
   orderPages: state.order.orderPages,
+  orderCategories: state.order.orderCategories,
   isLoading: state.order.isLoading,
   hasConnection: state.network.hasConnection,
 });

@@ -12,7 +12,7 @@ import { getClosedOrders } from '../store/order/orderActions';
 import { Header, ClosedOrders } from '../components';
 import { OrderViewModel } from '../entities/Order/Order';
 
-export interface ClosedOrdersScreenProps {
+interface ClosedOrdersScreenProps {
   isLoading: boolean;
   closedOrders: OrderViewModel[];
   toast: any;
