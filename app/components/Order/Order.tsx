@@ -48,7 +48,7 @@ const Order: FC<OrderProps> = ({
       );
     }
 
-    dispatch(getOrders(language, page || 1, selectedOrderCategory?.label));
+    dispatch(await getOrders(language, page || 1, selectedOrderCategory?.label));
     await printShipmentLabel(order);
 
     const toastRes = await toastResponse(dispatch);
