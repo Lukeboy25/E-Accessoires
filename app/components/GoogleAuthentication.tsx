@@ -20,7 +20,6 @@ const GoogleAuthentication = ({ loginWithGoogle }) => {
             const result = await Google.logInAsync({
                 androidClientId: ANDROID_DEMO_CLIENT_ID,
                 androidStandaloneAppClientId: ANDROID_CLIENT_ID,
-                // iosClientId: YOUR_CLIENT_ID_HERE,
                 scopes: ['profile', 'email'],
             });
 

@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { StyleSheet, View } from 'react-native';
-import { connect } from 'react-redux';
 
+import { OrderViewModel } from '../entities/Order/Order';
 import { Order, OrderTitle } from './index';
 import LoadingSpinner from './LoadingSpinner';
 
 export const IS_CLOSED_ORDER = true;
 
-const ClosedOrders = ({
+interface ClosedOrdersProps {
+    isLoading: boolean;
+    languageState: string;
+    closedOrders: OrderViewModel[];
+    toast: any;
+    switchLanguage: () => void;
+}
+
+const ClosedOrders: FC<ClosedOrdersProps> = ({
     isLoading,
     languageState,
     switchLanguage,
@@ -43,12 +51,4 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = (state) => {
-    const { order } = state;
-
-    return {
-        closedOrders: order.closedOrders,
-    };
-};
-
-export default connect(mapStateToProps, null)(ClosedOrders);
+export default ClosedOrders;
