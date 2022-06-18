@@ -1,6 +1,5 @@
 import Order from './Order/Order';
 import GoogleAuthentication from './GoogleAuthentication';
-import NotificationSender from './NotificationSender';
 import OpenOrders from './OpenOrders';
 import ClosedOrders from './ClosedOrders';
 import Header from './Header';
@@ -12,7 +11,6 @@ import NoNetworkNote from './NoNetworkNote/NoNetworkNote';
 export {
   Order,
   GoogleAuthentication,
-  NotificationSender,
   OpenOrders,
   ClosedOrders,
   Header,
