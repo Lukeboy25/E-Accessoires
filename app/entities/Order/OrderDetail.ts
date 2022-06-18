@@ -36,12 +36,12 @@ export interface DetailOrderItemViewModel {
     orderItemId: string;
     cancellationRequest: boolean;
     fulfilment: {
-      method: string;
-      distributionParty: string;
-      latestDeliveryDate: string;
-      exactDeliveryDate: string;
-      expiryDate: string;
-      timeFrameType: string;
+        method: string;
+        distributionParty: string;
+        latestDeliveryDate: string;
+        exactDeliveryDate: string;
+        expiryDate: string;
+        timeFrameType: string;
     },
     offer: {
         offerId: string;

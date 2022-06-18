@@ -1,17 +1,17 @@
 import { OFFER } from './offerTypes';
 
 const initialState = {
-  offer: {},
+    offer: {},
 };
 
 export function offerReducer(state = initialState, action: any) {
-  switch (action.type) {
-    case OFFER:
-      return {
-        ...state,
-        offer: action.offer,
-      };
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case OFFER:
+            return {
+                ...state,
+                offer: action.offer,
+            };
+        default:
+            return state;
+    }
 }

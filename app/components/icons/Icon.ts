@@ -1,6 +1,6 @@
-import { StyleProp, ViewStyle } from "react-native";
+import { StyleProp, ViewStyle } from 'react-native';
 
 export interface SvgIconProps {
     style?: StyleProp<ViewStyle>;
-    onPress?: () => void; 
+    onPress?: () => void;
 }

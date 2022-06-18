@@ -1,53 +1,55 @@
 import { FC } from 'react';
-import { connect, useDispatch } from 'react-redux';
+
 import {
-  StyleSheet, 
-  StatusBar, 
-  ScrollView, 
-  Button,
+    Button,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
 } from 'react-native';
-import { logOutGoogle } from '../store/login/loginActions';
+import { connect, useDispatch } from 'react-redux';
+
 import { Header } from '../components';
 import { GoogleUserViewModel } from '../entities/GoogleUser/GoogleUserViewModel';
+import { logOutGoogle } from '../store/login/loginActions';
 
 interface SettingsScreenProps {
-  user: GoogleUserViewModel;
+    user: GoogleUserViewModel;
 }
 
 const SettingsScreen: FC<SettingsScreenProps> = ({
-  user,
+    user,
 }) => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  const sendLogOutGoogle = async () => {
-    dispatch(logOutGoogle());
-  };
+    const sendLogOutGoogle = async () => {
+        dispatch(logOutGoogle());
+    };
 
-  return (
-    <ScrollView
-      style={styles.background}
-    >
-      <StatusBar barStyle="light-content" />
-      <Header />
-      {user.name && (
-        <Button
-          onPress={() => sendLogOutGoogle()}
-          title="Uitloggen"
-          accessibilityLabel="Uitloggen"
-        />
-      )}
-    </ScrollView>
-  );
-}
+    return (
+        <ScrollView
+            style={styles.background}
+        >
+            <StatusBar barStyle="light-content" />
+            <Header />
+            {user.name && (
+                <Button
+                    onPress={() => sendLogOutGoogle()}
+                    title="Uitloggen"
+                    accessibilityLabel="Uitloggen"
+                />
+            )}
+        </ScrollView>
+    );
+};
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+    background: {
+        flex: 1,
+    },
 });
 
 const mapStateToProps = (state: any) => ({
-  user: state.login.user,
+    user: state.login.user,
 });
 
 export default connect(mapStateToProps, null)(SettingsScreen);
