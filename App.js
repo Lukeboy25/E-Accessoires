@@ -21,8 +21,11 @@ const connectedApp = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(checkForGoogleUser());
     dispatch(checkForActiveConnection());
+  }, []);
+
+  useEffect(() => {
+    dispatch(checkForGoogleUser());
   }, []);
 
   return (

@@ -1,17 +1,17 @@
-import React, {
+import {
   forwardRef, 
   ForwardRefExoticComponent,
   ReactElement, 
   RefAttributes,
 } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { DeleteIcon } from '../../components/icons';
 import { HTMLInputProps } from '../../components/Input/Input';
 
 // @ts-ignore
 import styles from './SearchInput.scss';
 
-export interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
+interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
   value: string;
   label: string;
   onChange: (value: string) => void;

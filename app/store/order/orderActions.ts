@@ -92,6 +92,7 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders').catch((e) => {
     console.error('error fetching orders:', e);
+    dispatch(setIsLoading(false));
   });
 
   if (!orders || orders === undefined) {
@@ -121,13 +122,14 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
   });
 };
 
-export const getClosedOrders = (language: string, pageNumber: number) => async (dispatch: Dispatch) => {
+export const getClosedOrders = (language: string, pageNumber = 1) => async (dispatch: Dispatch) => {
   dispatch(setIsLoading(true));
   const params = { status: 'ALL' };
 
   const httpService = new HttpService(language);
   const { orders } = await httpService.get('orders', { params }).catch((e) => {
     console.error('error while fetching orders:', e);
+    dispatch(setIsLoading(false));
   });
 
   if (!orders || orders === undefined) {

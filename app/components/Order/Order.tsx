@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import {
   View, 
   Text, 
@@ -10,9 +10,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getColorForDeliveryDateBE, getColorForDeliveryDateNL } from '../../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../../helpers/printShipmentLabel';
 import { OrderViewModel } from '../../entities/Order/Order';
-import { shipOrderItem } from '../../store/order/orderActions';
+import { getOrders, shipOrderItem } from '../../store/order/orderActions';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { useDispatch } from 'react-redux';
+import { SearchableOption } from '../../compositions/types';
 
 // @ts-ignore
 import styles from './Order.scss';
@@ -22,7 +23,7 @@ interface OrderProps {
   order: OrderViewModel;
   toast: any;
   languageState: string;
-  selectedOrderCategory?: string;
+  selectedOrderCategory?: SearchableOption;
   page?: number;
   getOrders?: (language: string, page: number, selectedOrderCategory?: string) => void;
 };
@@ -34,7 +35,6 @@ const Order: FC<OrderProps> = ({
   page,
   selectedOrderCategory,
   languageState,
-  getOrders,
 }) => {
   const dispatch = useDispatch();
 
@@ -48,7 +48,7 @@ const Order: FC<OrderProps> = ({
       );
     }
 
-    await getOrders(language, page, selectedOrderCategory);
+    dispatch(await getOrders(language, page || 1, selectedOrderCategory?.label));
     await printShipmentLabel(order);
 
     const toastRes = await toastResponse(dispatch);

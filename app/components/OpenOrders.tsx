@@ -1,41 +1,48 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { FC } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Order, OrderTitle } from './index';
 import SearchableValueInput from '../compositions/SearchableValueInput/SearchableValueInput';
 import { SearchableOption } from '../compositions/types/index';
 import LoadingSpinner from './LoadingSpinner';
+import { OrderViewModel } from '../entities/Order/Order';
 
-function OpenOrders({
+interface OpenOrdersProps {
+  isLoading: boolean;
+  selectedOrderCategory?: SearchableOption;
+  languageState: string;
+  openOrders: OrderViewModel[];
+  orderCategories: SearchableOption[];
+  orderAmount: number;
+  toast: any;
+  page: number;
+  onSelectedOrderCategory: (selectedOrderCategory?: SearchableOption) => void;
+  switchLanguage: () => void;
+}
+
+const OpenOrders: FC<OpenOrdersProps> = ({
   isLoading,
-  fetchOrders, 
   selectedOrderCategory,
-  onSelectedOrderCategory,
   languageState,
-  switchLanguage, 
   openOrders, 
+  orderCategories,
   orderAmount, 
   toast,
   page, 
-  orderCategories,
-}) {
+  onSelectedOrderCategory,
+  switchLanguage, 
+}) => {
   const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
-    onSelectedOrderCategory(orderCategoryValue);
-
     const selectedOrder = orderCategoryValue.id !== null
       ? orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id)
       : undefined;
 
-    if (selectedOrder) {
-      fetchOrders(selectedOrder);
-    }
+      selectedOrder && onSelectedOrderCategory(selectedOrder);
   };
 
   const getTitle = () => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
 
   const onDeleteIconPress = () => {
       onSelectedOrderCategory(undefined);
-      fetchOrders();
   }
 
   // if (isLoading) {
@@ -62,7 +69,6 @@ function OpenOrders({
           isClosedOrder={false} 
           selectedOrderCategory={selectedOrderCategory}
           languageState={languageState}
-          getOrders={fetchOrders}          
           />
       ))}
     </View>
@@ -75,13 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  const { order } = state;
-
-  return {
-    openOrders: order.openOrders,
-    orderCategories: order.orderCategories,
-  };
-};
-
-export default connect(mapStateToProps, null)(OpenOrders);
+export default OpenOrders;
