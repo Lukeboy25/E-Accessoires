@@ -58,7 +58,7 @@ export function setOrderCategories(orderCategories: string[]) {
     };
 }
 
-const PAGE_SIZE = 1;
+const PAGE_SIZE = 15;
 
 export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch): void => {
     const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
