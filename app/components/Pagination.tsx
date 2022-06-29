@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     leftArrowContainer: {
         flexDirection: 'row',
         width: 50,
+        height: 30,
         backgroundColor: '#2194f3',
         borderRadius: 25,
         paddingRight: 10,
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 'auto',
         width: 50,
+        height: 30,
         backgroundColor: '#2194f3',
         borderRadius: 25,
         paddingLeft: 10,

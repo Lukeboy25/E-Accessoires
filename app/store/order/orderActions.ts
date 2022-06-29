@@ -58,9 +58,9 @@ export function setOrderCategories(orderCategories: string[]) {
     };
 }
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 1;
 
-export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch) => {
+export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch): void => {
     const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
 
     dispatch(setOrderPages(orderPages));
@@ -97,7 +97,7 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
     });
 
     if (!orders || orders === undefined) {
-        dispatch(calculateOrderPages(0));
+        calculateOrderPages(0);
         dispatch(setOrderAmount(0));
         dispatch(setIsLoading(false));
 
