@@ -5,63 +5,21 @@ import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { calculatePage } from '../../helpers/calculatePage';
 import HttpService from '../../services/HttpService';
 import { checkStockForOffer } from '../offer/offerActions';
-import { fetchOrderCategoriesFromOrders } from './helpers/fetchOrderCategoriesFromOrders';
+import { getOrderCategoriesFromOrders } from './helpers/getOrderCategoriesFromOrders';
 import {
-    CLOSED_ORDERS,
-    OPEN_ORDERS,
-    ORDER_AMOUNT,
-    ORDER_CATEGORIES,
-    ORDER_PAGES,
-    SET_IS_LOADING,
-} from './orderTypes';
-
-export function setIsLoading(isLoading: boolean) {
-    return {
-        type: SET_IS_LOADING,
-        isLoading,
-    };
-}
-
-export function setOpenOrders(openOrders: OrderViewModel[], search?: string) {
-    return {
-        type: OPEN_ORDERS,
-        openOrders,
-        search,
-    };
-}
-
-export function setClosedOrders(closedOrders) {
-    return {
-        type: CLOSED_ORDERS,
-        closedOrders,
-    };
-}
-
-export function setOrderPages(orderPages: number) {
-    return {
-        type: ORDER_PAGES,
-        orderPages,
-    };
-}
-
-export function setOrderAmount(orderAmount: number) {
-    return {
-        type: ORDER_AMOUNT,
-        orderAmount,
-    };
-}
-
-export function setOrderCategories(orderCategories: string[]) {
-    return {
-        type: ORDER_CATEGORIES,
-        orderCategories,
-    };
-}
+    setClosedOrders,
+    setIsLoading,
+    setOpenOrders,
+    setOrderAmount,
+    setOrderCategories,
+    setOrderPages,
+} from './orderReducer';
+import {transformOrderCategoriesToSearchableValue} from "./helpers/transformOrderCategoryToSearchableValue";
 
 const PAGE_SIZE = 15;
 
 export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch): void => {
-    const orderPages = parseInt((orderAmount - 1) / PAGE_SIZE) + 1;
+    const orderPages = parseInt(String((orderAmount - 1) / PAGE_SIZE), 10) + 1;
 
     dispatch(setOrderPages(orderPages));
 };
@@ -83,10 +41,13 @@ export const getOrderDetails = (
     return slicedArray.map(async (order) => httpService.get(`orders/${order.orderId}`));
 };
 
-const fetchOrderCategories = (openOrdersArray: OrderViewModel[]) => (dispatch: Dispatch) => {
-    const orderCategories = fetchOrderCategoriesFromOrders(openOrdersArray);
+const setOrderCategoriesFromOpenOrders = (openOrdersArray: OrderViewModel[]): void => {
+    const orderCategories = getOrderCategoriesFromOrders(openOrdersArray);
 
-    dispatch(setOrderCategories(orderCategories));
+    console.log(orderCategories);
+    const searchableOrderCategories = orderCategories.map((value: string, index: string) => transformOrderCategoriesToSearchableValue(value, index));
+
+    setOrderCategories(searchableOrderCategories);
 };
 export const getOrders = (language: string, pageNumber: number, search?: string) => async (dispatch: Dispatch) => {
     dispatch(setIsLoading(true));
@@ -96,7 +57,7 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
         dispatch(setIsLoading(false));
     });
 
-    if (!orders || orders === undefined) {
+    if (!orders) {
         calculateOrderPages(0);
         dispatch(setOrderAmount(0));
         dispatch(setIsLoading(false));
@@ -110,7 +71,7 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
         }
     }).sort((a: OrderViewModel, b: OrderViewModel) => a.orderPlacedDateTime > b.orderPlacedDateTime);
 
-    dispatch(calculateOrderPages(orders.length));
+    calculateOrderPages(orders.length);
     dispatch(setOrderAmount(orders.length));
 
     const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE, search);
@@ -118,8 +79,8 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
     dispatch(setIsLoading(false));
 
     return Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
-        dispatch(setOpenOrders(openOrdersArray, search));
-        dispatch(fetchOrderCategories(openOrdersArray));
+        dispatch(setOpenOrders(openOrdersArray));
+        setOrderCategoriesFromOpenOrders(openOrdersArray);
     });
 };
 
@@ -134,7 +95,7 @@ export const getClosedOrders = (language: string, pageNumber = 1) => async (disp
     });
 
     if (!orders || orders === undefined) {
-        dispatch(calculateOrderPages(0));
+        calculateOrderPages(0);
         dispatch(setIsLoading(false));
 
         return dispatch(setClosedOrders([]));
@@ -173,7 +134,7 @@ export const shipOrderItem = (orderdetail: DetailOrderItemViewModel, language: s
                 dispatch(setIsLoading(false));
             });
 
-        const outOfStockMessage = await dispatch(checkStockForOffer(orderdetail.offer.offerId, language));
+        const outOfStockMessage = await checkStockForOffer(orderdetail.offer.offerId, language);
 
         if (outOfStockMessage) {
             return toasterMessageWithColor('#F39C12', outOfStockMessage);

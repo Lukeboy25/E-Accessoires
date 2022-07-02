@@ -1,7 +1,7 @@
 import { OrderViewModel } from '../../../entities/Order/Order';
 import { DetailOrderItemViewModel } from '../../../entities/Order/OrderDetail';
 
-export const fetchOrderCategoriesFromOrders = (orderArray: OrderViewModel[]) => {
+export const getOrderCategoriesFromOrders = (orderArray: OrderViewModel[]): string[] => {
     const orderCategories = [];
 
     orderArray.map(

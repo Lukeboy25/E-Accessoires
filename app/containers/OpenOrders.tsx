@@ -5,6 +5,7 @@ import {
     ScrollView,
     StatusBar,
     StyleSheet,
+    View,
 } from 'react-native';
 import Toast from 'react-native-easy-toast';
 import { connect, useDispatch } from 'react-redux';
@@ -13,15 +14,17 @@ import {
     Header,
     LoadingSpinner,
     NoNetworkNote,
-    OpenOrders,
+    Order,
+    OrderTitle,
     Pagination,
 } from '../components';
+import SearchableValueInput from '../compositions/SearchableValueInput/SearchableValueInput';
 import { SearchableOption } from '../compositions/types';
 import { OrderViewModel } from '../entities/Order/Order';
 import { getOrders } from '../store/order/orderActions';
 import { requestTokenBE, requestTokenNL } from '../store/token/tokenActions';
 
-interface HomeScreenProps {
+interface OpenOrdersProps {
     hasConnection: boolean;
     isLoading: boolean;
     openOrders: OrderViewModel[];
@@ -30,7 +33,7 @@ interface HomeScreenProps {
     orderPages: number;
 }
 
-const HomeScreen: FC<HomeScreenProps> = ({
+const OpenOrders: FC<OpenOrdersProps> = ({
     hasConnection,
     isLoading,
     openOrders,
@@ -80,6 +83,20 @@ const HomeScreen: FC<HomeScreenProps> = ({
         dispatch(getOrders(languageState, page, selectedOrderCategory?.label));
     };
 
+    const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
+        const selectedOrder = orderCategoryValue.id !== null
+            ? orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id)
+            : undefined;
+
+        selectedOrder && onSelectedOrderCategory(selectedOrder);
+    };
+
+    const getTitle = () => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
+
+    const onDeleteIconPress = () => {
+        onSelectedOrderCategory(undefined);
+    };
+
 
     if (!hasConnection) {
         return (
@@ -101,20 +118,28 @@ const HomeScreen: FC<HomeScreenProps> = ({
                 <LoadingSpinner show={isLoading} />
                 <StatusBar barStyle="light-content" />
                 <Header />
-                {openOrders && (
-                    <OpenOrders
-                        isLoading={isLoading}
-                        orderCategories={orderCategories}
-                        switchLanguage={switchLanguage}
-                        openOrders={openOrders}
-                        orderAmount={orderAmount}
-                        toast={toaster}
-                        languageState={languageState}
-                        page={page}
-                        selectedOrderCategory={orderCategory}
-                        onSelectedOrderCategory={onSelectedOrderCategory}
+                <View style={styles.container}>
+                    <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
+                    <SearchableValueInput
+                        isSearchable
+                        label="Zoek op categorie"
+                        value={orderCategory && orderCategory.label}
+                        options={orderCategories}
+                        onChange={handleChangeOrderCategory}
+                        onDeleteIconPress={onDeleteIconPress}
                     />
-                )}
+                    {openOrders?.map((order) => (
+                        <Order
+                            key={order.orderId}
+                            order={order}
+                            toast={toaster}
+                            page={page}
+                            isClosedOrder={false}
+                            selectedOrderCategory={orderCategory}
+                            languageState={languageState}
+                        />
+                    ))}
+                </View>
                 {!orderCategory && orderPages > 1
         && (
             <Pagination
@@ -141,6 +166,9 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
     },
+    container: {
+        padding: 5,
+    },
     defaultToast: {
         backgroundColor: 'rgba(0, 0, 0, 0)',
         margin: 8,
@@ -148,15 +176,14 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = (state: any) => ({
-    token: state.token.token,
-    tokenBE: state.token.tokenBE,
-    openOrders: state.order.openOrders,
-    orderAmount: state.order.orderAmount,
-    orderPages: state.order.orderPages,
-    orderCategories: state.order.orderCategories,
-    isLoading: state.order.isLoading,
-    hasConnection: state.network.hasConnection,
-});
+// const mapStateToProps = (state: any) => ({
+//     token: state.token.token,
+//     tokenBE: state.token.tokenBE,
+//     orderAmount: state.order.orderAmount,
+//     orderPages: state.order.orderPages,
+//     orderCategories: state.order.orderCategories,
+//     isLoading: state.order.isLoading,
+//     hasConnection: state.network.hasConnection,
+// });
 
-export default connect(mapStateToProps, null)(HomeScreen);
+export default OpenOrders;

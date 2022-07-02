@@ -1,71 +1,95 @@
-import { OrderViewModel } from '../../entities/Order/Order';
-import { transformOrderCategoriesToSearchableValue } from './helpers/transformOrderCategoryToSearchableValue';
-import {
-    CLOSED_ORDERS,
-    OPEN_ORDERS,
-    ORDER_AMOUNT,
-    ORDER_CATEGORIES,
-    ORDER_PAGES,
-    SET_ERROR,
-    SET_IS_LOADING,
-} from './orderTypes';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {
+import { SearchableOption } from '../../compositions/types';
+import { OrderViewModel } from '../../entities/Order/Order';
+import { AsyncReduxState, initialAsyncReduxState } from '../AsyncReduxState';
+
+export type OrderState = AsyncReduxState<{
+    openOrders: OrderViewModel[];
+    closedOrders: OrderViewModel[];
+    orderCategories: SearchableOption[];
+    orderPages: number | null;
+    orderAmount: number;
+    search?: string;
+}>
+
+const initialState: OrderState = {
+    ...initialAsyncReduxState,
     openOrders: [],
     closedOrders: [],
     orderCategories: [],
     orderPages: null,
     orderAmount: 0,
-
-    error: '',
-    isLoading: false,
 };
 
-export function orderReducer(state = initialState, action: any) {
-    switch (action.type) {
-        case SET_IS_LOADING:
+export const orderSlice = createSlice({
+    name: 'orderReducer',
+    initialState,
+    reducers: {
+        setIsLoading(state, action: PayloadAction<boolean>): OrderState {
             return {
                 ...state,
-                isLoading: action.isLoading,
+                isLoading: action.payload,
             };
-        case SET_ERROR:
+        },
+        setIsSuccessful(state, action: PayloadAction<boolean>): OrderState {
             return {
                 ...state,
-                error: action.error,
+                isSuccessful: action.payload,
             };
-        case OPEN_ORDERS: {
-            const filteredOrders = action.search
-        ? action.openOrders.filter(
-            (detailorderItem: OrderViewModel) => detailorderItem.orderItems[0].product.title.split('-', 1)[0].trim() === action.search,
-        )
-        : action.openOrders;
+        },
+        setError(state, action: PayloadAction<string>): OrderState {
+            return {
+                ...state,
+                error: action.payload,
+            };
+        },
+        setOpenOrders(state, action: PayloadAction<OrderViewModel[]>): OrderState {
+            const filteredOpenOrders = state.search
+                ? action.payload.filter((detailOrderItem: OrderViewModel) => detailOrderItem.orderItems[0].product.title.split('-', 1)[0].trim() === state.search)
+                : action.payload;
 
             return {
                 ...state,
-                openOrders: filteredOrders,
+                openOrders: filteredOpenOrders,
             };
-        }
-        case CLOSED_ORDERS:
+        },
+        setClosedOrders(state, action: PayloadAction<OrderViewModel[]>): OrderState {
             return {
                 ...state,
-                closedOrders: action.closedOrders,
+                closedOrders: action.payload,
             };
-        case ORDER_CATEGORIES:
+        },
+        setOrderCategories(state, action: PayloadAction<SearchableOption[]>): OrderState {
             return {
                 ...state,
-                orderCategories: action.orderCategories.map((value: string, index: string) => transformOrderCategoriesToSearchableValue(value, index)),
+                orderCategories: action.payload,
             };
-        case ORDER_PAGES:
+        },
+        setOrderPages(state, action: PayloadAction<number>): OrderState {
             return {
                 ...state,
-                orderPages: action.orderPages,
+                orderPages: action.payload,
             };
-        case ORDER_AMOUNT:
+        },
+        setOrderAmount(state, action: PayloadAction<number>): OrderState {
             return {
                 ...state,
-                orderAmount: action.orderAmount,
+                orderAmount: action.payload,
             };
-        default:
-            return state;
-    }
-}
+        },
+    },
+});
+
+export const {
+    setIsLoading,
+    setIsSuccessful,
+    setError,
+    setOpenOrders,
+    setClosedOrders,
+    setOrderCategories,
+    setOrderPages,
+    setOrderAmount,
+} = orderSlice.actions;
+
+export default orderSlice.reducer;
