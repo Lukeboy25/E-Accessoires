@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC, useState} from 'react';
 
 import {
     Image,
@@ -8,17 +8,38 @@ import {
     View,
 } from 'react-native';
 
-const OrderTitle = ({ switchLanguage, languageState, title }) => (
-    <View style={styles.orderTitle}>
-        <Text style={styles.title}>E-accessoires</Text>
-        <Text style={styles.orders}>
-            {title}
-        </Text>
-        <TouchableOpacity onPress={switchLanguage} style={styles.languageContainer}>
-            <Image style={styles.languageLogo} source={languageState === 'NL' ? require('../assets/netherlands.png') : require('../assets/belgium.png')} />
-        </TouchableOpacity>
-    </View>
-);
+import { Language } from '../types/languageTypes';
+
+export interface OrderTitleProps {
+    title: string;
+    language: Language;
+    switchLanguage: (language: Language) => void;
+}
+
+const OrderTitle: FC<OrderTitleProps> = ({
+    title,
+    language,
+    switchLanguage,
+}) => {
+    const handleLanguagePress = () => {
+        if (language === 'NL') {
+            switchLanguage('BE');
+        } else {
+            switchLanguage('NL');
+        }
+    };
+    return (
+        <View style={styles.orderTitle}>
+            <Text style={styles.title}>E-accessoires</Text>
+            <Text style={styles.orders}>
+                {title}
+            </Text>
+            <TouchableOpacity onPress={handleLanguagePress} style={styles.languageContainer}>
+                <Image style={styles.languageLogo} source={language === 'NL' ? require('../assets/netherlands.png') : require('../assets/belgium.png')} />
+            </TouchableOpacity>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     orderTitle: {

@@ -44,6 +44,7 @@ const getOrderDetails = (
 
 export const getOrders = (language: string, pageNumber: number, search?: string) => async (dispatch: Dispatch) => {
     dispatch(setIsLoading(true));
+
     const httpService = new HttpService(language);
     const { orders } = await httpService.get('orders').catch((e) => {
         console.error('error fetching orders:', e);

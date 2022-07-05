@@ -19,6 +19,7 @@ class HttpService {
                 const token = language === 'NL' ? store.getState().token.token : store.getState().token.tokenBE;
                 request.headers = request.headers || {};
                 request.headers.Authorization = `Bearer ${token}`;
+
                 return request;
             },
             (error) => error,
@@ -28,6 +29,7 @@ class HttpService {
                 if (response.data.status === 'success') {
                     response.data = response.data.data;
                 }
+
                 return response;
             },
             async (error) => {

@@ -45,7 +45,6 @@ export const orderSlice = createSlice({
             };
         },
         setOpenOrders(state, action: PayloadAction<OrderViewModel[]>): OrderState {
-            console.log(state.search);
             const filteredOpenOrders = state.search
                 ? action.payload.filter((detailOrderItem: OrderViewModel) => detailOrderItem.orderItems[0].product.title.split('-', 1)[0].trim() === state.search)
                 : action.payload;

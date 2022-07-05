@@ -1,4 +1,4 @@
-import OpenOrders from './OpenOrders';
+import OpenOrders from './OpenOrders/OpenOrders';
 
 export {
     OpenOrders,
