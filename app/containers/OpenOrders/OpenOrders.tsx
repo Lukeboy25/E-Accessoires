@@ -1,14 +1,12 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import {
     RefreshControl,
     ScrollView,
     StatusBar,
-    StyleSheet,
     View,
 } from 'react-native';
 import Toast from 'react-native-easy-toast';
-import { useDispatch } from 'react-redux';
 
 import {
     Header,
@@ -17,80 +15,68 @@ import {
     Order,
     OrderTitle,
     Pagination,
-} from '../components';
-import SearchableValueInput from '../compositions/SearchableValueInput/SearchableValueInput';
-import { SearchableOption } from '../compositions/types';
-import { OrderViewModel } from '../entities/Order/Order';
-import {clearSearch, getOrders} from '../store/order/orderActions';
-import { requestTokenBE, requestTokenNL } from '../store/token/tokenActions';
+} from '../../components';
+import SearchableValueInput from '../../compositions/SearchableValueInput/SearchableValueInput';
+import { SearchableOption } from '../../compositions/types';
+import { OrderViewModel } from '../../entities/Order/Order';
+import { Language } from '../../types/languageTypes';
+
+// @ts-ignore
+import styles from './OpenOrders.scss';
 
 interface OpenOrdersProps {
     hasConnection: boolean;
     isLoading: boolean;
+    language: Language;
     openOrders: OrderViewModel[];
     orderCategories: SearchableOption[];
     orderAmount: number;
     orderPages: number;
+    handleSwitchLanguage: (languageState: Language) => void;
+    handleOnDeleteIconPress: (page: number) => void;
+    handleGetOrders: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
 }
 
 const OpenOrders: FC<OpenOrdersProps> = ({
     hasConnection,
     isLoading,
+    language,
     openOrders,
     orderCategories,
     orderAmount,
     orderPages,
+    handleSwitchLanguage,
+    handleOnDeleteIconPress,
+    handleGetOrders,
 }) => {
-    const dispatch = useDispatch();
-
-    const [languageState, setLanguageState] = useState<string>('NL');
-    const [page, setPage] = useState<number>(1);
+    const [pageState, setPageState] = useState<number>(1);
     const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
     const [toaster, setToaster] = useState<any>(null);
 
-    const requestOrders = async () => {
-        if (languageState === 'NL') {
-            dispatch(await requestTokenNL());
-        } else {
-            dispatch(await requestTokenBE());
-        }
-
-        dispatch(await getOrders(languageState, page, orderCategory?.label));
-    };
-
-    useEffect(() => {
-        requestOrders();
-    }, [languageState]);
-
-    const switchLanguage = async () => {
-        setPage(1);
+    const switchLanguage = (languageState: Language) => {
+        setPageState(1);
         setOrderCategory(undefined);
 
-        if (languageState === 'NL') {
-            setLanguageState('BE');
-        } else {
-            setLanguageState('NL');
-        }
+        handleSwitchLanguage(languageState);
     };
 
     const handleSetPage = (page: number) => {
-        setPage(page);
-        requestOrders();
+        setPageState(page);
+        handleGetOrders(language, page, orderCategory?.label);
     };
 
     const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
         const selectedOrder = orderCategoryValue.id && orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id);
 
         if (selectedOrder) {
-            dispatch(getOrders(languageState, page, orderCategoryValue?.label));
+            handleGetOrders(language, pageState, orderCategoryValue.label);
             setOrderCategory(orderCategoryValue);
         }
     };
 
     const onDeleteIconPress = () => {
-        dispatch(clearSearch());
         setOrderCategory(undefined);
-        dispatch(getOrders(languageState, page, undefined));
+        handleOnDeleteIconPress(pageState);
     };
 
     const getTitle = () => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
@@ -108,15 +94,14 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     return (
         <>
             <ScrollView
-                style={styles.background}
                 contentContainerStyle={{ flexGrow: 1 }}
-                refreshControl={<RefreshControl refreshing={isLoading} onRefresh={requestOrders} />}
+                refreshControl={<RefreshControl refreshing={isLoading} onRefresh={() => handleGetOrders(language, pageState, orderCategory?.label)} />}
             >
                 <LoadingSpinner show={isLoading} />
                 <StatusBar barStyle="light-content" />
                 <Header />
-                <View style={styles.container}>
-                    <OrderTitle switchLanguage={switchLanguage} languageState={languageState} title={getTitle()} />
+                <View style={styles['open-orders__container']}>
+                    <OrderTitle switchLanguage={switchLanguage} language={language} title={getTitle()} />
                     <SearchableValueInput
                         isSearchable
                         label="Zoek op categorie"
@@ -130,16 +115,16 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                             key={order.orderId}
                             order={order}
                             toast={toaster}
-                            page={page}
+                            page={pageState}
                             isClosedOrder={false}
                             selectedOrderCategory={orderCategory}
-                            languageState={languageState}
+                            languageState={language}
                         />
                     ))}
                 </View>
                 {!orderCategory && orderPages > 1 && (
                     <Pagination
-                        currentPage={page}
+                        currentPage={pageState}
                         totalPages={orderPages}
                         onPageChange={page => handleSetPage(page)}
                     />
@@ -147,7 +132,7 @@ const OpenOrders: FC<OpenOrdersProps> = ({
             </ScrollView>
             <Toast
                 ref={setToaster}
-                style={styles.defaultToast}
+                style={styles['open-orders__default-toast']}
                 position="top"
                 positionValue={0}
                 fadeInDuration={800}
@@ -158,18 +143,15 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     );
 };
 
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-    },
-    container: {
-        padding: 5,
-    },
-    defaultToast: {
-        backgroundColor: 'rgba(0, 0, 0, 0)',
-        margin: 8,
-        alignSelf: 'flex-end',
-    },
-});
+// const styles = StyleSheet.create({
+//     container: {
+//         padding: 5,
+//     },
+//     defaultToast: {
+//         backgroundColor: 'rgba(0, 0, 0, 0)',
+//         margin: 8,
+//         alignSelf: 'flex-end',
+//     },
+// });
 
 export default OpenOrders;
