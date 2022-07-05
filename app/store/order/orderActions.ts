@@ -12,25 +12,27 @@ import {
     setOpenOrders,
     setOrderAmount,
     setOrderCategories,
-    setOrderPages,
+    setOrderPages, setSearch,
 } from './orderReducer';
 
 const PAGE_SIZE = 15;
 
-export const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch): void => {
+const calculateOrderPages = (orderAmount: number) => (dispatch: Dispatch): void => {
     const orderPages = parseInt(String((orderAmount - 1) / PAGE_SIZE), 10) + 1;
 
     dispatch(setOrderPages(orderPages));
 };
 
-export const getOrderDetails = (
+const getOrderDetails = (
     httpService: HttpService,
     orders: OrderViewModel[],
     pageNumber: number,
     itemsAmount: number,
     search?: string,
-) => {
+) => (dispatch: Dispatch) => {
     if (search) {
+        dispatch(setSearch(search));
+
         return orders.map(async (order) => httpService.get(`orders/${order.orderId}`));
     }
 
@@ -49,7 +51,7 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
     });
 
     if (!orders) {
-        calculateOrderPages(0);
+        dispatch(calculateOrderPages(1));
         dispatch(setOrderAmount(0));
         dispatch(setIsLoading(false));
 
@@ -62,10 +64,10 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
         }
     }).sort((a: OrderViewModel, b: OrderViewModel) => a.orderPlacedDateTime > b.orderPlacedDateTime);
 
-    calculateOrderPages(orders.length);
+    dispatch(calculateOrderPages(orders.length));
     dispatch(setOrderAmount(orders.length));
 
-    const promiseArray = getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE, search);
+    const promiseArray = dispatch(getOrderDetails(httpService, notCancelledSortedOrders, pageNumber, PAGE_SIZE, search));
 
     dispatch(setIsLoading(false));
 
@@ -87,8 +89,8 @@ export const getClosedOrders = (language: string, pageNumber = 1) => async (disp
         dispatch(setIsLoading(false));
     });
 
-    if (!orders || orders === undefined) {
-        calculateOrderPages(0);
+    if (!orders) {
+        dispatch(calculateOrderPages(1));
         dispatch(setIsLoading(false));
 
         return dispatch(setClosedOrders([]));
@@ -100,7 +102,7 @@ export const getClosedOrders = (language: string, pageNumber = 1) => async (disp
         }
     }).sort((a: OrderViewModel, b: OrderViewModel) => a.orderPlacedDateTime < b.orderPlacedDateTime);
 
-    const promiseArray = getOrderDetails(httpService, onlyClosedOrders, pageNumber, 20);
+    const promiseArray = dispatch(getOrderDetails(httpService, onlyClosedOrders, pageNumber, 20));
     Promise.all(promiseArray).then((closedOrdersArray) => dispatch(setClosedOrders(closedOrdersArray))).catch((error) => {
         console.error('error filtering:', error);
     });
@@ -108,6 +110,10 @@ export const getClosedOrders = (language: string, pageNumber = 1) => async (disp
 };
 
 const toasterMessageWithColor = (color: string, text: string) => ({ color, text });
+
+export const clearSearch = () => (dispatch: Dispatch): void => {
+    dispatch(setSearch(undefined));
+};
 
 export const shipOrderItem = (orderdetail: DetailOrderItemViewModel, language: string) => async (dispatch: Dispatch) => {
     dispatch(setIsLoading(true));

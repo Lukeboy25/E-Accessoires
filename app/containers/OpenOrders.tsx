@@ -8,7 +8,7 @@ import {
     View,
 } from 'react-native';
 import Toast from 'react-native-easy-toast';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import {
     Header,
@@ -21,7 +21,7 @@ import {
 import SearchableValueInput from '../compositions/SearchableValueInput/SearchableValueInput';
 import { SearchableOption } from '../compositions/types';
 import { OrderViewModel } from '../entities/Order/Order';
-import { getOrders } from '../store/order/orderActions';
+import {clearSearch, getOrders} from '../store/order/orderActions';
 import { requestTokenBE, requestTokenNL } from '../store/token/tokenActions';
 
 interface OpenOrdersProps {
@@ -78,25 +78,22 @@ const OpenOrders: FC<OpenOrdersProps> = ({
         requestOrders();
     };
 
-    const onSelectedOrderCategory = (selectedOrderCategory?: SearchableOption) => {
-        setOrderCategory(selectedOrderCategory);
-        dispatch(getOrders(languageState, page, selectedOrderCategory?.label));
+    const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
+        const selectedOrder = orderCategoryValue.id && orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id);
+
+        if (selectedOrder) {
+            dispatch(getOrders(languageState, page, orderCategoryValue?.label));
+            setOrderCategory(orderCategoryValue);
+        }
     };
 
-    const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
-        const selectedOrder = orderCategoryValue.id !== null
-            ? orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id)
-            : undefined;
-
-        selectedOrder && onSelectedOrderCategory(selectedOrder);
+    const onDeleteIconPress = () => {
+        dispatch(clearSearch());
+        setOrderCategory(undefined);
+        dispatch(getOrders(languageState, page, undefined));
     };
 
     const getTitle = () => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
-
-    const onDeleteIconPress = () => {
-        onSelectedOrderCategory(undefined);
-    };
-
 
     if (!hasConnection) {
         return (
@@ -128,7 +125,7 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                         onChange={handleChangeOrderCategory}
                         onDeleteIconPress={onDeleteIconPress}
                     />
-                    {openOrders?.map((order) => (
+                    {openOrders.map(order => (
                         <Order
                             key={order.orderId}
                             order={order}
@@ -140,14 +137,13 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                         />
                     ))}
                 </View>
-                {!orderCategory && orderPages > 1
-        && (
-            <Pagination
-                currentPage={page}
-                totalPages={orderPages}
-                onPageChange={page => handleSetPage(page)}
-            />
-        )}
+                {!orderCategory && orderPages > 1 && (
+                    <Pagination
+                        currentPage={page}
+                        totalPages={orderPages}
+                        onPageChange={page => handleSetPage(page)}
+                    />
+                )}
             </ScrollView>
             <Toast
                 ref={setToaster}
@@ -175,15 +171,5 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
     },
 });
-
-// const mapStateToProps = (state: any) => ({
-//     token: state.token.token,
-//     tokenBE: state.token.tokenBE,
-//     orderAmount: state.order.orderAmount,
-//     orderPages: state.order.orderPages,
-//     orderCategories: state.order.orderCategories,
-//     isLoading: state.order.isLoading,
-//     hasConnection: state.network.hasConnection,
-// });
 
 export default OpenOrders;

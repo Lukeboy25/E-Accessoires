@@ -12,6 +12,8 @@ const ConnectedOpenOrders: FC = () => {
         orderPages,
     } = useTypedSelector(state => state.orderReducer);
 
+    // TODO hasConnection
+
     return (
         <OpenOrders
             hasConnection
@@ -19,7 +21,7 @@ const ConnectedOpenOrders: FC = () => {
             openOrders={openOrders}
             orderCategories={orderCategories}
             orderAmount={orderAmount}
-            orderPages={orderPages || 1}
+            orderPages={orderPages}
         />
     );
 };

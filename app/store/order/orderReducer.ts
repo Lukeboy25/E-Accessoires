@@ -8,7 +8,7 @@ export type OrderState = AsyncReduxState<{
     openOrders: OrderViewModel[];
     closedOrders: OrderViewModel[];
     orderCategories: SearchableOption[];
-    orderPages: number | null;
+    orderPages: number;
     orderAmount: number;
     search?: string;
 }>
@@ -18,7 +18,7 @@ const initialState: OrderState = {
     openOrders: [],
     closedOrders: [],
     orderCategories: [],
-    orderPages: null,
+    orderPages: 1,
     orderAmount: 0,
 };
 
@@ -45,6 +45,7 @@ export const orderSlice = createSlice({
             };
         },
         setOpenOrders(state, action: PayloadAction<OrderViewModel[]>): OrderState {
+            console.log(state.search);
             const filteredOpenOrders = state.search
                 ? action.payload.filter((detailOrderItem: OrderViewModel) => detailOrderItem.orderItems[0].product.title.split('-', 1)[0].trim() === state.search)
                 : action.payload;
@@ -78,6 +79,12 @@ export const orderSlice = createSlice({
                 orderAmount: action.payload,
             };
         },
+        setSearch(state, action: PayloadAction<string | undefined>): OrderState {
+            return {
+                ...state,
+                search: action.payload,
+            };
+        },
     },
 });
 
@@ -90,6 +97,7 @@ export const {
     setOrderCategories,
     setOrderPages,
     setOrderAmount,
+    setSearch,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
