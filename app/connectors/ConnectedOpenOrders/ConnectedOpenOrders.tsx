@@ -12,8 +12,6 @@ const ConnectedOpenOrders: FC = () => {
         orderPages,
     } = useTypedSelector(state => state.orderReducer);
 
-    // console.log(orderCategories);
-
     return (
         <OpenOrders
             hasConnection

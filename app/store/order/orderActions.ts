@@ -14,7 +14,6 @@ import {
     setOrderCategories,
     setOrderPages,
 } from './orderReducer';
-import {transformOrderCategoriesToSearchableValue} from "./helpers/transformOrderCategoryToSearchableValue";
 
 const PAGE_SIZE = 15;
 
@@ -41,14 +40,6 @@ export const getOrderDetails = (
     return slicedArray.map(async (order) => httpService.get(`orders/${order.orderId}`));
 };
 
-const setOrderCategoriesFromOpenOrders = (openOrdersArray: OrderViewModel[]): void => {
-    const orderCategories = getOrderCategoriesFromOrders(openOrdersArray);
-
-    console.log(orderCategories);
-    const searchableOrderCategories = orderCategories.map((value: string, index: string) => transformOrderCategoriesToSearchableValue(value, index));
-
-    setOrderCategories(searchableOrderCategories);
-};
 export const getOrders = (language: string, pageNumber: number, search?: string) => async (dispatch: Dispatch) => {
     dispatch(setIsLoading(true));
     const httpService = new HttpService(language);
@@ -80,7 +71,9 @@ export const getOrders = (language: string, pageNumber: number, search?: string)
 
     return Promise.all(promiseArray).then((openOrdersArray: OrderViewModel[]) => {
         dispatch(setOpenOrders(openOrdersArray));
-        setOrderCategoriesFromOpenOrders(openOrdersArray);
+
+        const orderCategories = getOrderCategoriesFromOrders(openOrdersArray);
+        dispatch(setOrderCategories(orderCategories));
     });
 };
 
