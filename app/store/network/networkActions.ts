@@ -10,6 +10,6 @@ export const setHasConnection = (hasConnection: boolean) => ({
 
 export const checkForActiveConnection = () => (dispatch: Dispatch) => {
     NetInfo.addEventListener(state => {
-        dispatch(setHasConnection(state.isConnected));
+        dispatch(setHasConnection(!!state.isConnected));
     });
 };

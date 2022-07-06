@@ -66,11 +66,11 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     };
 
     const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
+        setOrderCategory(orderCategoryValue);
         const selectedOrder = orderCategoryValue.id && orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id);
 
         if (selectedOrder) {
             handleGetOrders(language, pageState, orderCategoryValue.label);
-            setOrderCategory(orderCategoryValue);
         }
     };
 
@@ -105,7 +105,7 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                     <SearchableValueInput
                         isSearchable
                         label="Zoek op categorie"
-                        value={orderCategory && orderCategory.label}
+                        value={orderCategory?.label || ''}
                         options={orderCategories}
                         onChange={handleChangeOrderCategory}
                         onDeleteIconPress={onDeleteIconPress}
@@ -142,16 +142,5 @@ const OpenOrders: FC<OpenOrdersProps> = ({
         </>
     );
 };
-
-// const styles = StyleSheet.create({
-//     container: {
-//         padding: 5,
-//     },
-//     defaultToast: {
-//         backgroundColor: 'rgba(0, 0, 0, 0)',
-//         margin: 8,
-//         alignSelf: 'flex-end',
-//     },
-// });
 
 export default OpenOrders;
