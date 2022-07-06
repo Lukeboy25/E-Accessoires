@@ -1,4 +1,3 @@
-import ClosedOrders from './ClosedOrders';
 import GoogleAuthentication from './GoogleAuthentication';
 import Header from './Header';
 import LoadingSpinner from './LoadingSpinner';
@@ -10,7 +9,6 @@ import Pagination from './Pagination';
 export {
     Order,
     GoogleAuthentication,
-    ClosedOrders,
     Header,
     Pagination,
     OrderTitle,

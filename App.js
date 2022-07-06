@@ -9,8 +9,9 @@ import { connect, Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { GoogleAuthentication, LoadingSpinner } from './app/components';
+import { ConnectedClosedOrders } from './app/connectors';
 import ConnectedOpenOrders from './app/connectors/ConnectedOpenOrders/ConnectedOpenOrders';
-import { ClosedOrdersScreen, SettingsScreen } from './app/screens';
+import { SettingsScreen } from './app/screens';
 import configureStore from './app/store';
 import { checkForGoogleUser } from './app/store/login/loginActions';
 import { checkForActiveConnection } from './app/store/network/networkActions';
@@ -37,7 +38,7 @@ const connectedApp = (props) => {
             barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#D0D0C0' }}
         >
             <Tab.Screen
-                name="Home"
+                name="OpenOrders"
                 component={ConnectedOpenOrders}
                 options={{
                     tabBarLabel: 'Bestellingen',
@@ -46,7 +47,7 @@ const connectedApp = (props) => {
             />
             <Tab.Screen
                 name="ClosedOrders"
-                component={ClosedOrdersScreen}
+                component={ConnectedClosedOrders}
                 options={{
                     tabBarLabel: 'Afgerond',
                     tabBarIcon: ({ color }) => <MaterialIcons name="done" color={color} size={26} />,
