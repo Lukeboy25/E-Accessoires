@@ -20,8 +20,7 @@ const ConnectedOpenOrders: FC = () => {
         orderPages,
     } = useTypedSelector(state => state.orderReducer);
     const { language } = useTypedSelector(state => state.languageReducer);
-
-    // TODO hasConnection
+    const { hasConnection } = useTypedSelector(state => state.networkReducer);
 
     const handleGetOrders = (languageState: Language, page: number, orderCategoryLabel?: string): void => {
         if (languageState === 'NL') {
@@ -49,7 +48,7 @@ const ConnectedOpenOrders: FC = () => {
 
     return (
         <OpenOrders
-            hasConnection
+            hasConnection={hasConnection}
             isLoading={isLoading}
             language={language}
             openOrders={openOrders}

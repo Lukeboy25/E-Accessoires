@@ -17,8 +17,7 @@ const ConnectedClosedOrders: FC = () => {
         closedOrders,
     } = useTypedSelector(state => state.orderReducer);
     const { language } = useTypedSelector(state => state.languageReducer);
-
-    // TODO hasConnection
+    const { hasConnection } = useTypedSelector(state => state.networkReducer);
 
     const handleGetClosedOrders = (languageState: Language): void => {
         if (languageState === 'NL') {
@@ -41,7 +40,7 @@ const ConnectedClosedOrders: FC = () => {
 
     return (
         <ClosedOrders
-            hasConnection
+            hasConnection={hasConnection}
             isLoading={isLoading}
             language={language}
             closedOrders={closedOrders}

@@ -78,7 +78,6 @@ const connectedApp = (props) => {
 
 const mapStateToProps = (state) => ({
     user: state.login.user,
-    hasConnection: state.network.hasConnection,
 });
 
 const ConnectedApp = connect(mapStateToProps, null)(connectedApp);
