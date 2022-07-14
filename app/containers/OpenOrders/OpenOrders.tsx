@@ -18,8 +18,10 @@ import {
 } from '../../components';
 import SearchableValueInput from '../../compositions/SearchableValueInput/SearchableValueInput';
 import { SearchableOption } from '../../compositions/types';
+import { DeliveryOption } from '../../entities/DeliveryOption/DeliveryOption';
 import { OrderViewModel } from '../../entities/Order/Order';
 import { Language } from '../../types/languageTypes';
+import { SelectDeliveryMethodForm } from '../index';
 
 // @ts-ignore
 import styles from './OpenOrders.scss';
@@ -30,11 +32,13 @@ interface OpenOrdersProps {
     language: Language;
     openOrders: OrderViewModel[];
     orderCategories: SearchableOption[];
+    deliveryOptions?: DeliveryOption[];
     orderAmount: number;
     orderPages: number;
     handleSwitchLanguage: (languageState: Language) => void;
     handleOnDeleteIconPress: (page: number) => void;
     handleGetOrders: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
+    handleDeliveryClick: (orderItemId: string) => void;
 }
 
 const OpenOrders: FC<OpenOrdersProps> = ({
@@ -43,15 +47,18 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     language,
     openOrders,
     orderCategories,
+    deliveryOptions,
     orderAmount,
     orderPages,
     handleSwitchLanguage,
     handleOnDeleteIconPress,
     handleGetOrders,
+    handleDeliveryClick,
 }) => {
     const [pageState, setPageState] = useState<number>(1);
     const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
     const [toaster, setToaster] = useState<any>(null);
+    const [isSelectDeliveryMethodFormOpen, setIsSelectDeliveryMethodFormOpen] = useState<boolean>(false);
 
     const switchLanguage = (languageState: Language) => {
         setPageState(1);
@@ -72,6 +79,11 @@ const OpenOrders: FC<OpenOrdersProps> = ({
         if (selectedOrder) {
             handleGetOrders(language, pageState, orderCategoryValue.label);
         }
+    };
+
+    const onDeliveryClick = (orderItemId: string): void => {
+        setIsSelectDeliveryMethodFormOpen(true);
+        handleDeliveryClick(orderItemId);
     };
 
     const onDeleteIconPress = () => {
@@ -119,6 +131,8 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                             isClosedOrder={false}
                             selectedOrderCategory={orderCategory}
                             languageState={language}
+                            getOrders={handleGetOrders}
+                            onDeliveryClick={onDeliveryClick}
                         />
                     ))}
                 </View>
@@ -130,6 +144,12 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                     />
                 )}
             </ScrollView>
+            {isSelectDeliveryMethodFormOpen && deliveryOptions
+                && (
+                    <SelectDeliveryMethodForm
+                        deliveryOptions={deliveryOptions}
+                    />
+                )}
             <Toast
                 ref={setToaster}
                 style={styles['open-orders__default-toast']}

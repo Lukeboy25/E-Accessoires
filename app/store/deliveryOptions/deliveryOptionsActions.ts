@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 
-import { DeliveryOption } from '../../entities/DeliveryOption/DeliveryOption';
+import { DeliveryOptionResource } from '../../entities/DeliveryOption/DeliveryOption';
 import HttpService from '../../services/HttpService';
 import { Language } from '../../types/languageTypes';
 import { setIsLoading } from '../order/orderReducer';
@@ -11,10 +11,10 @@ export const getDeliveryOptions = (language: Language, orderItemId: string) => a
 
     const httpService = new HttpService(language);
 
-    const deliveryOptions: DeliveryOption[] = await httpService.post('shipping-labels/delivery-options', {
+    const deliveryOptions: DeliveryOptionResource = await httpService.post('shipping-labels/delivery-options', {
         orderItems: { orderItemId },
     });
 
-    dispatch(setDeliveryOptions(deliveryOptions));
+    dispatch(setDeliveryOptions(deliveryOptions.deliveryOptions));
     dispatch(setIsLoading(false));
 };

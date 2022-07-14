@@ -5,7 +5,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 
 import { loginReducer } from './login/loginReducer';
-import { networkReducer } from './network/networkReducer';
 import { offerReducer } from './offer/offerReducer';
 import reducers from './reducers';
 import { tokenReducer } from './token/tokenReducer';
@@ -14,7 +13,6 @@ const rootReducer = combineReducers({
     token: tokenReducer,
     login: loginReducer,
     offer: offerReducer,
-    network: networkReducer,
     ...reducers,
 });
 
