@@ -1,17 +1,45 @@
-import { SET_HAS_CONNECTION } from './networkTypes';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {
+import { AsyncReduxState, initialAsyncReduxState } from '../AsyncReduxState';
+
+export type NetworkState = AsyncReduxState<{
+    hasConnection: boolean;
+}>
+
+const initialState: NetworkState = {
+    ...initialAsyncReduxState,
     hasConnection: true,
 };
 
-export const networkReducer = (state = initialState, action: any) => {
-    switch (action.type) {
-        case SET_HAS_CONNECTION:
+export const networkSlice = createSlice({
+    name: 'networkReducer',
+    initialState,
+    reducers: {
+        setIsLoading(state, action: PayloadAction<boolean>): NetworkState {
             return {
                 ...state,
-                hasConnection: action.hasConnection,
+                isLoading: action.payload,
             };
-        default:
-            return state;
-    }
-};
+        },
+        setIsSuccessful(state, action: PayloadAction<boolean>): NetworkState {
+            return {
+                ...state,
+                isSuccessful: action.payload,
+            };
+        },
+        setHasConnection(state, action: PayloadAction<boolean>): NetworkState {
+            return {
+                ...state,
+                hasConnection: action.payload,
+            };
+        },
+    },
+});
+
+export const {
+    setIsLoading,
+    setIsSuccessful,
+    setHasConnection,
+} = networkSlice.actions;
+
+export default networkSlice.reducer;

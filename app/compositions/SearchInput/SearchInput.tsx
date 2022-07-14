@@ -13,7 +13,7 @@ import { HTMLInputProps } from '../../components/Input/Input';
 // @ts-ignore
 import styles from './SearchInput.scss';
 
-interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
+export interface SearchInputProps extends Omit<HTMLInputProps, 'onChange'> {
     value: string;
     label: string;
     onChange: (value: string) => void;

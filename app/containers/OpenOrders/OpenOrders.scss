@@ -1,0 +1,12 @@
+.open-orders {
+
+    &__container {
+        padding: 5px;
+    }
+
+    &__default-toast {
+        background-color: rgba(0, 0, 0, 0);
+        margin: 8px;
+        align-self: flex-end;
+    }
+}
