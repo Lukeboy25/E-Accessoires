@@ -29,7 +29,7 @@ const getOrderDetails = (
     pageNumber: number,
     itemsAmount: number,
     search?: string,
-) => (dispatch: Dispatch) => {
+) => (dispatch: Dispatch): Promise<OrderViewModel>[] => {
     if (search) {
         dispatch(setSearch(search));
 
@@ -42,7 +42,11 @@ const getOrderDetails = (
     return slicedArray.map(async (order) => httpService.get(`orders/${order.orderId}`));
 };
 
-export const getOrders = (language: string, pageNumber: number, search?: string) => async (dispatch: Dispatch) => {
+export const getOrders = (
+    language: string,
+    pageNumber: number,
+    search?: string,
+) => async (dispatch: Dispatch) => {
     dispatch(setIsLoading(true));
 
     const httpService = new HttpService(language);
@@ -116,16 +120,16 @@ export const clearSearch = () => (dispatch: Dispatch): void => {
     dispatch(setSearch(undefined));
 };
 
-export const shipOrderItem = (orderdetail: DetailOrderItemViewModel, language: string) => async (dispatch: Dispatch) => {
+export const shipOrderItem = (orderDetail: DetailOrderItemViewModel, language: string) => async (dispatch: Dispatch) => {
     dispatch(setIsLoading(true));
     const httpService = new HttpService(language);
 
-    if (orderdetail.fulfilment.method === 'FBR') {
+    if (orderDetail.fulfilment.method === 'FBR') {
         const transporterCode = 'BRIEFPOST';
 
         const shipmentResponse = await httpService
             .put('orders/shipment', {
-                orderItems: { orderItemId: orderdetail.orderItemId },
+                orderItems: { orderItemId: orderDetail.orderItemId },
                 transport: {
                     transporterCode,
                 },
@@ -134,7 +138,7 @@ export const shipOrderItem = (orderdetail: DetailOrderItemViewModel, language: s
                 dispatch(setIsLoading(false));
             });
 
-        const outOfStockMessage = await checkStockForOffer(orderdetail.offer.offerId, language);
+        const outOfStockMessage = await checkStockForOffer(orderDetail.offer.offerId, language);
 
         if (outOfStockMessage) {
             return toasterMessageWithColor('#F39C12', outOfStockMessage);

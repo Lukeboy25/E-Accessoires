@@ -62,5 +62,4 @@ const ConnectedOpenOrders: FC = () => {
     );
 };
 
-
 export default ConnectedOpenOrders;

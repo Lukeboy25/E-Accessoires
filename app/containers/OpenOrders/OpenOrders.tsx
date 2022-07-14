@@ -53,19 +53,19 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
     const [toaster, setToaster] = useState<any>(null);
 
-    const switchLanguage = (languageState: Language) => {
+    const switchLanguage = (languageState: Language): void => {
         setPageState(1);
         setOrderCategory(undefined);
 
         handleSwitchLanguage(languageState);
     };
 
-    const handleSetPage = (page: number) => {
+    const handleSetPage = (page: number): void => {
         setPageState(page);
         handleGetOrders(language, page, orderCategory?.label);
     };
 
-    const handleChangeOrderCategory = (orderCategoryValue: SearchableOption) => {
+    const handleChangeOrderCategory = (orderCategoryValue: SearchableOption): void => {
         setOrderCategory(orderCategoryValue);
         const selectedOrder = orderCategoryValue.id && orderCategories.find((option: SearchableOption) => option.id === orderCategoryValue.id);
 
@@ -74,12 +74,12 @@ const OpenOrders: FC<OpenOrdersProps> = ({
         }
     };
 
-    const onDeleteIconPress = () => {
+    const onDeleteIconPress = (): void => {
         setOrderCategory(undefined);
         handleOnDeleteIconPress(pageState);
     };
 
-    const getTitle = () => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
+    const getTitle = (): string => (orderAmount === 1 ? `${orderAmount} openstaande bestelling` : `${orderAmount} openstaande bestellingen`);
 
     if (!hasConnection) {
         return (
