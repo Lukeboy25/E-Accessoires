@@ -3,6 +3,7 @@ import { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { OpenOrders } from '../../containers';
+import { getDeliveryOptions } from '../../store/deliveryOptions/deliveryOptionsActions';
 import { switchLanguage } from '../../store/language/languageActions';
 import { clearSearch, getOrders } from '../../store/order/orderActions';
 import { useTypedSelector } from '../../store/store';
@@ -21,6 +22,7 @@ const ConnectedOpenOrders: FC = () => {
     } = useTypedSelector(state => state.orderReducer);
     const { language } = useTypedSelector(state => state.languageReducer);
     const { hasConnection } = useTypedSelector(state => state.networkReducer);
+    const { deliveryOptions } = useTypedSelector(state => state.deliveryOptionsReducer);
 
     const handleGetOrders = (languageState: Language, page: number, orderCategoryLabel?: string): void => {
         if (languageState === 'NL') {
@@ -42,6 +44,10 @@ const ConnectedOpenOrders: FC = () => {
         dispatch(getOrders(language, page, undefined));
     };
 
+    const handleDeliveryClick = (orderItemId: string): void => {
+        dispatch(getDeliveryOptions(language, orderItemId));
+    };
+
     useEffect(() => {
         handleGetOrders(language, 1, undefined);
     }, [language]);
@@ -53,11 +59,13 @@ const ConnectedOpenOrders: FC = () => {
             language={language}
             openOrders={openOrders}
             orderCategories={orderCategories}
+            deliveryOptions={deliveryOptions}
             orderAmount={orderAmount}
             orderPages={orderPages}
             handleSwitchLanguage={handleSwitchLanguage}
             handleOnDeleteIconPress={handleOnDeleteIconPress}
             handleGetOrders={handleGetOrders}
+            handleDeliveryClick={handleDeliveryClick}
         />
     );
 };
