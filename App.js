@@ -75,7 +75,6 @@ const connectedApp = (props) => {
     );
 };
 
-
 const mapStateToProps = (state) => ({
     user: state.login.user,
 });

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Text, View } from 'react-native';
 
-import { LogoIcon, WifiIcon } from '../icons';
+import { WifiIcon } from '../icons';
 
 // @ts-ignore
 import styles from './NoNetworkNote.scss';

@@ -26,9 +26,9 @@ const ConnectedOpenOrders: FC = () => {
 
     const handleGetOrders = (languageState: Language, page: number, orderCategoryLabel?: string): void => {
         if (languageState === 'NL') {
-            dispatch(requestTokenNL());
-        } else {
             dispatch(requestTokenBE());
+        } else {
+            dispatch(requestTokenNL());
         }
 
         dispatch(getOrders(languageState, page, orderCategoryLabel));
@@ -69,6 +69,5 @@ const ConnectedOpenOrders: FC = () => {
         />
     );
 };
-
 
 export default ConnectedOpenOrders;

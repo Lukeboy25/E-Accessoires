@@ -21,7 +21,7 @@ const OrderTitle: FC<OrderTitleProps> = ({
     language,
     switchLanguage,
 }) => {
-    const handleLanguagePress = () => {
+    const handleLanguagePress = (): void => {
         if (language === 'NL') {
             switchLanguage('BE');
         } else {
