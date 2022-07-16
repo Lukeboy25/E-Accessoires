@@ -17,15 +17,17 @@ import styles from './SelectDeliveryMethodModal.scss';
 interface SelectDeliveryMethodModalProps {
     deliveryOptions: DeliveryOption[];
     onCancelDeliveryMethodClick: () => void;
+    onDeliveryOptionClick: (shippingLabelOfferId: string) => void;
 }
 
 const SelectDeliveryMethodModal: FC<SelectDeliveryMethodModalProps> = ({
     deliveryOptions,
     onCancelDeliveryMethodClick,
+    onDeliveryOptionClick,
 }): ReactElement => (
     <Modal
         transparent
-        animationType="slide"
+        animationType="fade"
     >
         <View style={styles['select-delivery-method']}>
             <View style={styles['select-delivery-method__modal']}>
@@ -43,6 +45,7 @@ const SelectDeliveryMethodModal: FC<SelectDeliveryMethodModalProps> = ({
                     renderItem={({ item }) => (
                         <DeliveryMethodItem
                             deliveryOption={item}
+                            onDeliveryOptionClick={onDeliveryOptionClick}
                         />
                     )}
                 />

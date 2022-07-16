@@ -48,6 +48,11 @@ const ConnectedOpenOrders: FC = () => {
         dispatch(getDeliveryOptions(language, orderItemId));
     };
 
+    const onDeliveryOptionClick = (orderItemId: string, shippingLabelOfferId: string): void => {
+        // TODO Uncomment to test if creating shipping label works!
+        // dispatch(createShippingLabel(language, orderItemId, shippingLabelOfferId));
+    };
+
     useEffect(() => {
         handleGetOrders(language, 1, undefined);
     }, [language]);
@@ -66,6 +71,7 @@ const ConnectedOpenOrders: FC = () => {
             handleOnDeleteIconPress={handleOnDeleteIconPress}
             handleGetOrders={handleGetOrders}
             handleDeliveryClick={handleDeliveryClick}
+            onDeliveryOptionClick={onDeliveryOptionClick}
         />
     );
 };

@@ -39,6 +39,7 @@ interface OpenOrdersProps {
     handleOnDeleteIconPress: (page: number) => void;
     handleGetOrders: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
     handleDeliveryClick: (orderItemId: string) => void;
+    onDeliveryOptionClick: (orderItemId: string, shippingLabelOfferId: string) => void;
 }
 
 const OpenOrders: FC<OpenOrdersProps> = ({
@@ -54,11 +55,13 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     handleOnDeleteIconPress,
     handleGetOrders,
     handleDeliveryClick,
+    onDeliveryOptionClick,
 }) => {
     const [pageState, setPageState] = useState<number>(1);
     const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
     const [toaster, setToaster] = useState<any>(null);
     const [isSelectDeliveryMethodFormOpen, setIsSelectDeliveryMethodFormOpen] = useState<boolean>(false);
+    const [currentOrderItemId, setCurrentOrderItemId] = useState<string | undefined>(undefined);
 
     const switchLanguage = (languageState: Language): void => {
         setPageState(1);
@@ -83,12 +86,19 @@ const OpenOrders: FC<OpenOrdersProps> = ({
 
     const onDeliveryClick = (orderItemId: string): void => {
         setIsSelectDeliveryMethodFormOpen(true);
+        setCurrentOrderItemId(orderItemId);
         handleDeliveryClick(orderItemId);
     };
 
     const onCancelDeliveryMethodClick = (): void => {
-        console.log(isSelectDeliveryMethodFormOpen);
         setIsSelectDeliveryMethodFormOpen(false);
+        setCurrentOrderItemId(undefined);
+    };
+
+    const handleDeliveryOptionClick = (shippingLabelOfferId: string): void => {
+        if (currentOrderItemId) {
+            onDeliveryOptionClick(currentOrderItemId, shippingLabelOfferId);
+        }
     };
 
     const onDeleteIconPress = (): void => {
@@ -154,6 +164,7 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                     <SelectDeliveryMethodModal
                         deliveryOptions={deliveryOptions}
                         onCancelDeliveryMethodClick={onCancelDeliveryMethodClick}
+                        onDeliveryOptionClick={handleDeliveryOptionClick}
                     />
                 )}
             <Toast
