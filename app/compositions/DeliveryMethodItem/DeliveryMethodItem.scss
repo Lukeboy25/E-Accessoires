@@ -1,0 +1,25 @@
+.delivery-method-item {
+    padding: 1rem;
+    margin: .25rem;
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-radius: .25rem;
+
+    &__label {
+        text-align: center;
+        font-size: .75rem;
+    }
+
+    &__price-wrapper {
+        flex-direction: row;
+        align-items: flex-end;
+        margin-top: 1rem;
+    }
+
+    &__price {
+        font-weight: bold;
+    }
+
+    &__icon {
+        margin-left: auto;
+    }
+}
