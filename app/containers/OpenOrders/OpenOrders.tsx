@@ -21,7 +21,7 @@ import { SearchableOption } from '../../compositions/types';
 import { DeliveryOption } from '../../entities/DeliveryOption/DeliveryOption';
 import { OrderViewModel } from '../../entities/Order/Order';
 import { Language } from '../../types/languageTypes';
-import { SelectDeliveryMethodForm } from '../index';
+import { SelectDeliveryMethodModal } from '../index';
 
 // @ts-ignore
 import styles from './OpenOrders.scss';
@@ -86,6 +86,11 @@ const OpenOrders: FC<OpenOrdersProps> = ({
         handleDeliveryClick(orderItemId);
     };
 
+    const onCancelDeliveryMethodClick = (): void => {
+        console.log(isSelectDeliveryMethodFormOpen);
+        setIsSelectDeliveryMethodFormOpen(false);
+    };
+
     const onDeleteIconPress = (): void => {
         setOrderCategory(undefined);
         handleOnDeleteIconPress(pageState);
@@ -146,8 +151,9 @@ const OpenOrders: FC<OpenOrdersProps> = ({
             </ScrollView>
             {isSelectDeliveryMethodFormOpen && deliveryOptions
                 && (
-                    <SelectDeliveryMethodForm
+                    <SelectDeliveryMethodModal
                         deliveryOptions={deliveryOptions}
+                        onCancelDeliveryMethodClick={onCancelDeliveryMethodClick}
                     />
                 )}
             <Toast
