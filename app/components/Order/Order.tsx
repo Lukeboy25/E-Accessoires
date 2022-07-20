@@ -1,21 +1,15 @@
 import { FC } from 'react';
 
 import Moment from 'react-moment';
-import {
-    Button,
-    Image,
-    Text,
-    View,
-} from 'react-native';
+import { Image, Text, View } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useDispatch } from 'react-redux';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { SearchableOption } from '../../compositions/types';
 import { OrderViewModel } from '../../entities/Order/Order';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { getColorForDeliveryDateBE, getColorForDeliveryDateNL } from '../../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../../helpers/printShipmentLabel';
-import { shipOrderItem } from '../../store/order/orderActions';
 import { Language } from '../../types/languageTypes';
 
 // @ts-ignore
@@ -26,10 +20,11 @@ interface OrderProps {
     order: OrderViewModel;
     toast: any;
     languageState: Language;
+    onPrintClick: (orderDetail: DetailOrderItemViewModel) => void;
+    onTrackAndTraceClick?: (orderItemId: string) => void;
     selectedOrderCategory?: SearchableOption;
     page?: number;
     getOrders?: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
-    onDeliveryClick?: (orderItemId: string) => void;
 }
 
 const Order: FC<OrderProps> = ({
@@ -39,12 +34,19 @@ const Order: FC<OrderProps> = ({
     page,
     selectedOrderCategory,
     getOrders,
-    onDeliveryClick,
+    onPrintClick,
+    onTrackAndTraceClick,
     languageState,
 }) => {
-    const handleDeliveryClick = (orderItemId: string) => {
-        if (onDeliveryClick) {
-            onDeliveryClick(orderItemId);
+    const handlePrintClick = (orderDetail: DetailOrderItemViewModel): void => {
+        printShipmentLabel(order);
+
+        onPrintClick(orderDetail);
+    };
+
+    const handleTrackAndTraceClick = (orderItemId: string): void => {
+        if (onTrackAndTraceClick) {        
+            onTrackAndTraceClick(orderItemId);
         }
     };
 
@@ -96,6 +98,7 @@ const Order: FC<OrderProps> = ({
         )}
             {order.orderItems && order.orderItems.map(orderDetail => (
                 <View key={orderDetail.orderItemId}>
+                  <View style={styles['order__text-wrapper']}> 
                     <Text>
                         {orderDetail.product && orderDetail.product.title}
                         {' '}
@@ -122,9 +125,7 @@ const Order: FC<OrderProps> = ({
                                 {orderDetail.fulfilment
                               && (
                                   <Moment
-                                      // @ts-ignore
-                                      style={[
-                                          styles['order__bold-label'],
+                                    style={[styles['order__bold-label'],
                                     languageState === 'NL'
                                     ? getColorForDeliveryDateNL(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date())
                                     : getColorForDeliveryDateBE(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
@@ -137,26 +138,23 @@ const Order: FC<OrderProps> = ({
                               )}
                             </Text>
                         )}
-                    <View style={styles['order__send-container']}>
-                        {!isClosedOrder
-                            ? (
-                                <Button
-                                    key={orderDetail.orderItemId}
-                                    disabled={orderDetail.quantity === orderDetail.quantityShipped}
-                                    onPress={() => handleDeliveryClick(orderDetail.orderItemId)}
-                                    title="Verzend"
-                                />
-                            )
-                             : (
-                                 <MaterialIcons
-                                     key={orderDetail.orderItemId}
-                                     style={styles['order__send-container-print']}
-                                     onPress={() => printShipmentLabel(order)}
-                                     name="print"
-                                     color="grey"
-                                     size={30}
-                                 />
-                            )}
+                    </View>
+                    <View style={styles['order__send-container']}>    
+                        {orderDetail.quantity !== orderDetail.quantityShipped && <MaterialCommunityIcons
+                            key={orderDetail.orderItemId} 
+                            onPress={() => handleTrackAndTraceClick(orderDetail.orderItemId)}
+                            name="barcode-scan"
+                            color="grey"
+                            size={30}
+                            style={styles['order__barcode']}
+                          />}
+                        <MaterialIcons
+                            onPress={() => handlePrintClick(orderDetail)}
+                            name="print"
+                            color="grey"
+                            size={30}
+                            style={styles[`order__print${!isClosedOrder && orderDetail.quantity === orderDetail.quantityShipped ? '--is-shipped' : ''}`]}
+                        />
                     </View>
                 </View>
             ))}

@@ -20,6 +20,7 @@ import SearchableValueInput from '../../compositions/SearchableValueInput/Search
 import { SearchableOption } from '../../compositions/types';
 import { DeliveryOption } from '../../entities/DeliveryOption/DeliveryOption';
 import { OrderViewModel } from '../../entities/Order/Order';
+import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { Language } from '../../types/languageTypes';
 import { SelectDeliveryMethodModal } from '../index';
 
@@ -38,7 +39,8 @@ interface OpenOrdersProps {
     handleSwitchLanguage: (languageState: Language) => void;
     handleOnDeleteIconPress: (page: number) => void;
     handleGetOrders: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
-    handleDeliveryClick: (orderItemId: string) => void;
+    handlePrintClick: (orderDetail: DetailOrderItemViewModel) => void;
+    handleTrackAndTraceClick: (orderItemId: string) => void;
     onDeliveryOptionClick: (orderItemId: string, shippingLabelOfferId: string) => void;
 }
 
@@ -54,7 +56,8 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     handleSwitchLanguage,
     handleOnDeleteIconPress,
     handleGetOrders,
-    handleDeliveryClick,
+    handlePrintClick,
+    handleTrackAndTraceClick,
     onDeliveryOptionClick,
 }) => {
     const [pageState, setPageState] = useState<number>(1);
@@ -84,10 +87,14 @@ const OpenOrders: FC<OpenOrdersProps> = ({
         }
     };
 
-    const onDeliveryClick = (orderItemId: string): void => {
+    const onPrintClick = (orderDetail: DetailOrderItemViewModel): void => {
+        handlePrintClick(orderDetail);
+    };
+
+    const onTrackAndTraceClick = (orderItemId: string): void => {
         setIsSelectDeliveryMethodFormOpen(true);
         setCurrentOrderItemId(orderItemId);
-        handleDeliveryClick(orderItemId);
+        handleTrackAndTraceClick(orderItemId);
     };
 
     const onCancelDeliveryMethodClick = (): void => {
@@ -147,7 +154,8 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                             selectedOrderCategory={orderCategory}
                             languageState={language}
                             getOrders={handleGetOrders}
-                            onDeliveryClick={onDeliveryClick}
+                            onTrackAndTraceClick={onTrackAndTraceClick}
+                            onPrintClick={onPrintClick}
                         />
                     ))}
                 </View>

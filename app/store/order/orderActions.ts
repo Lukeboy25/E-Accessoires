@@ -120,7 +120,7 @@ export const clearSearch = () => (dispatch: Dispatch): void => {
     dispatch(setSearch(undefined));
 };
 
-export const shipOrderItem = (orderDetail: DetailOrderItemViewModel, language: string) => async (dispatch: Dispatch) => {
+export const shipPostBoxOrderItem = (orderDetail: DetailOrderItemViewModel, language: string) => async (dispatch: Dispatch) => {
     dispatch(setIsLoading(true));
     const httpService = new HttpService(language);
 

@@ -3,9 +3,10 @@ import { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { OpenOrders } from '../../containers';
+import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { getDeliveryOptions } from '../../store/deliveryOptions/deliveryOptionsActions';
 import { switchLanguage } from '../../store/language/languageActions';
-import { clearSearch, getOrders } from '../../store/order/orderActions';
+import { clearSearch, getOrders, shipPostBoxOrderItem } from '../../store/order/orderActions';
 import { useTypedSelector } from '../../store/store';
 import { requestTokenBE, requestTokenNL } from '../../store/token/tokenActions';
 import { Language } from '../../types/languageTypes';
@@ -44,8 +45,12 @@ const ConnectedOpenOrders: FC = () => {
         dispatch(getOrders(language, page, undefined));
     };
 
-    const handleDeliveryClick = (orderItemId: string): void => {
+    const handleTrackAndTraceClick = (orderItemId: string): void => {
         dispatch(getDeliveryOptions(language, orderItemId));
+    };
+
+    const handlePrintClick = (orderDetail: DetailOrderItemViewModel): void => {
+        // dispatch(shipPostBoxOrderItem(orderDetail, language));
     };
 
     const onDeliveryOptionClick = (orderItemId: string, shippingLabelOfferId: string): void => {
@@ -70,7 +75,8 @@ const ConnectedOpenOrders: FC = () => {
             handleSwitchLanguage={handleSwitchLanguage}
             handleOnDeleteIconPress={handleOnDeleteIconPress}
             handleGetOrders={handleGetOrders}
-            handleDeliveryClick={handleDeliveryClick}
+            handlePrintClick={handlePrintClick}
+            handleTrackAndTraceClick={handleTrackAndTraceClick}
             onDeliveryOptionClick={onDeliveryOptionClick}
         />
     );

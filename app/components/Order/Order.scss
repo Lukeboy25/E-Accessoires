@@ -33,15 +33,29 @@
         font-weight: bold;
     }
 
+    &__text-wrapper {
+        width: 90%;
+    }
+
     &__send-container {
+        flex-direction: row;
         position: absolute;
         bottom: 0;
         right: 0;
-        width: 100px;
-        align-self: stretch;
+    }
 
-        &-print {
+    &__barcode {
+        padding: .25rem;
+    }
+
+    &__print {
+        align-self: flex-end;
+        padding: .25rem .25rem .25rem .75rem;
+
+        &--is-shipped {
             align-self: flex-end;
+            margin-left: .75rem;
+            opacity: .3;
         }
     }
 
