@@ -15,7 +15,8 @@ import { OrderViewModel } from '../../entities/Order/Order';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { getColorForDeliveryDateBE, getColorForDeliveryDateNL } from '../../helpers/getColorForDeliveryDate';
 import { printShipmentLabel } from '../../helpers/printShipmentLabel';
-import { getOrders, shipOrderItem } from '../../store/order/orderActions';
+import { shipOrderItem } from '../../store/order/orderActions';
+import { Language } from '../../types/languageTypes';
 
 // @ts-ignore
 import styles from './Order.scss';
@@ -24,10 +25,11 @@ interface OrderProps {
     isClosedOrder: boolean;
     order: OrderViewModel;
     toast: any;
-    languageState: string;
+    languageState: Language;
     selectedOrderCategory?: SearchableOption;
     page?: number;
-    getOrders?: (language: string, page: number, selectedOrderCategory?: string) => void;
+    getOrders?: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
+    onDeliveryClick?: (orderItemId: string) => void;
 }
 
 const Order: FC<OrderProps> = ({
@@ -36,30 +38,38 @@ const Order: FC<OrderProps> = ({
     toast,
     page,
     selectedOrderCategory,
+    getOrders,
+    onDeliveryClick,
     languageState,
 }) => {
-    const dispatch = useDispatch();
-
-    const sendShipOrderItem = async (order: OrderViewModel, orderDetail: DetailOrderItemViewModel, language: string) => {
-        const toastResponse = shipOrderItem(orderDetail, language);
-
-        if (!order) {
-            return toast && toast.show(
-                <Text style={[{ backgroundColor: '#E74C3C' }, styles.order__toast]}>Kan geen order vinden.</Text>,
-                2500,
-            );
+    const handleDeliveryClick = (orderItemId: string) => {
+        if (onDeliveryClick) {
+            onDeliveryClick(orderItemId);
         }
-
-        dispatch(await getOrders(language, page || 1, selectedOrderCategory?.label));
-        await printShipmentLabel(order);
-
-        const toastRes = await toastResponse(dispatch);
-
-        toast.show(
-            <Text style={[{ backgroundColor: toastRes.color }, styles.order__toast]}>{toastRes.text}</Text>,
-            2500,
-        );
     };
+
+    // const sendShipOrderItem = async (order: OrderViewModel, orderDetail: DetailOrderItemViewModel) => {
+    //     const toastResponse = shipOrderItem(orderDetail, language);
+    //
+    //     if (!order) {
+    //         return toast && toast.show(
+    //             <Text style={[{ backgroundColor: '#E74C3C' }, styles.order__toast]}>Kan geen order vinden.</Text>,
+    //             2500,
+    //         );
+    //     }
+    //
+    //     if (getOrders) {
+    //         getOrders(languageState, page || 1, selectedOrderCategory?.label);
+    //     }
+    //     await printShipmentLabel(order);
+    //
+    //     const toastRes = await toastResponse(dispatch);
+    //
+    //     toast.show(
+    //         <Text style={[{ backgroundColor: toastRes.color }, styles.order__toast]}>{toastRes.text}</Text>,
+    //         2500,
+    //     );
+    // };
 
     return (
         <View style={[styles.order, isClosedOrder && styles.order__dark]} key={order.orderId}>
@@ -105,48 +115,48 @@ const Order: FC<OrderProps> = ({
                         </Moment>
                     </Text>
                     {!isClosedOrder
-            && (
-                <Text>
-                    Uiterste leverdatum:
-                    {' '}
-                    {orderDetail.fulfilment
-                  && (
-                      <Moment
-                          // @ts-ignore
-                          style={[
-                              styles['order__bold-label'],
-                        languageState === 'NL'
-                        ? getColorForDeliveryDateNL(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date())
-                        : getColorForDeliveryDateBE(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
-                          ]}
-                          format="DD-MM-yyyy"
-                          element={Text}
-                      >
-                          {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
-                      </Moment>
-                  )}
-                </Text>
-            )}
+                        && (
+                            <Text>
+                                Uiterste leverdatum:
+                                {' '}
+                                {orderDetail.fulfilment
+                              && (
+                                  <Moment
+                                      // @ts-ignore
+                                      style={[
+                                          styles['order__bold-label'],
+                                    languageState === 'NL'
+                                    ? getColorForDeliveryDateNL(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date())
+                                    : getColorForDeliveryDateBE(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
+                                      ]}
+                                      format="DD-MM-yyyy"
+                                      element={Text}
+                                  >
+                                      {orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate}
+                                  </Moment>
+                              )}
+                            </Text>
+                        )}
                     <View style={styles['order__send-container']}>
                         {!isClosedOrder
-              ? (
-                  <Button
-                      key={orderDetail.orderItemId}
-                      disabled={orderDetail.quantity === orderDetail.quantityShipped}
-                      onPress={() => sendShipOrderItem(order, orderDetail, order.shipmentDetails.countryCode)}
-                      title="Verzend"
-                  />
-              )
-              : (
-                  <MaterialIcons
-                      key={orderDetail.orderItemId}
-                      style={styles['order__send-container-print']}
-                      onPress={() => printShipmentLabel(order)}
-                      name="print"
-                      color="grey"
-                      size={30}
-                  />
-              )}
+                            ? (
+                                <Button
+                                    key={orderDetail.orderItemId}
+                                    disabled={orderDetail.quantity === orderDetail.quantityShipped}
+                                    onPress={() => handleDeliveryClick(orderDetail.orderItemId)}
+                                    title="Verzend"
+                                />
+                            )
+                             : (
+                                 <MaterialIcons
+                                     key={orderDetail.orderItemId}
+                                     style={styles['order__send-container-print']}
+                                     onPress={() => printShipmentLabel(order)}
+                                     name="print"
+                                     color="grey"
+                                     size={30}
+                                 />
+                            )}
                     </View>
                 </View>
             ))}
