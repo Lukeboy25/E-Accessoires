@@ -18,3 +18,14 @@ export const createShippingLabel = (language: Language, orderItemId: string, shi
     dispatch(setShippingLabel(shippingLabel));
     dispatch(setIsLoading(false));
 };
+
+export const getShippingLabel = (language: Language, shippingLabelId: string) => async (dispatch: Dispatch): Promise<void> => {
+    dispatch(setIsLoading(true));
+    const httpService = new HttpService(language);
+
+    const shippingLabelPdf = await httpService.get(`shipping-labels/${shippingLabelId}`);
+
+    console.log(shippingLabelPdf);
+
+    dispatch(setIsLoading(false));
+};
