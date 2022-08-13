@@ -7,4 +7,3 @@ export interface ShippingLabel {
     errorMessage: string;
     createTimestamp: string;
 }
-

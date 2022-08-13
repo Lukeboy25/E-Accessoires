@@ -40,4 +40,3 @@ const DeliveryMethodItem: FC<DeliveryMethodItemProps> = ({
 };
 
 export default DeliveryMethodItem;
-

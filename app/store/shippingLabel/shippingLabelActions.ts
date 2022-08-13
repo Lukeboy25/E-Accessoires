@@ -23,9 +23,7 @@ export const getShippingLabel = (language: Language, shippingLabelId: string) =>
     dispatch(setIsLoading(true));
     const httpService = new HttpService(language);
 
-    const shippingLabelPdf = await httpService.get(`shipping-labels/${shippingLabelId}`);
-
-    console.log(shippingLabelPdf);
+    await httpService.get(`shipping-labels/${shippingLabelId}`);
 
     dispatch(setIsLoading(false));
 };

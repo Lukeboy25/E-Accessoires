@@ -55,4 +55,3 @@ const SelectDeliveryMethodModal: FC<SelectDeliveryMethodModalProps> = ({
 );
 
 export default SelectDeliveryMethodModal;
-
