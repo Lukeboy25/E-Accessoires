@@ -63,7 +63,7 @@ const ConnectedOpenOrders: FC = () => {
             handleSwitchLanguage={handleSwitchLanguage}
             handleOnDeleteIconPress={handleOnDeleteIconPress}
             handleGetOrders={handleGetOrders}
-            handlePrintClick={handlePrintClick}
+            onPrintClick={handlePrintClick}
         />
     );
 };

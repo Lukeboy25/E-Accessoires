@@ -124,30 +124,29 @@ export const shipPostBoxOrderItem = (orderDetail: DetailOrderItemViewModel, lang
     dispatch(setIsLoading(true));
     const httpService = new HttpService(language);
 
-    if (orderDetail.fulfilment.method === 'FBR') {
-        const transporterCode = 'BRIEFPOST';
+    const transporterCode = 'BRIEFPOST';
 
-        const shipmentResponse = await httpService
-            .put('orders/shipment', {
-                orderItems: { orderItemId: orderDetail.orderItemId },
-                transport: {
-                    transporterCode,
-                },
-            })
-            .catch((e) => {
-                dispatch(setIsLoading(false));
-            });
+    const shipmentResponse = await httpService
+        .put('orders/shipment', {
+            orderItems: { orderItemId: orderDetail.orderItemId },
+            transport: {
+                transporterCode,
+            },
+        })
+        .catch((e) => {
+            dispatch(setIsLoading(false));
+        });
 
-        const outOfStockMessage = await checkStockForOffer(orderDetail.offer.offerId, language);
+    const outOfStockMessage = await checkStockForOffer(orderDetail.offer.offerId, language);
 
-        if (outOfStockMessage) {
-            return toasterMessageWithColor('#F39C12', outOfStockMessage);
-        }
-
-        if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
-            return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
-        }
+    if (outOfStockMessage) {
+        return toasterMessageWithColor('#F39C12', outOfStockMessage);
     }
+
+    if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
+        return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
+    }
+
 
     dispatch(setIsLoading(false));
 
