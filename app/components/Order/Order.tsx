@@ -3,7 +3,6 @@ import { FC } from 'react';
 import Moment from 'react-moment';
 import { Image, Text, View } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { SearchableOption } from '../../compositions/types';
 import { OrderViewModel } from '../../entities/Order/Order';
@@ -21,7 +20,6 @@ interface OrderProps {
     toast: any;
     languageState: Language;
     onPrintClick: (orderDetail: DetailOrderItemViewModel) => void;
-    onTrackAndTraceClick?: (orderItemId: string) => void;
     selectedOrderCategory?: SearchableOption;
     page?: number;
     getOrders?: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
@@ -35,7 +33,6 @@ const Order: FC<OrderProps> = ({
     selectedOrderCategory,
     getOrders,
     onPrintClick,
-    onTrackAndTraceClick,
     languageState,
 }) => {
     const handlePrintClick = (orderDetail: DetailOrderItemViewModel): void => {
@@ -44,11 +41,6 @@ const Order: FC<OrderProps> = ({
         onPrintClick(orderDetail);
     };
 
-    const handleTrackAndTraceClick = (orderItemId: string): void => {
-        if (onTrackAndTraceClick) {        
-            onTrackAndTraceClick(orderItemId);
-        }
-    };
 
     // const sendShipOrderItem = async (order: OrderViewModel, orderDetail: DetailOrderItemViewModel) => {
     //     const toastResponse = shipOrderItem(orderDetail, language);
@@ -98,26 +90,26 @@ const Order: FC<OrderProps> = ({
         )}
             {order.orderItems && order.orderItems.map(orderDetail => (
                 <View key={orderDetail.orderItemId}>
-                  <View style={styles['order__text-wrapper']}> 
-                    <Text>
-                        {orderDetail.product && orderDetail.product.title}
-                        {' '}
-                        - &euro;
-                        {orderDetail.unitPrice}
-                    </Text>
-                    <Text>
-                        Aantal besteld:
-                        {' '}
-                        <Text style={styles['order__bold-label']}>{orderDetail.quantity}</Text>
-                    </Text>
-                    <Text>
-                        Besteld op:
-                        {' '}
-                        <Moment style={styles['order__bold-label']} format="DD-MM-yyyy, HH:mm uur" element={Text}>
-                            {order.orderPlacedDateTime}
-                        </Moment>
-                    </Text>
-                    {!isClosedOrder
+                    <View style={styles['order__text-wrapper']}>
+                        <Text>
+                            {orderDetail.product && orderDetail.product.title}
+                            {' '}
+                            - &euro;
+                            {orderDetail.unitPrice}
+                        </Text>
+                        <Text>
+                            Aantal besteld:
+                            {' '}
+                            <Text style={styles['order__bold-label']}>{orderDetail.quantity}</Text>
+                        </Text>
+                        <Text>
+                            Besteld op:
+                            {' '}
+                            <Moment style={styles['order__bold-label']} format="DD-MM-yyyy, HH:mm uur" element={Text}>
+                                {order.orderPlacedDateTime}
+                            </Moment>
+                        </Text>
+                        {!isClosedOrder
                         && (
                             <Text>
                                 Uiterste leverdatum:
@@ -125,7 +117,7 @@ const Order: FC<OrderProps> = ({
                                 {orderDetail.fulfilment
                               && (
                                   <Moment
-                                    style={[styles['order__bold-label'],
+                                      style={[styles['order__bold-label'],
                                     languageState === 'NL'
                                     ? getColorForDeliveryDateNL(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date())
                                     : getColorForDeliveryDateBE(orderDetail.fulfilment.latestDeliveryDate || orderDetail.fulfilment.exactDeliveryDate, new Date()),
@@ -139,15 +131,7 @@ const Order: FC<OrderProps> = ({
                             </Text>
                         )}
                     </View>
-                    <View style={styles['order__send-container']}>    
-                        {orderDetail.quantity !== orderDetail.quantityShipped && <MaterialCommunityIcons
-                            key={orderDetail.orderItemId} 
-                            onPress={() => handleTrackAndTraceClick(orderDetail.orderItemId)}
-                            name="barcode-scan"
-                            color="grey"
-                            size={30}
-                            style={styles['order__barcode']}
-                          />}
+                    <View style={styles['order__send-container']}>
                         <MaterialIcons
                             onPress={() => handlePrintClick(orderDetail)}
                             name="print"

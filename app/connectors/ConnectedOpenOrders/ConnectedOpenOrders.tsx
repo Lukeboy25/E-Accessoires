@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 
 import { OpenOrders } from '../../containers';
 import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
-import { getDeliveryOptions } from '../../store/deliveryOptions/deliveryOptionsActions';
 import { switchLanguage } from '../../store/language/languageActions';
 import { clearSearch, getOrders, shipPostBoxOrderItem } from '../../store/order/orderActions';
 import { useTypedSelector } from '../../store/store';
@@ -23,7 +22,6 @@ const ConnectedOpenOrders: FC = () => {
     } = useTypedSelector(state => state.orderReducer);
     const { language } = useTypedSelector(state => state.languageReducer);
     const { hasConnection } = useTypedSelector(state => state.networkReducer);
-    const { deliveryOptions } = useTypedSelector(state => state.deliveryOptionsReducer);
 
     const handleGetOrders = (languageState: Language, page: number, orderCategoryLabel?: string): void => {
         if (languageState === 'NL') {
@@ -45,17 +43,8 @@ const ConnectedOpenOrders: FC = () => {
         dispatch(getOrders(language, page, undefined));
     };
 
-    const handleTrackAndTraceClick = (orderItemId: string): void => {
-        dispatch(getDeliveryOptions(language, orderItemId));
-    };
-
     const handlePrintClick = (orderDetail: DetailOrderItemViewModel): void => {
-        // dispatch(shipPostBoxOrderItem(orderDetail, language));
-    };
-
-    const onDeliveryOptionClick = (orderItemId: string, shippingLabelOfferId: string): void => {
-        // TODO Uncomment to test if creating shipping label works!
-        // dispatch(createShippingLabel(language, orderItemId, shippingLabelOfferId));
+        dispatch(shipPostBoxOrderItem(orderDetail, language));
     };
 
     useEffect(() => {
@@ -69,15 +58,12 @@ const ConnectedOpenOrders: FC = () => {
             language={language}
             openOrders={openOrders}
             orderCategories={orderCategories}
-            deliveryOptions={deliveryOptions}
             orderAmount={orderAmount}
             orderPages={orderPages}
             handleSwitchLanguage={handleSwitchLanguage}
             handleOnDeleteIconPress={handleOnDeleteIconPress}
             handleGetOrders={handleGetOrders}
             handlePrintClick={handlePrintClick}
-            handleTrackAndTraceClick={handleTrackAndTraceClick}
-            onDeliveryOptionClick={onDeliveryOptionClick}
         />
     );
 };
