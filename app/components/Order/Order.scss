@@ -29,30 +29,34 @@
         height: 1rem;
     }
 
-    &__bold-label {
-        font-weight: bold;
-    }
-
-    &__send-container {
+    &__item-wrapper {
         flex-direction: row;
-        position: absolute;
-        bottom: 0;
-        right: 0;
     }
 
-    &__barcode {
-        padding: .25rem;
+    &__item {
+        flex-direction: column;
+        width: 90%;
+
+        &-title {
+            width: 110%;
+        }
+    }
+
+    &__print-wrapper {
+        align-self: flex-end;
     }
 
     &__print {
-        align-self: flex-end;
-        padding: .25rem .25rem .25rem .75rem;
+        padding: .25rem;
 
         &--is-shipped {
-            align-self: flex-end;
             margin-left: .75rem;
             opacity: .3;
         }
+    }
+
+    &__bold-label {
+        font-weight: bold;
     }
 
     &__toast {
