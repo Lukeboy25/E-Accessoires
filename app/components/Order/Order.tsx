@@ -39,31 +39,19 @@ const Order: FC<OrderProps> = ({
         printShipmentLabel(order);
 
         onPrintClick(orderDetail);
+
+        if (getOrders) {
+            getOrders(languageState, page || 1, selectedOrderCategory?.label);
+        }
+
+        // TO DO fix toast
+        // const toastRes = await toastResponse(dispatch);
+        //
+        // toast.show(
+        //     <Text style={[{ backgroundColor: toastRes.color }, styles.order__toast]}>{toastRes.text}</Text>,
+        //     2500,
+        // );
     };
-
-
-    // const sendShipOrderItem = async (order: OrderViewModel, orderDetail: DetailOrderItemViewModel) => {
-    //     const toastResponse = shipOrderItem(orderDetail, language);
-    //
-    //     if (!order) {
-    //         return toast && toast.show(
-    //             <Text style={[{ backgroundColor: '#E74C3C' }, styles.order__toast]}>Kan geen order vinden.</Text>,
-    //             2500,
-    //         );
-    //     }
-    //
-    //     if (getOrders) {
-    //         getOrders(languageState, page || 1, selectedOrderCategory?.label);
-    //     }
-    //     await printShipmentLabel(order);
-    //
-    //     const toastRes = await toastResponse(dispatch);
-    //
-    //     toast.show(
-    //         <Text style={[{ backgroundColor: toastRes.color }, styles.order__toast]}>{toastRes.text}</Text>,
-    //         2500,
-    //     );
-    // };
 
     return (
         <View style={[styles.order, isClosedOrder && styles.order__dark]} key={order.orderId}>

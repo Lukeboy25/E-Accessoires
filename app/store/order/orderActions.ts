@@ -50,10 +50,12 @@ export const getOrders = (
     dispatch(setIsLoading(true));
 
     const httpService = new HttpService(language);
-    const { orders } = await httpService.get('orders').catch((e) => {
+    const response = await httpService.get('orders').catch((e) => {
         console.error('error fetching orders:', e);
         dispatch(setIsLoading(false));
     });
+
+    const orders = response.orders as OrderViewModel[];
 
     if (!orders) {
         dispatch(calculateOrderPages(1));
@@ -63,11 +65,9 @@ export const getOrders = (
         return dispatch(setOpenOrders([]));
     }
 
-    const notCancelledSortedOrders = orders.filter((order: OrderViewModel) => {
-        if (order && order.orderItems[0]) {
-            return !order.orderItems[0].cancellationRequest;
-        }
-    }).sort((a: OrderViewModel, b: OrderViewModel) => a.orderPlacedDateTime > b.orderPlacedDateTime);
+    const notCancelledSortedOrders = orders
+        .filter(order => !order.orderItems[0].cancellationRequest)
+        .sort((a, b) => a.orderPlacedDateTime > b.orderPlacedDateTime);
 
     dispatch(calculateOrderPages(orders.length));
     dispatch(setOrderAmount(orders.length));
