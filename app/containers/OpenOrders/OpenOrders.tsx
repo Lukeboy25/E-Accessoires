@@ -36,7 +36,7 @@ interface OpenOrdersProps {
     handleSwitchLanguage: (languageState: Language) => void;
     handleOnDeleteIconPress: (page: number) => void;
     handleGetOrders: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
-    handlePrintClick: (orderDetail: DetailOrderItemViewModel) => void;
+    onPrintClick: (orderDetail: DetailOrderItemViewModel) => void;
 }
 
 const OpenOrders: FC<OpenOrdersProps> = ({
@@ -50,7 +50,7 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     handleSwitchLanguage,
     handleOnDeleteIconPress,
     handleGetOrders,
-    handlePrintClick,
+    onPrintClick,
 }) => {
     const [pageState, setPageState] = useState<number>(1);
     const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
@@ -75,10 +75,6 @@ const OpenOrders: FC<OpenOrdersProps> = ({
         if (selectedOrder) {
             handleGetOrders(language, pageState, orderCategoryValue.label);
         }
-    };
-
-    const onPrintClick = (orderDetail: DetailOrderItemViewModel): void => {
-        handlePrintClick(orderDetail);
     };
 
     const onDeleteIconPress = (): void => {

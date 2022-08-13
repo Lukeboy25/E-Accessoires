@@ -90,26 +90,25 @@ const Order: FC<OrderProps> = ({
         )}
             {order.orderItems && order.orderItems.map(orderDetail => (
                 <View key={orderDetail.orderItemId}>
-                    <View style={styles['order__text-wrapper']}>
-                        <Text>
-                            {orderDetail.product && orderDetail.product.title}
-                            {' '}
-                            - &euro;
-                            {orderDetail.unitPrice}
-                        </Text>
-                        <Text>
-                            Aantal besteld:
-                            {' '}
-                            <Text style={styles['order__bold-label']}>{orderDetail.quantity}</Text>
-                        </Text>
-                        <Text>
-                            Besteld op:
-                            {' '}
-                            <Moment style={styles['order__bold-label']} format="DD-MM-yyyy, HH:mm uur" element={Text}>
-                                {order.orderPlacedDateTime}
-                            </Moment>
-                        </Text>
-                        {!isClosedOrder
+                    <Text>
+                        {orderDetail.product && orderDetail.product.title}
+                        {' '}
+                        - &euro;
+                        {orderDetail.unitPrice}
+                    </Text>
+                    <Text>
+                        Aantal besteld:
+                        {' '}
+                        <Text style={styles['order__bold-label']}>{orderDetail.quantity}</Text>
+                    </Text>
+                    <Text>
+                        Besteld op:
+                        {' '}
+                        <Moment style={styles['order__bold-label']} format="DD-MM-yyyy, HH:mm uur" element={Text}>
+                            {order.orderPlacedDateTime}
+                        </Moment>
+                    </Text>
+                    {!isClosedOrder
                         && (
                             <Text>
                                 Uiterste leverdatum:
@@ -130,13 +129,12 @@ const Order: FC<OrderProps> = ({
                               )}
                             </Text>
                         )}
-                    </View>
                     <View style={styles['order__send-container']}>
                         <MaterialIcons
                             onPress={() => handlePrintClick(orderDetail)}
                             name="print"
                             color="grey"
-                            size={30}
+                            size={32}
                             style={styles[`order__print${!isClosedOrder && orderDetail.quantity === orderDetail.quantityShipped ? '--is-shipped' : ''}`]}
                         />
                     </View>
