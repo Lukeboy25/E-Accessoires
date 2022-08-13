@@ -2,8 +2,8 @@ import React, { FC, ReactElement } from 'react';
 
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { generateDeliveryIconForLabel } from '../../containers/@modals/SelectDeliveryMethodModal/helpers/generateDeliveryIconForLabel';
 import { DeliveryOption } from '../../entities/DeliveryOption/DeliveryOption';
+import { generateDeliveryIconForLabel } from './helpers';
 
 // @ts-ignore
 import styles from './DeliveryMethodItem.scss';
