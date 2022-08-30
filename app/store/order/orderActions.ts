@@ -50,12 +50,10 @@ export const getOrders = (
     dispatch(setIsLoading(true));
 
     const httpService = new HttpService(language);
-    const response = await httpService.get('orders').catch((e) => {
+    const { orders } = await httpService.get('orders').catch((e) => {
         console.error('error fetching orders:', e);
         dispatch(setIsLoading(false));
     });
-
-    const orders = response.orders as OrderViewModel[];
 
     if (!orders) {
         dispatch(calculateOrderPages(1));
@@ -146,7 +144,6 @@ export const shipPostBoxOrderItem = (orderDetail: DetailOrderItemViewModel, lang
     if (shipmentResponse && shipmentResponse.eventType === 'CONFIRM_SHIPMENT') {
         return toasterMessageWithColor('#2ECC71', 'Order succesvol verzonden!');
     }
-
 
     dispatch(setIsLoading(false));
 
