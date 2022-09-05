@@ -19,7 +19,7 @@ interface OrderProps {
     order: OrderViewModel;
     toast: any;
     languageState: Language;
-    onPrintClick: (orderDetail: DetailOrderItemViewModel) => void;
+    onPrintClick?: (orderDetail: DetailOrderItemViewModel) => void;
     selectedOrderCategory?: SearchableOption;
     page?: number;
     getOrders?: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
@@ -38,7 +38,9 @@ const Order: FC<OrderProps> = ({
     const handlePrintClick = (orderDetail: DetailOrderItemViewModel): void => {
         printShipmentLabel(order);
 
-        onPrintClick(orderDetail);
+        if (onPrintClick) {
+            onPrintClick(orderDetail);
+        }
 
         if (getOrders) {
             getOrders(languageState, page || 1, selectedOrderCategory?.label);
