@@ -1,41 +1,41 @@
 export default {
-  expo: {
-    name: 'E-accessoires',
-    slug: 'e-accessoires-app',
-    version: '4.0.4',
-    orientation: 'portrait',
-    icon: './app/assets/logo-new-middle.png',
-    splash: {
-      image: './app/assets/logo-new-space-around.png',
-      resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+    expo: {
+        name: 'E-accessoires',
+        slug: 'e-accessoires-app',
+        version: '4.1.4',
+        orientation: 'portrait',
+        icon: './app/assets/logo-new-middle.png',
+        splash: {
+            image: './app/assets/logo-new-space-around.png',
+            resizeMode: 'contain',
+            backgroundColor: '#ffffff',
+        },
+        updates: {
+            fallbackToCacheTimeout: 0,
+        },
+        assetBundlePatterns: ['**/*'],
+        sdkVersion: '44.0.0',
+        platforms: ['ios', 'android'],
+        ios: {
+            infoPlist: {
+                UIBackgroundModes: ['location', 'fetch'],
+            },
+            supportsTablet: true,
+        },
+        android: {
+            versionCode: 25,
+            package: 'eaccessoires.app',
+            googleServicesFile: './google-services.json',
+            adaptiveIcon: {
+                foregroundImage: './app/assets/logo-new-space-around.png',
+                backgroundColor: '#FFFFFF',
+            },
+            permissions: [],
+        },
+        packagerOpts: {
+            config: 'metro.config.js',
+            sourceExts: ['js', 'jsx', 'scss', 'sass'],
+        },
     },
-    updates: {
-      fallbackToCacheTimeout: 0,
-    },
-    assetBundlePatterns: ['**/*'],
-    sdkVersion: '44.0.0',
-    platforms: ['ios', 'android'],
-    ios: {
-      infoPlist: {
-        UIBackgroundModes: ['location', 'fetch'],
-      },
-      supportsTablet: true,
-    },
-    android: {
-      versionCode: 20,
-      package: 'eaccessoires.app',
-      googleServicesFile: './google-services.json',
-      adaptiveIcon: {
-        foregroundImage: './app/assets/logo-new-space-around.png',
-        backgroundColor: '#FFFFFF',
-      },
-      permissions: [],
-    },
-    packagerOpts: {
-      config: 'metro.config.js',
-      sourceExts: ['js', 'jsx', 'scss', 'sass'],
-    },
-  },
-  extra: {},
+    extra: {},
 };
