@@ -56,16 +56,16 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
     const [toaster, setToaster] = useState<any>(null);
 
-    const switchLanguage = (languageState: Language): void => {
+    const switchLanguage = async (languageState: Language): Promise<void> => {
         setPageState(1);
         setOrderCategory(undefined);
 
-        handleSwitchLanguage(languageState);
+        await handleSwitchLanguage(languageState);
     };
 
-    const handleSetPage = (page: number): void => {
+    const handleSetPage = async (page: number): Promise<void> => {
         setPageState(page);
-        handleGetOrders(language, page, orderCategory?.label);
+        await handleGetOrders(language, page, orderCategory?.label);
     };
 
     const handleChangeOrderCategory = (orderCategoryValue: SearchableOption): void => {

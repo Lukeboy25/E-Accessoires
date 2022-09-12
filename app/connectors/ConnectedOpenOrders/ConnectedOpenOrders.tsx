@@ -23,28 +23,28 @@ const ConnectedOpenOrders: FC = () => {
     const { language } = useTypedSelector(state => state.languageReducer);
     const { hasConnection } = useTypedSelector(state => state.networkReducer);
 
-    const handleGetOrders = (languageState: Language, page: number, orderCategoryLabel?: string): void => {
+    const handleGetOrders = async (languageState: Language, page: number, orderCategoryLabel?: string): Promise<void> => {
         if (languageState === 'NL') {
-            dispatch(requestTokenBE());
+            await dispatch(requestTokenBE());
         } else {
-            dispatch(requestTokenNL());
+            await dispatch(requestTokenNL());
         }
 
-        dispatch(getOrders(languageState, page, orderCategoryLabel));
+        await dispatch(getOrders(languageState, page, orderCategoryLabel));
     };
 
-    const handleSwitchLanguage = (languageState: Language): void => {
+    const handleSwitchLanguage = async (languageState: Language): Promise<void> => {
         dispatch(clearSearch());
         dispatch(switchLanguage(languageState));
     };
 
-    const handleOnDeleteIconPress = (page: number): void => {
+    const handleOnDeleteIconPress = async (page: number): Promise<void> => {
         dispatch(clearSearch());
-        dispatch(getOrders(language, page, undefined));
+        await dispatch(getOrders(language, page, undefined));
     };
 
-    const handlePrintClick = (orderDetail: DetailOrderItemViewModel): void => {
-        dispatch(shipPostBoxOrderItem(orderDetail, language));
+    const handlePrintClick = async (orderDetail: DetailOrderItemViewModel): Promise<void> => {
+        await dispatch(shipPostBoxOrderItem(orderDetail, language));
     };
 
     useEffect(() => {
