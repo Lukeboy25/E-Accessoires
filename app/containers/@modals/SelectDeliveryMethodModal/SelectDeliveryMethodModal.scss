@@ -1,0 +1,29 @@
+.select-delivery-method {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, .2);
+
+    &__modal {
+        max-height: 30rem;
+        min-width: 90%;
+        margin: .5rem;
+        padding: 1rem;
+        border-radius: .5rem;
+        background-color: white;
+    }
+
+    &__header {
+        flex-direction: row;
+        margin-bottom: .5rem;
+    }
+
+    &__title {
+        align-self: center;
+        font-weight: bold;
+    }
+
+    &__close-icon {
+        margin-left: auto;
+    }
+}

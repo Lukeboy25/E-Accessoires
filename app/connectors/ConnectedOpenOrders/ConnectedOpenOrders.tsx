@@ -3,8 +3,9 @@ import { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { OpenOrders } from '../../containers';
+import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { switchLanguage } from '../../store/language/languageActions';
-import { clearSearch, getOrders } from '../../store/order/orderActions';
+import { clearSearch, getOrders, shipPostBoxOrderItem } from '../../store/order/orderActions';
 import { useTypedSelector } from '../../store/store';
 import { requestTokenBE, requestTokenNL } from '../../store/token/tokenActions';
 import { Language } from '../../types/languageTypes';
@@ -22,24 +23,28 @@ const ConnectedOpenOrders: FC = () => {
     const { language } = useTypedSelector(state => state.languageReducer);
     const { hasConnection } = useTypedSelector(state => state.networkReducer);
 
-    const handleGetOrders = (languageState: Language, page: number, orderCategoryLabel?: string): void => {
+    const handleGetOrders = async (languageState: Language, page: number, orderCategoryLabel?: string): Promise<void> => {
         if (languageState === 'NL') {
-            dispatch(requestTokenBE());
+            await dispatch(requestTokenBE());
         } else {
-            dispatch(requestTokenNL());
+            await dispatch(requestTokenNL());
         }
 
-        dispatch(getOrders(languageState, page, orderCategoryLabel));
+        await dispatch(getOrders(languageState, page, orderCategoryLabel));
     };
 
-    const handleSwitchLanguage = (languageState: Language): void => {
+    const handleSwitchLanguage = async (languageState: Language): Promise<void> => {
         dispatch(clearSearch());
         dispatch(switchLanguage(languageState));
     };
 
-    const handleOnDeleteIconPress = (page: number): void => {
+    const handleOnDeleteIconPress = async (page: number): Promise<void> => {
         dispatch(clearSearch());
-        dispatch(getOrders(language, page, undefined));
+        await dispatch(getOrders(language, page, undefined));
+    };
+
+    const handlePrintClick = async (orderDetail: DetailOrderItemViewModel): Promise<void> => {
+        await dispatch(shipPostBoxOrderItem(orderDetail, language));
     };
 
     useEffect(() => {
@@ -58,6 +63,7 @@ const ConnectedOpenOrders: FC = () => {
             handleSwitchLanguage={handleSwitchLanguage}
             handleOnDeleteIconPress={handleOnDeleteIconPress}
             handleGetOrders={handleGetOrders}
+            onPrintClick={handlePrintClick}
         />
     );
 };

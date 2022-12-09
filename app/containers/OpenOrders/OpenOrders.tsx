@@ -19,6 +19,7 @@ import {
 import SearchableValueInput from '../../compositions/SearchableValueInput/SearchableValueInput';
 import { SearchableOption } from '../../compositions/types';
 import { OrderViewModel } from '../../entities/Order/Order';
+import { DetailOrderItemViewModel } from '../../entities/Order/OrderDetail';
 import { Language } from '../../types/languageTypes';
 
 // @ts-ignore
@@ -35,6 +36,7 @@ interface OpenOrdersProps {
     handleSwitchLanguage: (languageState: Language) => void;
     handleOnDeleteIconPress: (page: number) => void;
     handleGetOrders: (languageState: Language, page: number, orderCategoryLabel?: string) => void;
+    onPrintClick: (orderDetail: DetailOrderItemViewModel) => void;
 }
 
 const OpenOrders: FC<OpenOrdersProps> = ({
@@ -48,21 +50,22 @@ const OpenOrders: FC<OpenOrdersProps> = ({
     handleSwitchLanguage,
     handleOnDeleteIconPress,
     handleGetOrders,
+    onPrintClick,
 }) => {
     const [pageState, setPageState] = useState<number>(1);
     const [orderCategory, setOrderCategory] = useState<SearchableOption | undefined>(undefined);
     const [toaster, setToaster] = useState<any>(null);
 
-    const switchLanguage = (languageState: Language): void => {
+    const switchLanguage = async (languageState: Language): Promise<void> => {
         setPageState(1);
         setOrderCategory(undefined);
 
-        handleSwitchLanguage(languageState);
+        await handleSwitchLanguage(languageState);
     };
 
-    const handleSetPage = (page: number): void => {
+    const handleSetPage = async (page: number): Promise<void> => {
         setPageState(page);
-        handleGetOrders(language, page, orderCategory?.label);
+        await handleGetOrders(language, page, orderCategory?.label);
     };
 
     const handleChangeOrderCategory = (orderCategoryValue: SearchableOption): void => {
@@ -119,6 +122,8 @@ const OpenOrders: FC<OpenOrdersProps> = ({
                             isClosedOrder={false}
                             selectedOrderCategory={orderCategory}
                             languageState={language}
+                            getOrders={handleGetOrders}
+                            onPrintClick={onPrintClick}
                         />
                     ))}
                 </View>
